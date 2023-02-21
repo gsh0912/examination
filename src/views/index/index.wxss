@@ -1,0 +1,41 @@
+ /deep/ .menuActive {
+  background-color: #d1d3d5;
+  color: #3889ff !important;
+}
+ /deep/ .el-aside {
+  width: 80px;
+  min-height: 100vh;
+  background-color: #ebebeb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ /deep/ .el-aside .user {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+ /deep/ .el-aside .user img {
+  width: 50px;
+  height: 50px;
+}
+ /deep/ .el-aside .menu {
+  width: 60px;
+  height: 60px;
+  margin-top: 5px;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+  padding: 5px;
+}
+ /deep/ .el-aside .menu i {
+  font-size: 29px;
+  text-align: center;
+  color: #747e97;
+}
+ /deep/ .el-aside .menu p {
+  font-size: 14px;
+}

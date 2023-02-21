@@ -1,0 +1,114 @@
+#tabHint {
+  position: absolute;
+  top: 10px;
+  right: 58px;
+  display: block;
+  width: 99px;
+  height: 18px;
+  z-index: 999;
+  background-size: 100% 100%;
+}
+#root header {
+  height: 88px;
+  background-color: #fff;
+  display: flex;
+  padding: 0 20px;
+  align-items: center;
+}
+#root .login {
+  height: 455px;
+  background-color: #f7f5f5;
+  display: flex;
+  padding: 20px;
+  justify-content: center;
+}
+#root .login .login_big {
+  display: flex;
+}
+#root .login .login_big .left {
+  width: 688px;
+  margin-right: 100px;
+}
+#root .login .login_big .left img {
+  height: 100%;
+}
+#root .login .login_big .right {
+  width: 485px;
+  background-color: #fff;
+  position: relative;
+}
+#root .login .login_big .right .tabImage {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+#root .login .login_big .right .form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+#root .login .login_big .right .form .code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+#root .login .login_big .right .form .code .wxcode {
+  margin: 10px 0;
+}
+#root .login .login_big .right .form .code .wxcode span {
+  color: #3a7ff2;
+  margin: 0 5px;
+  cursor: pointer;
+}
+#root .login .login_big .right .form .code .bottom {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 12px;
+  color: #666;
+}
+#root .login .login_big .right .form .code .bottom .border {
+  width: 1px;
+  height: 10px;
+  background-color: #666;
+  margin: 0 5px;
+}
+#root .login .login_big .right .title {
+  font-size: 20px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 45px;
+  margin-bottom: 20px;
+}
+#root .login .login_big .right .hint {
+  text-align: right;
+  color: #4f86e1;
+  font-size: 14px;
+  cursor: pointer;
+  height: 40px;
+  width: 340px;
+  margin: 0 auto;
+  line-height: 40px;
+}
+#root .login .login_big .right .el-input {
+  margin: 10px auto;
+  width: 340px;
+  height: 50px;
+}
+#root .login .login_big .right .sub {
+  margin-top: 22px;
+  background-color: #3b78dd;
+  color: #fff;
+  font-size: 21px;
+  margin: 10px auto;
+  text-align: center;
+  height: 51px;
+  line-height: 51px;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 340px;
+}
