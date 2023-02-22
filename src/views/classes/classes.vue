@@ -8,16 +8,11 @@
     <div class="classes_search">
       <el-form :inline="true" :model="from" class="demo-form-inline">
         <el-form-item label="班级名称">
-          <el-input
-            v-model="from.config.key"
-            @keyup.enter.native="searchfn"
-            @submit.native.prevent
-            clearable
-            placeholder="请输入关键字"
-          />
+          <el-input v-model="from.config.key" @keyup.enter.native="searchfn" @submit.native.prevent clearable
+            placeholder="请输入关键字" />
         </el-form-item>
         <el-form-item label="部门">
-          <el-cascader :options="options" :props="props1" clearable />
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
@@ -29,23 +24,15 @@
 
     <!-- 表格 -->
     <div class="classes_table">
-      <el-table
-        ref="multipleTableRef"
-        :data="from.tableData"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table ref="multipleTableRef" :data="from.tableData" style="width: 100%"
+        @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column property="name"  label="班级名称" />
-        <el-table-column property="depname"  label="部门" />
+        <el-table-column property="name" label="班级名称" />
+        <el-table-column property="depname" label="部门" />
         <el-table-column property="address" label="操作">
           <template #default="scope">
-            <el-button link type="primary" size="small" @click="dialogFormVisible = true"
-              >修改</el-button
-            >
-            <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)"
-              >删除</el-button
-            >
+            <el-button link type="primary" size="small" @click="dialogFormVisible = true">修改</el-button>
+            <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,18 +41,9 @@
 
     <!-- 分页 -->
     <div class="classes_pagsing">
-      <el-pagination
-        v-model:current-page="currentPage4"
-        v-model:page-size="pageSize4"
-        :page-sizes="[10, 20, 30, 40]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="from.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[10, 20, 30, 40]"
+        :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+        :total="from.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
     <!-- 分页 -->
 
@@ -76,7 +54,7 @@
           <el-input v-model="from.name" />
         </el-form-item>
         <el-form-item label="Activity zone" prop="region">
-          <el-cascader :options="options" :props="props1" clearable />
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -97,6 +75,7 @@ import { ElTable } from "element-plus";
 import { reactive, ref, onMounted } from "vue";
 import { classeslist, classesdelete, classesdepartment } from "../../api/classes";
 import { ElMessage, ElMessageBox } from "element-plus";
+import cascader from "../../components/common/cascader.vue";
 
 // 搜索
 const from = reactive({
@@ -116,40 +95,40 @@ const from = reactive({
 });
 
 // 搜索
-// const searchclasses = ref("");
-const searchfn = () => {};
-// 搜索
+const searchfn = () => {
+  list()
+};
+// cascaderChange
+const cascaderChange = (val:Array<number>)=>{
+  console.log(val);
+}
 
 // 部门级联
 const classes = async () => {
   let res: any = await classesdepartment({});
-  console.log(1111111111111, res, 11111111);
   if (res.errCode === 10000) {
-    options.label = res.data.list;
+    options.value = res.data.list;
   }
 };
-const props1 = {
-  lazy: true,
-  checkStrictly: true,
-};
-const options: any = [
-  {
-    value: "",
-    label: "",
-    children: [
-      {
-        value: "disciplines",
-        label: "Disciplines",
-        children: [
-          {
-            value: "consistency",
-            label: "Consistency",
-          },
-        ],
-      },
-    ],
-  },
-];
+interface Iprops {
+  value: string,
+  label: string,
+  children?: []
+}
+const options = ref<Array<Iprops>>([])
+  interface IcascaderProps {
+  value: string,
+  label: string,
+  expandTrigger?:string,
+  checkStrictly:boolean
+}
+const cascaderProps = ref<IcascaderProps>({
+  label: 'name',
+  value: 'id',
+  expandTrigger: 'hover' as const,
+  checkStrictly: true
+});
+
 // 部门级联
 
 // 表格
@@ -171,6 +150,8 @@ const list = async () => {
   let res: any = await classeslist({
     page: from.config.page,
     psize: from.config.psize,
+    depid: from.config.depid,
+    key: from.config.key
   });
   console.log(res);
   if (res.errCode === 10000) {

@@ -45,8 +45,9 @@
     </el-table-column>
     <el-table-column label="状态" width="120">
       <template #default="scope">
-        <span :class="scope.row.state === 1 ?'spanActive':'spanRed'">
-        {{ scope.row.state === 1 ? '已发布' : '未发布' }}</span>
+
+        <span class="spanActive" v-if="scope.row.state === 1">已发布</span>
+        <span class="spanRed" @click="openState(1, scope.row.id)" v-else>未发布</span>
       </template>
     </el-table-column>
     <el-table-column property="scores" label="总分" show-overflow-tooltip />
@@ -89,29 +90,63 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { testList, testDelete, testDeleteAll,updateState } from '../../api/test'
+import { testList, testDelete, testDeleteAll, updateState } from '../../api/test'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router';
 import moment from "moment"
 
 const router = useRouter()
 // 创建考试
-const createTest = ()=>{
+const createTest = () => {
   router.push('/index/testAdd')
 }
 // 请求网络接口
 onMounted(() => {
   getTabList()
 })
+const openState = async (state: number, id: number) => {
+  ElMessageBox.confirm(
+    '此操作将修改选中的考试状态, 是否继续?',
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      let res: any = await updateState({
+        state,
+        ids: [id]
+      })
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          type: 'success',
+          message: '修改成功',
+        })
+        getTabList()
+      }
+
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
+
+
+}
 // 修改发布状态
-const announceFn =async (state:number)=>{
-  let res:any = await updateState({
+const announceFn = async (state: number) => {
+  let res: any = await updateState({
     state,
-    ids:selectChecked.value.map((item:{id:number})=>item.id)
+    ids: selectChecked.value.map((item: { id: number }) => item.id)
   })
-  if(res.errCode ===10000){
-      ElMessage.success('修改成功')
-  }else{
+  if (res.errCode === 10000) {
+    ElMessage.success('修改成功')
+  } else {
     ElMessage.error('修改失败')
   }
   getTabList()
@@ -377,15 +412,23 @@ header {
   margin: 10px 0;
   padding-left: 20px;
 }
-.spanRed{
+
+.spanRed {
   color: red;
   cursor: pointer
 }
-.spanTitle{
-  color:#409eff;
+
+.spanRed:hover {
+  border-bottom: 1px solid red;
+
+}
+
+.spanTitle {
+  color: #409eff;
   cursor: pointer
 }
-.spanTitle:hover{
+
+.spanTitle:hover {
   border-bottom: 1px solid #409eff;
 }
 </style>
