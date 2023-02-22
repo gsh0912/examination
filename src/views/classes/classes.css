@@ -1,0 +1,15 @@
+.classes_p {
+  font-size: 22px;
+}
+.classes_search {
+  margin-top: 20px;
+}
+.classes_pagsing {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+.el-input__inner {
+  width: 300px;
+}

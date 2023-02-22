@@ -1,8 +1,8 @@
- /deep/ .menuActive {
+:deep(.menuActive ) {
   background-color: #d1d3d5;
   color: #3889ff !important;
 }
- /deep/ .el-aside {
+:deep(.el-aside) {
   width: 80px;
   min-height: 100vh;
   background-color: #ebebeb;
@@ -10,16 +10,16 @@
   flex-direction: column;
   align-items: center;
 }
- /deep/ .el-aside .user {
+:deep(.el-aside) .user {
   height: 80px;
   display: flex;
   align-items: center;
 }
- /deep/ .el-aside .user img {
+:deep(.el-aside) .user img {
   width: 50px;
   height: 50px;
 }
- /deep/ .el-aside .menu {
+:deep(.el-aside) .menu {
   width: 60px;
   height: 60px;
   margin-top: 5px;
@@ -30,12 +30,17 @@
   justify-content: center;
   border-radius: 5%;
   padding: 5px;
-}
- /deep/ .el-aside .menu i {
-  font-size: 29px;
-  text-align: center;
   color: #747e97;
 }
- /deep/ .el-aside .menu p {
+:deep(.el-aside) .menu .iconfont {
+  font-size: 28px;
+  width: 29px;
+  height: 29px;
+}
+:deep(.el-aside) .menu i {
+  font-size: 29px;
+  text-align: center;
+}
+:deep(.el-aside) .menu p {
   font-size: 14px;
 }
