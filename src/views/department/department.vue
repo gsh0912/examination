@@ -104,8 +104,11 @@ const handleNodeClick = (data: InowChild) => {
   nowChild.value = data
   childFlag.value = 1
 }
+
 // 修改 / 添加 节点
 const sonUpdate = (flag: number) => {
+console.log(sonRuleFormRef.value.validate);
+
   sonRuleFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       let obj: { id: number, pid: number, name: string } = {
