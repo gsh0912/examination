@@ -2,7 +2,7 @@
   <header>
     <div class="left">考试管理</div>
     <div class="right">
-      <el-button type="primary">创建考试</el-button>
+      <el-button type="primary" @click="createTest">创建考试</el-button>
     </div>
   </header>
   <!-- 搜索 -->
@@ -29,23 +29,24 @@
     </el-select>
     <el-button type="primary" class="searchBtn" @click="searchFn">查询</el-button>
   </div>
-  <div class="button">
-    <el-button type="danger">批量删除</el-button>
-    <el-button type="primary">发布考试</el-button>
-    <el-button type="success">取消发布</el-button>
+  <div class="button" v-if="selectChecked.length">
+    <el-button type="danger" @click="delAll">批量删除</el-button>
+    <el-button type="primary" @click="announceFn(1)">发布考试</el-button>
+    <el-button type="success" @click="announceFn(2)">取消发布</el-button>
   </div>
   <!-- 表格 -->
-  <el-table ref="multipleTableRef" :data="tableData.tableArr" style="width: 100%"
-    @selection-change="handleSelectionChange">
+  <el-table ref="multipleTableRef" :data="tableData.tableArr" :header-cell-style="{ 'text-align': 'center' }"
+    :cell-style="{ 'text-align': 'center' }" @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" />
     <el-table-column label="考试名称" width="120">
       <template #default="scope">
-        <span class="spanActive">{{ scope.row.title }}</span>
+        <span class="spanTitle">{{ scope.row.title }}</span>
       </template>
     </el-table-column>
     <el-table-column label="状态" width="120">
       <template #default="scope">
-        <span class="spanActive">{{ scope.row.state === 0 ? '所有' : scope.row.state === 1 ? '已发布' : '未发布' }}</span>
+        <span :class="scope.row.state === 1 ?'spanActive':'spanRed'">
+        {{ scope.row.state === 1 ? '已发布' : '未发布' }}</span>
       </template>
     </el-table-column>
     <el-table-column property="scores" label="总分" show-overflow-tooltip />
@@ -88,14 +89,33 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { testList, testDelete } from '../../api/test'
+import { testList, testDelete, testDeleteAll,updateState } from '../../api/test'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router';
 import moment from "moment"
+
+const router = useRouter()
+// 创建考试
+const createTest = ()=>{
+  router.push('/index/testAdd')
+}
 // 请求网络接口
 onMounted(() => {
   getTabList()
 })
-// 
+// 修改发布状态
+const announceFn =async (state:number)=>{
+  let res:any = await updateState({
+    state,
+    ids:selectChecked.value.map((item:{id:number})=>item.id)
+  })
+  if(res.errCode ===10000){
+      ElMessage.success('修改成功')
+  }else{
+    ElMessage.error('修改失败')
+  }
+  getTabList()
+}
 // 单删
 const del = (id: number) => {
   ElMessageBox.confirm(
@@ -125,6 +145,40 @@ const del = (id: number) => {
         message: '已取消',
       })
     })
+}
+// 批量删除
+const delAll = async () => {
+  ElMessageBox.confirm(
+    '确定要删除数据吗',
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      const ids: any = []
+      selectChecked.value.map((item: any) => {
+        ids.push(item.id)
+      })
+      const res: any = await testDeleteAll({ ids })
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功',
+        })
+        getTabList()
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消',
+      })
+    })
+
 }
 // 搜索框创建人change事件
 const inpAdmin = () => {
@@ -316,9 +370,22 @@ header {
 
 .spanActive {
   color: #409eff;
+  cursor: pointer;
 }
 
 .button {
   margin: 10px 0;
+  padding-left: 20px;
+}
+.spanRed{
+  color: red;
+  cursor: pointer
+}
+.spanTitle{
+  color:#409eff;
+  cursor: pointer
+}
+.spanTitle:hover{
+  border-bottom: 1px solid #409eff;
 }
 </style>
