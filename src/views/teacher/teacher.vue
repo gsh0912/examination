@@ -14,8 +14,8 @@
       </el-form-item>
       <!-- 部门 -->
       <el-form-item label="部门">
-        <el-cascader v-model="value" :options="options" @change="handleChange" />
-      </el-form-item>
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange"/>
+        </el-form-item>
       <!-- 角色 -->
       <el-form-item label="角色">
         <el-select v-model="tableData.listConfig" placeholder="请选择">
@@ -37,7 +37,7 @@
         <template #default="scope">
           <div>
             <span class="spanActive" @click="anew(scope.row)">从新设置密码</span>
-            <span class="spanActive" @click="dialogVisibles = true">修改</span>
+            <span class="spanActive" @click="modification(scope.row)">修改</span>
             <span class="spanActive" @click="del(scope.row.id)">剪除</span>
           </div>
         </template>
@@ -60,7 +60,7 @@
       <el-form-item label="输入密码" prop="pass">
         <el-input v-model="addtable.add.oldpass" type="password" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="再次输入密码" prop="checkPass">
+      <el-form-item label="确认密码" prop="checkPass">
         <el-input v-model="addtable.add.confirmPass" type="password" autocomplete="off" />
       </el-form-item>
     </el-form>
@@ -74,19 +74,19 @@
     </template>
   </el-dialog>
   <!-- 修改的弹出框 -->
-  <el-dialog v-model="dialogVisibles" title="修改老师" width="30%">
+  <el-dialog v-model="tableData.dialogVisibles" title="修改老师" width="35%">
 
-    <el-form ref="ruleFormRef" :model="ruleForm" :rules="teacherRules" label-width="120px" class="demo-ruleForm"
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="teacherRules" label-width="100px" class="demo-ruleForm"
       :size="formSize" status-icon>
       <el-form-item label="姓名" prop="name">
-        <el-input v-model="ruleForm2.name" />
+        <el-input v-model="modificationList.modification.name" />
       </el-form-item>
       <el-form-item label="电话" prop="tel">
-        <el-input v-model="ruleForm2.tel" />
+        <el-input v-model="modificationList.modification.tel" />
       </el-form-item>
-      <el-form-item label="部门" prop="depname">
-        <el-cascader v-model="ruleForm2.depname" :options="options" @change="handleChange" />
-      </el-form-item>
+      <el-form-item label="部门">
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange"/>
+        </el-form-item>
       <el-form-item label="角色" prop="region">
         <el-select v-model="ruleForm2.region" placeholder="请选择角色">
           <el-option label="Zone one" value="shanghai" />
@@ -107,12 +107,12 @@
 
 <script setup lang='ts'>
 import { reactive, ref, onMounted } from 'vue'
-import { teacherList, deleteList, addList } from '../../api/teacher'
+import { teacherList, deleteList, addList,classesdepartment } from '../../api/teacher'
 
 import { ElMessageBox, ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import cascader from "../../components/common/cascader.vue";
 import { update } from 'lodash';
-const searchlog = ref('');
 // 弹出窗关闭之前调用
 const beforeClose = () => {
   ruleForm.checkPass = ''
@@ -132,6 +132,8 @@ const anew = (data: any) => {
   tableData.dialogVisible = true
   addtable.add.oldpass = data.oldpass
 }
+
+// 调用修改密码数据
 const updatepass = async () => {
   let res:any = await addList({
     id:  addtable.add.id,
@@ -154,7 +156,6 @@ const updatepass = async () => {
 }
 // 新设置密码弹框
 const dialogVisible = ref(false)
-const value = ref([])
 // 修改弹框
 const dialogVisibles = ref(false)
 
@@ -176,14 +177,25 @@ interface ItableData {
   tableArr: [],
   counts: number,
   dialogVisible: boolean,
+  dialogVisibles:boolean
+}
+// 修改
+const modification = (data:any)=>{
+  console.log(data);
+    modificationList.modification.name = data.name
+    modificationList.modification.tel = data.tel
+    modificationList.modification.depid = data.depid
+    modificationList.modification.roleid = data.roleid
+  tableData.dialogVisibles = true
 }
 
 // 表格相关配置
 const tableData = reactive<ItableData>({
   dialogVisible: false,
+  dialogVisibles:false,
   listConfig: {
     page: 1,
-    psize: 5,
+    psize: 10,
     name: '',
     depname: '',
     tel: '',
@@ -208,6 +220,16 @@ const addtable = reactive({
     oldpass: ""
   }
 })
+const modificationList = reactive({
+  modification:{
+    name: "",
+    tel: "",
+    depid: '',
+    roleid: '',
+   
+  }
+})
+
 //请求列表接口
 const getData = async () => {
   const res: any = await teacherList(tableData.listConfig);
@@ -245,12 +267,6 @@ const del = (id: number) => {
 
 }
 
-
-// 重置密码input框
-const formInline = reactive({
-  user: '',
-  region: '',
-})
 // 修改表单
 const ruleForm2 = reactive({
   tel: '',
@@ -258,137 +274,40 @@ const ruleForm2 = reactive({
   depname: '',
   region: '',
 })
-// 部门级联
-const handleChange = (value: any) => {
-  console.log(value)
+// cascaderChange
+const cascaderChange = (val:Array<number>)=>{
+  console.log(val);
 }
-
+// 部门级联
+const classes = async () => {
+  let res: any = await classesdepartment({});
+  if (res.errCode === 10000) {
+    options.value = res.data.list;
+  }
+};
+interface Iprops {
+  value: string,
+  label: string,
+  children?: []
+}
+const options = ref<Array<Iprops>>([])
+  interface IcascaderProps {
+  value: string,
+  label: string,
+  expandTrigger?:string,
+  checkStrictly:boolean
+}
+const cascaderProps = ref<IcascaderProps>({
+  label: 'name',
+  value: 'id',
+  expandTrigger: 'hover' as const,
+  checkStrictly: true
+});
 // 级联
-const options = [
-  {
-    value: 'guide',
-    label: 'Guide',
-    children: [
-      {
-        value: 'disciplines',
-        label: 'Disciplines',
-        children: [
-          {
-            value: 'consistency',
-            label: 'Consistency',
-          },
-          {
-            value: 'feedback',
-            label: 'Feedback',
-          },
-          {
-            value: 'efficiency',
-            label: 'Efficiency',
-          },
-          {
-            value: 'controllability',
-            label: 'Controllability',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'side nav',
-            label: 'Side Navigation',
-          },
-          {
-            value: 'top nav',
-            label: 'Top Navigation',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'component',
-    label: 'Component',
-    children: [
-      {
-        value: 'basic',
-        label: 'Basic',
-        children: [
-          {
-            value: 'layout',
-            label: 'Layout',
-          },
-          {
-            value: 'color',
-            label: 'Color',
-          },
-          {
-            value: 'typography',
-            label: 'Typography',
-          },
-          {
-            value: 'icon',
-            label: 'Icon',
-          },
-          {
-            value: 'button',
-            label: 'Button',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'menu',
-            label: 'Menu',
-          },
-          {
-            value: 'tabs',
-            label: 'Tabs',
-          },
-          {
-            value: 'breadcrumb',
-            label: 'Breadcrumb',
-          },
-          {
-            value: 'dropdown',
-            label: 'Dropdown',
-          },
-          {
-            value: 'steps',
-            label: 'Steps',
-          },
-        ],
-      }
-    ],
-  },
-  {
-    value: 'resource',
-    label: 'Resource',
-    children: [
-      {
-        value: 'axure',
-        label: 'Axure Components',
-      },
-      {
-        value: 'sketch',
-        label: 'Sketch Templates',
-      },
-      {
-        value: 'docs',
-        label: 'Design Documentation',
-      },
-    ],
-  },
-]
 // 搜索
 const searchFn = () => {
   console.log(123);
-  // tableData.listConfig.name = searchlog ;
-  // getData()
+ 
 }
 // 分页
 const currentPage4 = ref(1)
@@ -464,7 +383,8 @@ const teacherRules = reactive<FormRules>({
 })
 
 onMounted(() => {
-  getData()
+  getData();
+  classes()
 })
 </script>
 <style scoped>
@@ -496,5 +416,8 @@ span {
 
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+.demo-ruleForm{
+  width:450px
 }
 </style>

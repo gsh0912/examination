@@ -15,3 +15,8 @@ export const changePassList = (params:any={})=>{
 export const addList = (params:any={})=>{
   return post('/api/teacher/add',params)
  }
+ // 部门管理
+export const classesdepartment = (data:any)=>{
+  return get('/api/department/list',data)
+ }
+ 
