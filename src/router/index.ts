@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { ElMessage } from 'element-plus'
+import {start,close} from '../utils/nprogress'
 
 // 路由类型:RouteRecordRaw
 const routes: Array<RouteRecordRaw> = [
@@ -8,6 +10,9 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
+    meta:{
+      title:'考试系统'
+    },
     component: () => import('../views/login/login.vue'),
   },
   {
@@ -23,6 +28,13 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/test/test.vue'),
         meta: {
           title: '考试管理',
+        },
+      },
+      {
+        path: '/index/testAdd',
+        component: () => import('../views/test/testAdd/testAdd.vue'),
+        meta: {
+          title: '创建考试'
         },
       },
       {
@@ -90,5 +102,31 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
+router.beforeEach((to, from, next) => {
+  // 获取token
+  const token = sessionStorage.getItem("token");
+  // 有token
+  if (token) {
+    // 直接放行
+    next();
+  } else {
+    // 否则是没有
+    // 如果去的是登录页
+    if (to.path === "/login") {
+      // 直接放行
+      next();
+    } else {
+      // 如果去的是其他页,跳转到登录页
+      ElMessage.error("请登录以后再操作！");
+      // 跳转到登录页
+      return next({ path: "/login" });
+    }
+  }
+  start();
+});
+// 全局后置路由 每次切换路由后更换标题
+router.afterEach((to) => {
+  document.title = to.meta.title as string;
+  close();
+});
 export default router;

@@ -12,7 +12,7 @@
           :class="route.path === '/index' + item.url ? 'menuActive' : ''"
           @click="menuFn(item)"
         >
-          <i :class="item.ico" class="iconfont"></i>
+            <i :class="item.ico" class="iconfont"></i>
           <p>{{ item.name }}</p>
         </div>
       </el-aside>
@@ -34,6 +34,7 @@ const data = reactive({
     (item: any) => item.postion === "left"
   ),
 });
+console.log(data.menuList);
 
 interface Imenu {
   checked: boolean;
@@ -53,5 +54,10 @@ const menuFn = (val: Imenu) => {
 </script>
 
 <style scoped>
-@import url("./index.wxss");
+@import url("./index.css");
+.iconfont{
+  font-size: 28px;
+  width: 29px;
+  height: 29px;
+}
 </style>
