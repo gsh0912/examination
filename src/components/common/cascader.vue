@@ -20,11 +20,6 @@ const props = withDefaults(defineProps<{
     return { value: 'id', label: 'name', children: [] }
   }
 })
-
-const cascaderChange = (val: Array<number>) => {
-  console.log(val);
-}
-console.log(props.options);
 </script>
 
 <style scoped></style>

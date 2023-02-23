@@ -14,4 +14,9 @@ export const classesdelete = (data:any)=>{
 export const classesdepartment = (data:any)=>{
   return get('/api/department/list',data)
  }
+//  添加 / 修改班级
+export const addClasses = (data:any)=>{
+  return post('/api/classes/add',data)
+ }
+
  

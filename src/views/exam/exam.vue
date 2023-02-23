@@ -1,6 +1,6 @@
 <template>
   <div>
-    阅卷管理
+    阅卷
   </div>
 </template>
 
@@ -8,6 +8,6 @@
 
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
 </style>
