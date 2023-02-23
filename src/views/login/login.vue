@@ -47,10 +47,10 @@ import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 // 账号密码文本框
-const username = ref('')
-const pass = ref('')
+const username = ref<string>('')
+const pass = ref<string>('')
 // 控制账号登录/二维码登录
-let loginFlag = ref(true)
+let loginFlag = ref<boolean>(true)
 const tabFn = () => {
   loginFlag.value = !loginFlag.value
 }

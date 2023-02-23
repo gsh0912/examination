@@ -1,0 +1,26 @@
+.classes_p {
+  font-size: 22px;
+}
+.classes_search {
+  margin-top: 20px;
+}
+.classes_pagsing {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+.from_width {
+  margin-left: 55px;
+}
+.from_width .el-form-item__content {
+  margin-top: 10px;
+}
+.el-dialog {
+  display: flex;
+  text-align: center;
+  /* width: 450px; */
+}
+.el-dialog .el-form-item {
+  width: 350px;
+}
