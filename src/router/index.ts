@@ -33,6 +33,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: '/index/examstudent',
+        component: () => import('../views/exam/examstudent.vue'),
+        meta: {
+          title: '阅卷',
+        },
+      },
+      {
         path: '/index/subjects',
         component: () => import('../views/subjects/subjects.vue'),
         meta: {
@@ -81,7 +88,28 @@ const routes: Array<RouteRecordRaw> = [
           title: '角色管理',
         },
       },
+      {
+        path: '/index/stutest',
+        component: () => import('../views/stutest/stutest.vue'),
+        meta: {
+          title: '考试管理',
+        },
+      },
+      {
+        path: '/index/set',
+        component: () => import('../views/set/set.vue'),
+        meta: {
+          title: '设置管理',
+        },
+      },
     ],
+  },
+  {
+    path: '/examprepare',
+    component: () => import('../views/stutest/examprepare.vue'),
+    meta: {
+      title: '考试管理',
+    },
   },
 ];
 
