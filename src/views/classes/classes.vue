@@ -1,9 +1,11 @@
 <template>
   <div>
-    <!-- 标题 -->
-    <p class="classes_p">班级管理</p>
-    <!-- 标题 -->
-
+    <header>
+      <!-- 标题 -->
+      <p class="classes_p">班级管理</p>
+      <!-- 标题 -->
+      <el-button @click="classFn(0)" type="primary">添加班级</el-button>
+    </header>
     <!-- 搜索 -->
     <div class="classes_search">
       <el-form :inline="true" :model="from" class="demo-form-inline">
@@ -12,7 +14,7 @@
             placeholder="请输入关键字" />
         </el-form-item>
         <el-form-item label="部门">
-          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange"/>
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
@@ -31,7 +33,7 @@
         <el-table-column property="depname" label="部门" />
         <el-table-column property="address" label="操作">
           <template #default="scope">
-            <el-button link type="primary" size="small" @click="dialogFormVisible = true">修改</el-button>
+            <el-button link type="primary" size="small" @click="classFn(scope.row)">修改</el-button>
             <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -49,19 +51,19 @@
 
     <!-- 修改弹窗 -->
     <el-dialog v-model="dialogFormVisible" title="修改">
-      <el-form :model="from" class="from_width">
-        <el-form-item label="Activity name" prop="name">
-          <el-input v-model="from.name" />
+      <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
+        <el-form-item label="班级名称" prop="name">
+          <el-input v-model="ruleForm.name" />
         </el-form-item>
-        <el-form-item label="Activity zone" prop="region">
-          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChange" />
+        <el-form-item label="部门" prop="depid">
+          <cascader :options="options" :cascaderProps="cascaderProps" :cascaderChange="cascaderChangeClass" />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">
-            Confirm
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="updateStudent">
+            确定
           </el-button>
         </span>
       </template>
@@ -73,9 +75,59 @@
 <script setup lang="ts">
 import { ElTable } from "element-plus";
 import { reactive, ref, onMounted } from "vue";
-import { classeslist, classesdelete, classesdepartment } from "../../api/classes";
+import { classeslist, classesdelete, classesdepartment, addClasses } from "../../api/classes";
 import { ElMessage, ElMessageBox } from "element-plus";
 import cascader from "../../components/common/cascader.vue";
+import type { FormInstance, FormRules } from 'element-plus'
+
+// 添加 / 修改 班级
+const classFn = (val: any) => {
+  if (val === 0) {
+    ruleForm.id = 0
+  } else {
+    ruleForm.name = val.name
+    ruleForm.depid = val.depid
+    ruleForm.id = val.id
+  }
+
+
+  dialogFormVisible.value = true
+}
+// 点击确定 提交
+const updateStudent = () => {
+  ruleFormRef.value.validate(async (valid: boolean) => {
+    if (valid) {
+      let res = await addClasses({
+        id: ruleForm.id,
+        name: ruleForm.name,
+        depid: ruleForm.depid
+      })
+      console.log(res);
+    } else {
+      console.log('error submit!')
+    }
+  })
+}
+
+const ruleForm = reactive({
+  name: '',
+  depid: 0,
+  id: 0
+})
+const ruleFormRef = ref()
+const rules = reactive<FormRules>({
+  name: [
+    { required: true, message: '请输入班级名称', trigger: 'blur' },
+    { min: 1, max: 5, message: '班级名称为1-15个字符', trigger: 'blur' }
+  ],
+  depid: [
+    {
+      required: true,
+      message: '请选择部门',
+      trigger: 'change',
+    },
+  ],
+})
 
 // 搜索
 const from = reactive({
@@ -87,7 +139,7 @@ const from = reactive({
   tableData: [],
   total: 0,
   config: {
-    depid: "",
+    depid: 0,
     key: "",
     page: 1,
     psize: 10,
@@ -98,11 +150,19 @@ const from = reactive({
 const searchfn = () => {
   list()
 };
-// cascaderChange
-const cascaderChange = (val:Array<number>)=>{
-  console.log(val);
+// 获取搜索级联框
+const cascaderChange = (val: Array<number>) => {
+  if (val && val.length) {
+    from.config.depid = val[val.length - 1]
+  } else {
+    from.config.depid = 0
+  }
+  list()
 }
-
+// dialog里的弹出框
+const cascaderChangeClass = (val: Array<number>) => {
+  ruleForm.depid = val[val.length - 1]
+}
 // 部门级联
 const classes = async () => {
   let res: any = await classesdepartment({});
@@ -116,11 +176,11 @@ interface Iprops {
   children?: []
 }
 const options = ref<Array<Iprops>>([])
-  interface IcascaderProps {
+interface IcascaderProps {
   value: string,
   label: string,
-  expandTrigger?:string,
-  checkStrictly:boolean
+  expandTrigger?: string,
+  checkStrictly: boolean
 }
 const cascaderProps = ref<IcascaderProps>({
   label: 'name',
@@ -226,12 +286,9 @@ const deleclasses = (index: any) => {
       });
     });
 };
-// 单个删除
 
 // 修改
-const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
-const formLabelWidth = "140px";
 // 修改
 
 onMounted(() => {
