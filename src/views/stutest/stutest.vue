@@ -86,9 +86,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { stutesList } from '../../api/stutest';
-import {useRouter} from "vue-router"
+import { useRouter } from 'vue-router';
 // 路由
-let router = useRouter()
+let router = useRouter();
 // 分页数据
 const currentPage4 = ref(1);
 let counts = ref(0);
@@ -154,8 +154,12 @@ const select = () => {
 };
 //跳转考试页面
 const examine = (data: any) => {
-  // console.log(data);
-  router.push({path:"/examprepare"})
+  console.log(data);
+  if (data.result === '未考试') {
+    router.push({ path: '/examprepare', query: { id: data.id } });
+  } else {
+    router.push({ path: '/examresults', query: { id: data.id } });
+  }
 };
 </script>
 <style scoped lang="less">
