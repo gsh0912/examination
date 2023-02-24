@@ -153,9 +153,6 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import router from '../../router';
 let route = useRoute();
-onMounted(() => {
-  myList();
-});
 // title标签
 let title = route.query.title;
 // 列表数据
@@ -205,6 +202,7 @@ const myList = async () => {
   console.log(list.value);
   total.value = res.data.counts;
 };
+myList()
 // 分页
 const handleSizeChange = (val: number) => {
   // console.log(val);
@@ -242,11 +240,11 @@ const exam = async (data: any) => {
   console.log(data);
   drawer.value = true;
   if (data.state === '已阅卷') {
+    drawer.value = false;
     ElMessage({
       message: '您已判完卷',
       type: 'success',
     });
-    drawer.value = false;
   }
   let res = await question({ testid: route.query.testid, studentid: data.id });
   console.log(res);

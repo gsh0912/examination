@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { ElMessage } from 'element-plus'
-import {start,close} from '../utils/nprogress'
+import { ElMessage } from 'element-plus';
+import { start, close } from '../utils/nprogress';
 
 // 路由类型:RouteRecordRaw
 const routes: Array<RouteRecordRaw> = [
@@ -10,8 +10,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
-    meta:{
-      title:'考试系统'
+    meta: {
+      title: '考试系统',
     },
     component: () => import('../views/login/login.vue'),
   },
@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/index/testAdd',
         component: () => import('../views/test/testAdd/testAdd.vue'),
         meta: {
-          title: '创建考试'
+          title: '创建考试',
         },
       },
       {
@@ -123,6 +123,20 @@ const routes: Array<RouteRecordRaw> = [
       title: '考试管理',
     },
   },
+  {
+    path: '/examresults',
+    component: () => import('../views/stutest/examresults.vue'),
+    meta: {
+      title: '考试管理',
+    },
+  },
+  {
+    path: '/stuexamwrong',
+    component: () => import('../views/stutest/stuexamwrong.vue'),
+    meta: {
+      title: '考试管理',
+    },
+  },
 ];
 
 const router = createRouter({
@@ -132,7 +146,7 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   // 获取token
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem('token');
   // 有token
   if (token) {
     // 直接放行
@@ -140,14 +154,14 @@ router.beforeEach((to, from, next) => {
   } else {
     // 否则是没有
     // 如果去的是登录页
-    if (to.path === "/login") {
+    if (to.path === '/login') {
       // 直接放行
       next();
     } else {
       // 如果去的是其他页,跳转到登录页
-      ElMessage.error("请登录以后再操作！");
+      ElMessage.error('请登录以后再操作！');
       // 跳转到登录页
-      return next({ path: "/login" });
+      return next({ path: '/login' });
     }
   }
   start();

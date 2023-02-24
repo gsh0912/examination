@@ -65,6 +65,7 @@ const loginFn = debounce(async () => {
     ElMessage.success(res.errMsg)
     sessionStorage.setItem('token', res.data.token)
     sessionStorage.setItem('menus', JSON.stringify(res.data.menu))
+    sessionStorage.setItem("model",JSON.stringify(res.data.model))
     router.push('/index')
   } else {
     ElMessage.error(res.errMsg+'密码错误')
