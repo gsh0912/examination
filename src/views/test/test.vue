@@ -7,7 +7,7 @@
   </header>
   <!-- 搜索 -->
   <div class="search">
-    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable />
+    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable @keyup.enter="searchFn"/>
     创建人 <el-input v-model="tableData.listConfig.admin" @input="inpAdmin" placeholder="创建人"
       style="width:130px;margin:0 10px;" clearable />
     <div class="ismy">
