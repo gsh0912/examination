@@ -62,6 +62,13 @@ const routes: Array<RouteRecordRaw> = [
         path: '/index/databaselist',
         component: () => import('../views/databaselist/databaselist.vue'),
         meta: {
+          title: '题库试卷',
+        },
+      },
+      {
+        path: '/index/databasequestionlist',
+        component: () => import('../views/databaselist/databasequestionlist/databasequestionlist.vue'),
+        meta: {
           title: '题库管理',
         },
       },
