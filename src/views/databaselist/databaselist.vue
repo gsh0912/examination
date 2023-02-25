@@ -9,10 +9,10 @@
   <div class="search">
     <el-form inline>
       <el-form-item label="题库名称:">
-        <el-input v-model="Data.listConfig.key" />
+        <el-input v-model="Data.listConfig.key" placeholder="请输入题库名称"  clearable />
       </el-form-item>
       <el-form-item label="创建人:">
-        <el-input v-model="Data.listConfig.admin" />
+        <el-input v-model="Data.listConfig.admin" placeholder="请输入创建人"  clearable />
       </el-form-item>
     </el-form>
     <el-checkbox

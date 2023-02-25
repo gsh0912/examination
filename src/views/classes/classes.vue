@@ -135,7 +135,7 @@ const ruleFormRef = ref()
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入班级名称', trigger: 'blur' },
-    { min: 1, max: 5, message: '班级名称为1-15个字符', trigger: 'blur' }
+    { min: 1, max: 8, message: '班级名称为1-8个字符', trigger: 'blur' }
   ],
   depid: [
     {

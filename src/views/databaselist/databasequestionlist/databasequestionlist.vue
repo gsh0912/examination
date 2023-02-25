@@ -188,19 +188,27 @@ const handleSelectionChange = (val: any[]) => {
 // 批量删除
 const delAll = async () => {
   console.log(multipleSelection.value);
-  let res: any = await databasequestionDelall({
-    ids: multipleSelection.value,
-  });
-  console.log(res);
-  if (res.errCode === 10000) {
-    ElMessage({
-      message: '删除成功',
-      type: 'success',
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await databasequestionDelall({
+        ids: multipleSelection.value,
+      });
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        });
+        getList();
+      }
+    })
+    .catch(() => {
+      ElMessage.error('删除失败');
     });
-    getList();
-  } else {
-    ElMessage.error('删除失败');
-  }
 };
 //
 onMounted(() => {
