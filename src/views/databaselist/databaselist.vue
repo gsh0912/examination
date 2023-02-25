@@ -55,7 +55,7 @@
       <template #default="scope">
         <span class="isActive" @click="questions(scope.row.id)">试题</span>
         <span class="isActive">编辑</span>
-        <span class="isActive">删除</span>
+        <span class="isActive" @click="delFn(scope.row.id)">删除</span>
       </template>
     </el-table-column>
     />
@@ -80,24 +80,68 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue';
 import { ref } from 'vue';
-import { ElTable } from 'element-plus';
+import { ElTable, ElMessageBox, ElMessage } from 'element-plus';
 import { reqList } from '../../api/databaselist';
-import { deleteAllList } from '../../api/databaselist';
+import { deleteAllList, deleteList } from '../../api/databaselist';
 import { useRouter } from 'vue-router';
 let router = useRouter();
 // 批量删除
+const delFn = (id: number) => {
+  console.log(id);
+
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await deleteList({ id: id });
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        });
+        getList();
+      }
+    })
+    .catch(() => {
+      ElMessage.error('删除失败');
+    });
+};
 const delAllFn = async () => {
-  let res = await deleteAllList({
-    ids: tableChecked.value.map((item: { id: number }) => item.id),
-  });
-  console.log(res);
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await deleteAllList({
+        ids: tableChecked.value.map((item: any) => {
+          return item.id;
+        }),
+      });
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        });
+        getList();
+      }
+    })
+    .catch(() => {
+      ElMessage.error('删除失败');
+    });
 };
 // 我创建的
 const isMyFn = () => {
   if (Data.lookChecked) {
     Data.listConfig.ismy = 1;
+    getList();
   } else {
     Data.listConfig.ismy = 0;
+    getList();
   }
   console.log(Data.listConfig.ismy);
 };
@@ -165,7 +209,7 @@ const getList = async () => {
 };
 const questions = (id: number) => {
   console.log(id);
-  router.push({ path: '/index/databasequestionlist', query: { id:id } });
+  router.push({ path: '/index/databasequestionlist', query: { id: id } });
 };
 
 onMounted(() => {

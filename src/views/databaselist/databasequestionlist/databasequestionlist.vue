@@ -107,7 +107,7 @@ const background = ref(true);
 const disabled = ref(false);
 // 返回上一个页面
 const goBack = () => {
-  router.push("/index/databaselist")
+  router.push('/index/databaselist');
 };
 // 列表
 interface Ipaper {
