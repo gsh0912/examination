@@ -103,7 +103,6 @@ const infobox = () => {
 const infoData = reactive({
   info: JSON.parse(sessionStorage.getItem('model')!),
 });
-console.log(infoData.info);
 // 退出登录
 const logout = () => {
   window.onbeforeunload = function (e) {
