@@ -144,6 +144,13 @@ const routes: Array<RouteRecordRaw> = [
       title: '考试管理',
     },
   },
+  {
+    path: '/examination',
+    component: () => import('../views/stutest/examination.vue'),
+    meta: {
+      title: '考试管理',
+    },
+  },
 ];
 
 const router = createRouter({
