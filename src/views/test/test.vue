@@ -375,7 +375,7 @@ header {
   align-items: center;
   height: 50px;
 
-  /deep/ .timer {
+  :deep(.timer) {
     width: 330px;
   }
 
