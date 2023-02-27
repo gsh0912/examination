@@ -62,11 +62,16 @@ const loginFn = debounce(async () => {
   let res: any = await login({ username: username.value, pass: pass.value })
   console.log(res);
   if (res.errCode === 10000) {
+    if(res.data.type==='student'){
+      router.push('/index/stutest')
+    }else{
+    router.push('/index')
+    }
     ElMessage.success(res.errMsg)
     sessionStorage.setItem('token', res.data.token)
     sessionStorage.setItem('menus', JSON.stringify(res.data.menu))
     sessionStorage.setItem("model",JSON.stringify(res.data.model))
-    router.push('/index')
+    
   } else {
     ElMessage.error(res.errMsg+'密码错误')
   }

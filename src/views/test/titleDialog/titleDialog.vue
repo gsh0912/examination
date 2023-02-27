@@ -1,6 +1,6 @@
 <template>
   <div class="titleBox">
-    <el-dialog v-model="dialogVisible" :title="titleData.title" width="80%" :close-on-click-modal ="false">
+    <el-dialog v-model="dialogVisible" :title="titleData.title" width="80%" :close-on-click-modal="false">
       <div class="title">
         <div class="left">
           <div class="info">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="right">
-          <el-button>导出excel</el-button>
+          <el-button @click="exportFn">导出excel</el-button>
         </div>
       </div>
       <div class="body">
@@ -58,7 +58,6 @@
           </div>
           <div v-if="item.type === '问答题'">
             <div class="fillin correctExplain">答案解析：{{ item.explains }}</div>
-
           </div>
         </div>
       </div>
@@ -68,13 +67,34 @@
 <script setup lang="ts">
 import { ref, defineProps, defineExpose, onMounted, watch } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import { exportExcel } from '../../../api/test'
 
 const dialogVisible = ref(false)
 const checkList = ref(['A', 'B', 'C', 'D'])
+// 导出excel表格
+const exportFn = async () => {
+  let res: any = await exportExcel({
+    id: props.testNameId
+  })
+  let blob = new Blob([res], { type: 'application/vnd.ms-excel' });
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url;
+  a.setAttribute('download', '123.xlsx');
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+}
 
 const props = defineProps({
   titleData: {
     type: Object,
+    required: true
+  },
+  testNameId: {
+    type: Number,
     required: true
   }
 })
@@ -92,7 +112,6 @@ watch(() => props.titleData, (newVal) => {
   })
   titleData.value = newVal
   console.log(titleData.value);
-
 })
 
 
@@ -144,13 +163,15 @@ watch(() => props.titleData, (newVal) => {
       /deep/ .el-checkbox__input {
         margin: 0 5px 0 15px;
       }
-      .checkbox{
+
+      .checkbox {
         display: flex;
         align-items: center;
         height: 26px;
         margin-bottom: 10px;
         padding: 8px;
       }
+
       /deep/.checkboxNative {
         background-color: #eefaf6;
 

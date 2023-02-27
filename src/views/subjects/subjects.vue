@@ -12,20 +12,12 @@
           <el-input v-model="subjects.admin" clearable placeholder="创建人" />
         </el-form-item>
         <el-form-item label="" style="margin-left: 20px">
-          <el-checkbox
-            label="只看我创建的"
-            @change="myestablish"
-            true-label="1"
-            false-label="0"
-            v-model="subjects.ismy"
-          />
+          <el-checkbox label="只看我创建的" @change="myestablish" true-label="1" false-label="0" v-model="subjects.ismy" />
         </el-form-item>
-        <el-button @click="search" type="primary" style="margin-left: 10px"
-          >查询</el-button
-        >
+        <el-button @click="search" type="primary" style="margin-left: 10px">查询</el-button>
       </el-form>
       <div style="margin-top: -35px">
-        <el-button type="primary">创建考试</el-button>
+        <el-button type="primary" @click="createSubject">创建考试</el-button>
       </div>
     </div>
     <el-table :data="subjectsData.list" style="width: 100%; font-size: 12px">
@@ -52,18 +44,9 @@
       </el-table-column>
     </el-table>
     <div class="paging">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="[5, 10, 15, 20]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
+        :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
   </div>
 </template>
@@ -72,9 +55,17 @@
 import moment from 'moment';
 import { ref, reactive, onMounted } from 'vue';
 import { subjectsList, subjectsDel } from '../../api/subjects';
+import router from '../../router';
 onMounted(() => {
   getList();
 });
+// 点击创建考试
+const createSubject = () => {
+  console.log(111);
+  
+  router.push('/index/subjectAdd')
+}
+
 const currentPage = ref(1);
 const pageSize = ref(10);
 const small = ref(false);
@@ -132,9 +123,11 @@ const myestablish = () => {
 .title {
   font-size: 20px;
 }
+
 .fromData {
   display: flex;
   justify-content: space-between;
+
   .el-form {
     display: flex;
     margin-top: 20px;
@@ -145,6 +138,7 @@ const myestablish = () => {
     }
   }
 }
+
 .paging {
   width: 100%;
   display: flex;

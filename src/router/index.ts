@@ -59,6 +59,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: '/index/subjectAdd',
+        component: () => import('../views/subjects/subjectAdd/subjectAdd.vue'),
+        meta: {
+          title: '试卷管理',
+        },
+      },
+      {
         path: '/index/databaselist',
         component: () => import('../views/databaselist/databaselist.vue'),
         meta: {

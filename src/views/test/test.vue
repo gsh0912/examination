@@ -87,7 +87,7 @@
       @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
   <!-- title弹出框 -->
-  <titleDialog ref="dialogTitle" :titleData="titleData" />
+  <titleDialog ref="dialogTitle" :testNameId="testNameId"  :titleData="titleData" />
   <!-- visible弹出框 -->
   <visibleDialog ref="dialogVisible" :visibleTitle="visibleTitle" />
 </template>
@@ -125,7 +125,9 @@ onMounted(() => {
 })
 // 点击考试名称
 const titleData = ref({})
+let testNameId = ref<number>(0)
 const titleFn = async (testid: number) => {
+  testNameId.value = testid
   let res = await testStart({ testid })
   titleData.value = res.data
   dialogTitle.value.dialogVisible = true
