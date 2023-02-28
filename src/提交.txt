@@ -1,0 +1,111 @@
+ 创建分支1（是）
+git branch  查看分支
+git checkout -b feixinfei   创建分支
+git push origin feixinfei  push到远程自己
+git push 把分支推送到远程仓库
+
+
+创建分支2（是）
+clone工程代码到本地 
+git clone 项目地址
+在本地新建分支
+git branch 分支name
+切换到自己刚建好的分支
+git checkout 分支name
+本地分支推送到远程仓库
+git push origin 分支name
+
+
+把代码提交到主分支上去（暂时不用）
+1先把代码提交到自己分支上去
+git add .
+git commit -m 'XXX'
+git push
+2自己分支仓库去换到 主分支 （主分支可能是master或其他）
+git chekout master
+3将远程主分支的代码拉到本地分支
+git pull origin master
+4.将分支切换到自己分支
+git checkout XXX
+5执行变基命令，合并冲突代码
+git rebase origin/master 
+处理完后 git add .
+继续执行变基 git rebase --continue（解决冲突，并重复第5步的2，3步骤），直到变基完成，没有冲突
+6 提交
+git push 提交代码
+ 7. 在github创建合并请求，将自己分支代码合并到主分支  
+
+
+
+把主分支的代码拉取到自己分支上  ! （是）
+git checkout  master    首先切换到主分支
+git pull                           使用git pull 把主分支的代码pull 拉取下来
+git checkout XXX          切换到自己分支
+git merge master          把主分支的代码merge合并到自己分支
+git push                         提交
+0
+
+
+把自己分支代码提交到主分支上去（否）
+git checkout XXX   首先切换到自己分支
+git pull  先把主分支的代码拉取下来
+git chekout master 切换到主分支
+git merge XXX 把主分支的代码合并到自己分支上去
+git push   再次推送上去
+
+
+
+
+自己分支的代码上传到主分支上去 （是）
+git add .   已自己分支开发先提交到自己分支
+git pull     拉取自己分支
+git add .   在次提交
+git commit -m  '我修改了XXXX'
+git push origin fei  提交到暂存区
+git checkout master 切换到主分支
+git merge fei  主分支与自己分支合并
+// admin123    123456
+git push origin master  提交到远程仓库
+
+
+git log 查看版本号
+git reset --hard 20ba2e97290599e496d83b723c2ee4c11413a05b
+
+git rebase --abort 如果回退版本回退不了执行 
+
+git stash list 列出所有的暂存记录。
+
+
+(master|MERGING)  解决执行：git reset --merge HEAD^
+
+
+
+
+ts是哪家设计开发的   Typescript
+ts 关于变量名：以上都正确
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
