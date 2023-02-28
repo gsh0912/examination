@@ -59,8 +59,22 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: '/index/subjectAdd',
+        component: () => import('../views/subjects/subjectAdd/subjectAdd.vue'),
+        meta: {
+          title: '试卷管理',
+        },
+      },
+      {
         path: '/index/databaselist',
         component: () => import('../views/databaselist/databaselist.vue'),
+        meta: {
+          title: '题库试卷',
+        },
+      },
+      {
+        path: '/index/databasequestionlist',
+        component: () => import('../views/databaselist/databasequestionlist/databasequestionlist.vue'),
         meta: {
           title: '题库管理',
         },
@@ -133,6 +147,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/stuexamwrong',
     component: () => import('../views/stutest/stuexamwrong.vue'),
+    meta: {
+      title: '考试管理',
+    },
+  },
+  {
+    path: '/examination',
+    component: () => import('../views/stutest/examination.vue'),
     meta: {
       title: '考试管理',
     },

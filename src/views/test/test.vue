@@ -7,7 +7,7 @@
   </header>
   <!-- 搜索 -->
   <div class="search">
-    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable />
+    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable @keyup.enter="searchFn"/>
     创建人 <el-input v-model="tableData.listConfig.admin" @input="inpAdmin" placeholder="创建人"
       style="width:130px;margin:0 10px;" clearable />
     <div class="ismy">
@@ -29,6 +29,7 @@
     </el-select>
     <el-button type="primary" class="searchBtn" @click="searchFn">查询</el-button>
   </div>
+  <!-- 操作按钮 -->
   <div class="button" v-if="selectChecked.length">
     <el-button type="danger" @click="delAll">批量删除</el-button>
     <el-button type="primary" @click="announceFn(1)">发布考试</el-button>
@@ -40,7 +41,7 @@
     <el-table-column type="selection" width="55" />
     <el-table-column label="考试名称" width="120">
       <template #default="scope">
-        <span class="spanTitle">{{ scope.row.title }}</span>
+        <span class="spanTitle" @click="titleFn(scope.row.id)">{{ scope.row.title }}</span>
       </template>
     </el-table-column>
     <el-table-column label="状态" width="120">
@@ -65,11 +66,11 @@
     <el-table-column label="操作" width="160">
       <template #default="scope">
         <div class="operate">
-          <span class="spanActive">学生</span>
+          <span class="spanActive" @click="visibleDialogFn('学生可见列表', scope.row.id)">学生</span>
           <div class="border"></div>
-          <span class="spanActive">可见</span>
+          <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id)">可见</span>
           <div class="border"></div>
-          <span class="spanActive">阅卷老师</span>
+          <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id)">阅卷老师</span>
           <span class="spanActive">分析</span>
           <div class="border"></div>
           <span class="spanActive">编辑</span>
@@ -77,7 +78,6 @@
           <span @click="del(scope.row.id)">删除</span>
         </div>
       </template>
-
     </el-table-column>
   </el-table>
   <!-- 分页 -->
@@ -86,16 +86,35 @@
       :small="small" background layout="total, sizes, prev, pager, next, jumper" :total="tableData.counts"
       @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
+  <!-- title弹出框 -->
+  <titleDialog ref="dialogTitle" :testNameId="testNameId"  :titleData="titleData" />
+  <!-- visible弹出框 -->
+  <visibleDialog ref="dialogVisible" :visibleTitle="visibleTitle" />
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { testList, testDelete, testDeleteAll, updateState } from '../../api/test'
+import { testList, testDelete, testDeleteAll, updateState, testStart, testGet } from '../../api/test'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router';
 import moment from "moment"
+import titleDialog from './titleDialog/titleDialog.vue'
+import visibleDialog from './visibleDialog/visibleDialog.vue';
 
 const router = useRouter()
+const dialogTitle = ref()
+const dialogVisible = ref()
+const visibleTitle = ref<string>('')
+// 点击学生/可见/阅卷老师
+const visibleDialogFn = async (title: string, id: number) => {
+  console.log(id);
+  let res = await testGet({ id })
+  console.log(res);
+
+  visibleTitle.value = title
+  dialogVisible.value.dialogVisible = true
+}
+
 // 创建考试
 const createTest = () => {
   router.push('/index/testAdd')
@@ -104,6 +123,17 @@ const createTest = () => {
 onMounted(() => {
   getTabList()
 })
+// 点击考试名称
+const titleData = ref({})
+let testNameId = ref<number>(0)
+const titleFn = async (testid: number) => {
+  testNameId.value = testid
+  let res = await testStart({ testid })
+  titleData.value = res.data
+  dialogTitle.value.dialogVisible = true
+}
+
+// 修改状态
 const openState = async (state: number, id: number) => {
   ElMessageBox.confirm(
     '此操作将修改选中的考试状态, 是否继续?',

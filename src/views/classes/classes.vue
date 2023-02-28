@@ -61,7 +61,7 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button @click="closeClass">取消</el-button>
           <el-button type="primary" @click="updateStudent">
             确定
           </el-button>
@@ -79,30 +79,47 @@ import { classeslist, classesdelete, classesdepartment, addClasses } from "../..
 import { ElMessage, ElMessageBox } from "element-plus";
 import cascader from "../../components/common/cascader.vue";
 import type { FormInstance, FormRules } from 'element-plus'
+// 关闭修改弹出框
+const closeClass = ()=>{
+  console.log(1111);
+  
+  ruleForm.depid = 0
+  dialogFormVisible.value = false
+}
 
 // 添加 / 修改 班级
 const classFn = (val: any) => {
   if (val === 0) {
     ruleForm.id = 0
+    ruleForm.name = ''
+    ruleForm.depid = 0
   } else {
     ruleForm.name = val.name
     ruleForm.depid = val.depid
     ruleForm.id = val.id
   }
-
-
   dialogFormVisible.value = true
 }
 // 点击确定 提交
 const updateStudent = () => {
+  console.log({
+        id: ruleForm.id,
+        name: ruleForm.name,
+        depid: ruleForm.depid
+      });
   ruleFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      let res = await addClasses({
+      let res: any = await addClasses({
         id: ruleForm.id,
         name: ruleForm.name,
         depid: ruleForm.depid
       })
       console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage.success('修改成功')
+        list()
+        dialogFormVisible.value = false
+      }
     } else {
       console.log('error submit!')
     }
@@ -118,7 +135,7 @@ const ruleFormRef = ref()
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入班级名称', trigger: 'blur' },
-    { min: 1, max: 5, message: '班级名称为1-15个字符', trigger: 'blur' }
+    { min: 1, max: 8, message: '班级名称为1-8个字符', trigger: 'blur' }
   ],
   depid: [
     {

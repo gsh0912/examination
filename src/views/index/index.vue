@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="name">{{ infoData.info.name }}</div>
-          <div class="name">部门:{{ infoData.info.depname }}</div>
+          <div class="name">部门：{{ infoData.info.depname }}</div>
           <div class="butBox">
             <el-button @click="logout">退出登录</el-button>
           </div>
@@ -60,7 +60,7 @@
           <p>{{ item.name }}</p>
         </div>
       </el-aside>
-      <el-main>
+      <el-main @click="close">
         <router-view />
       </el-main>
     </el-container>
@@ -79,8 +79,11 @@ const data = reactive({
     (item: any) => item.postion === 'left'
   ),
 });
+<<<<<<< HEAD
 // console.log(data.menuList);
 
+=======
+>>>>>>> 471737100f65ab1d89ab172a2f3f431b0ba37295
 interface Imenu {
   checked: boolean;
   children?: [];
@@ -101,11 +104,14 @@ let flag = ref(false);
 const infobox = () => {
   flag.value = !flag.value;
 };
+// 关闭菜单栏
+const close = () => {
+  flag.value = false;
+};
 // 从缓存中读取数据
 const infoData = reactive({
   info: JSON.parse(sessionStorage.getItem('model')!),
 });
-console.log(infoData.info);
 // 退出登录
 const logout = () => {
   window.onbeforeunload = function (e) {
@@ -117,7 +123,7 @@ const logout = () => {
     type: 'success',
   });
   setTimeout(() => {
-    router.push("/login");
+    router.push('/login');
   }, 500);
 };
 </script>
