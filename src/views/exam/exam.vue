@@ -99,8 +99,8 @@ let tableData: ItableData = reactive({
   opentime: 1,
   begindate: '',
   enddate: '',
-  state: 1,
-  isread: 1,
+  state: 0,
+  isread: 0,
   result: '',
 });
 const myList = async () => {
