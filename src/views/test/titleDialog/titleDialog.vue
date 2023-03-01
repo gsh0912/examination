@@ -74,8 +74,10 @@ const checkList = ref(['A', 'B', 'C', 'D'])
 // 导出excel表格
 const exportFn = async () => {
   let res: any = await exportExcel({
-    id: props.testNameId
-  })
+    id: props.testNameId,
+    responseType: 'blob'
+    
+  }, )
   let blob = new Blob([res], { type: 'application/vnd.ms-excel' });
   let url = URL.createObjectURL(blob);
   let a = document.createElement("a");
