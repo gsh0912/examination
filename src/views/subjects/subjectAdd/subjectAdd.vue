@@ -90,7 +90,7 @@ const myData = reactive<any>({
 // 题库下拉框
 const getquestionBank = async () => {
   let res = await reqList();
-  console.log(res);
+  console.log(res); 
   myData.list.questionBank = res.data.list;
 };
 onMounted(() => {
