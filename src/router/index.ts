@@ -31,6 +31,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: '/index/Analyse',
+        component: () => import('../views/test/Analyse/Analyse.vue'),
+        meta: {
+          title: '数据分析',
+        },
+      },
+      {
         path: '/index/testAdd',
         component: () => import('../views/test/testAdd/testAdd.vue'),
         meta: {
