@@ -1,8 +1,7 @@
 <template>
-  <el-dialog v-model="dialogVisible" :title="props.visibleTitle" width="50%">
-    <el-transfer v-model="value"
-    :titles="['全选', '未选']"
-     :data="data" />
+  <el-dialog v-model="dialogVisible" :title="props.visibleTitle" width="40%">
+    <el-transfer v-model="value" :titles="['全选', '未选']" @left-check-change="left" @right-check-change="right"
+      :data="data" />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -15,13 +14,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineExpose, defineProps } from 'vue'
+import { ref, defineExpose, defineProps, onMounted,nextTick } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import { reqStudent } from '../../../api/test'
 
+// 
 const visibleFn = () => {
   dialogVisible.value = false
   console.log(value.value);
-  
 }
 
 // 穿梭框
@@ -31,21 +31,26 @@ interface Option {
   disabled: boolean
 }
 
-const generateData = () => {
-  const data: Option[] = []
-  for (let i = 1; i <= 15; i++) {
-    data.push({
-      key: i,
-      label: `Option ${i}`,
-      disabled: i % 4 === 0,
-    })
-  }
-  return data
+const left = (e: any) => {
+  console.log(e);
+  value.value = value.value.concat(e)
+}
+const right = () => {
+  console.log(111);
+}
+// 点击事件  
+
+const id = ref(0)
+const getStudentList = async () => {
+  let res = await reqStudent({
+    id: id.value
+  })
+  console.log(res.data.list);
 }
 
-const data = ref<Option[]>(generateData())
+const data = ref<Option[]>()
 const value = ref([])
-// 控制dialog显示隐藏
+// 控制dialog显示隐藏 
 const dialogVisible = ref(false)
 // 接受父组件传来的数据
 const props = defineProps({
@@ -56,11 +61,30 @@ const props = defineProps({
 })
 // 暴露自己的属性 用于显示隐藏
 defineExpose({
-  dialogVisible
+  dialogVisible,
+  id,
+  getStudentList
 })
 </script>
-<style scoped>
+<style scoped lang="less">
+.el-transfer {
+  display: flex;
+  justify-content: space-between;
+}
+
+:deep(.el-transfer-panel) {
+  width: 300px;
+
+  .el-transfer-panel__body {
+    height: 400px;
+  }
+}
+
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+
+:deep(.el-transfer__buttons) {
+  display: none;
 }
 </style>

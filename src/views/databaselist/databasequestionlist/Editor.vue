@@ -8,12 +8,12 @@
 
 <script lang="ts" setup>
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted,defineExpose } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 // 内容 HTML
-const valueHtml = ref('')
+const valueHtml = ref('123')
 const toolbarConfig = {}
 const editorConfig = { placeholder: '' }
 // 组件销毁时，也及时销毁编辑器
@@ -26,6 +26,9 @@ const handleCreated = (editor: any) => {
   console.log(editor.children);
   editorRef.value = editor // 记录 editor 实例，重要！
 }
+defineExpose({
+  valueHtml
+})
 </script>   
 
 <style src="@wangeditor/editor/dist/css/style.css"></style>

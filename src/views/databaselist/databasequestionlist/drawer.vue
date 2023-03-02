@@ -14,7 +14,7 @@
         :size="formSize" status-icon>
         <el-form-item label="题干" prop="name">
           <div class="editor">
-            <Editor />
+            <Editor ref="editorRef" />
           </div>
         </el-form-item>
         <div class="Item" v-show="radio === '单选题' || radio === '多选题'">
@@ -61,20 +61,20 @@
         </div>
         <div class="Item" v-show="radio === '填空题' || radio === '问答题'">
           <el-form-item label="解析">
-            <el-input type="textarea" rows="4" style="width:50%"></el-input>
+            <el-input type="textarea" v-model="tags" rows="4" style="width:50%"></el-input>
           </el-form-item>
         </div>
         <el-form-item label="分值" prop="name">
           <div class="score">
-            <el-input-number v-model="num" class="mx-4" :min="1" :max="10" controls-position="right"
+            <el-input-number v-model="scores" class="mx-4" :min="1" :max="10" controls-position="right"
               @change="handleChange" />
           </div>
         </el-form-item>
       </el-form>
       <div class="btns">
-        <el-button type="primary">保存</el-button>
-        <el-button>保存并继续</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="drawer=false">保存</el-button>
+        <el-button @click="drawer=false">保存并继续</el-button>
+        <el-button @click="drawer=false">取消</el-button>
       </div>
 
     </el-drawer>
@@ -89,6 +89,8 @@ import { CircleClose, CirclePlus } from '@element-plus/icons-vue'
 // 表单验证
 import type { FormInstance, FormRules } from 'element-plus'
 
+const editorRef = ref('')
+
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
@@ -100,7 +102,6 @@ const rules = reactive<FormRules>({
     { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
   ]
 })
-
 // 单删选项
 const deleteOneFn = (index: number) => {
   if (state.answers.length === 1) {
@@ -197,7 +198,7 @@ const state = reactive({
 const { answers } = toRefs(state)
 
 // 分值
-const num = ref(1)
+const scores = ref(1)
 const handleChange = (value: number) => {
   console.log(value)
 }
@@ -212,14 +213,25 @@ const estimateAnswer = ref('')
 const drawer = ref<boolean>(false)
 const direction = ref<string>('rtl')
 const title = ref<string>('')
-defineExpose({
-  drawer,
-  title
-})
+
+
+// 问答题解析
+const tags = ref<string>('')
 // 点击旁白或关闭按钮 关闭右侧抽屉
 const handleClose = (done: () => void) => {
   done()
 }
+defineExpose({
+  drawer,
+  title,
+  radio,
+  editorRef,
+  state,
+  rightAnswers,
+  rightcehckboxAnswers,
+  scores,
+  tags
+})
 </script>
 
 <style scoped lang="less">

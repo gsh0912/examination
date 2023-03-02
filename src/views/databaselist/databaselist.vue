@@ -106,7 +106,7 @@ const delFn = (id: number) => {
       }
     })
     .catch(() => {
-      ElMessage.error('删除失败');
+      ElMessage.info('已取消');
     });
 };
 const delAllFn = async () => {

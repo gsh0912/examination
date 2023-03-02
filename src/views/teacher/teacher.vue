@@ -17,9 +17,7 @@
               </div>
             </template>
           </el-upload>
-          
         </div>
-
       </div>
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
         status-icon>

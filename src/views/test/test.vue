@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
 import { testList, testDelete, testDeleteAll, updateState, testStart, testGet } from '../../api/test'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router';
@@ -108,11 +108,15 @@ const dialogVisible = ref()
 const visibleTitle = ref<string>('')
 // 点击学生/可见/阅卷老师
 const visibleDialogFn = async (title: string, id: number) => {
-  console.log(id);
   let res = await testGet({ id })
   console.log(res);
   visibleTitle.value = title
   dialogVisible.value.dialogVisible = true
+  console.log(dialogVisible.value.id);
+  nextTick(() => {
+    dialogVisible.value.id = id
+    dialogVisible.value.getStudentList()
+  })
 }
 
 // 点击分析 跳转页面

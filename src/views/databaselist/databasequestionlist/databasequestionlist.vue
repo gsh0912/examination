@@ -50,7 +50,7 @@
         <el-table-column align="center" prop="admin" label="创建人" />
         <el-table-column align="center" label="操作">
           <template #default="scope">
-            <el-link style="margin-right: 10px" type="primary">编辑</el-link>
+            <el-link style="margin-right: 10px" type="primary" @click="compileFn(scope.row)">编辑</el-link>
             <el-link type="primary" @click="del(scope.row.id)">删除</el-link>
           </template>
         </el-table-column>
@@ -62,7 +62,7 @@
       </div>
     </div>
   </div>
-  <!-- 添加试题抽屉 -->
+  <!-- 添加/编辑试题抽屉 -->
   <drawer ref="leftDrawer" />
   <!-- 添加批量考试试题 -->
   <addDialog ref="addDialogRef" />
@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import moment from 'moment';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import {
   databasequestion,
@@ -82,6 +82,7 @@ import {
 import router from '../../../router';
 import drawer from './drawer.vue';
 import addDialog from './addDialog.vue'
+import { next } from 'dom7';
 
 let route = useRoute();
 //分页数据
@@ -94,6 +95,45 @@ const disabled = ref(false);
 const goBack = () => {
   router.push('/index/databaselist');
 };
+// 点击编辑
+const compileFn = (data: any) => {
+  console.log(data);
+  leftDrawer.value.drawer = true
+  // 判断什么题型
+  leftDrawer.value.radio = data.type
+  nextTick(() => {
+    leftDrawer.value.editorRef.valueHtml = data.title
+  })
+  console.log(data.title);
+
+  // 选项
+  data.answers.forEach((element: any) => {
+    leftDrawer.value.state.answers.forEach((item: any) => {
+      if (item.answerno === element.answerno) {
+        item.content = element.content
+      }
+    })
+  });
+  // 分值
+  leftDrawer.value.scores = data.scores
+
+  // 正确答案
+  // data.answer rightAnswers rightcehckboxAnswers
+  if (data.type === '多选题') {
+    leftDrawer.value.rightcehckboxAnswers = data.answer.split('|')
+  }
+  if (data.type === '单选题') {
+    leftDrawer.value.rightAnswers = data.answer
+  }
+  if (data.type === '判断题') {
+    leftDrawer.value.estimateAnswer = data.answer
+  }
+  if (data.type === '填空题' || data.type === '问答题' ) {
+    leftDrawer.value.tags = data.tags
+  }
+
+}
+
 // 添加试题
 const leftDrawer = ref()
 const addDatabasequestion = () => {
