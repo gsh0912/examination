@@ -72,7 +72,7 @@
           <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id)">可见</span>
           <div class="border"></div>
           <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id)">阅卷老师</span>
-          <span class="spanActive" @click="analyseFn(scope.row.id)">分析</span>
+          <span class="spanActive" @click="analyseFn(scope.row)">分析</span>
           <div class="border"></div>
           <span class="spanActive">编辑</span>
           <div class="border"></div>
@@ -111,17 +111,30 @@ const visibleDialogFn = async (title: string, id: number) => {
   console.log(id);
   let res = await testGet({ id })
   console.log(res);
-
   visibleTitle.value = title
   dialogVisible.value.dialogVisible = true
 }
 
 // 点击分析 跳转页面
-const analyseFn = async (id: number) => {
-  router.push({
-    path: '/index/Analyse',
-    query: { id }
-  })
+const analyseFn = async (data: any) => {
+  if (data.studentcounts == 0) {
+    ElMessage({
+      message: "没有学生考试",
+      type: "error",
+    });
+  } else if (data.incomplete != 0) {
+    ElMessage({
+      message: "该试卷未判完",
+      type: "error",
+    });
+  }
+  else {
+    router.push({
+      path: '/index/Analyse',
+      query: { id: data.id }
+    })
+  }
+
 }
 
 // 创建考试
