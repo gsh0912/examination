@@ -10,15 +10,14 @@
           <el-upload class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple
             :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="3"
             :on-exceed="handleExceed">
-            <el-button  style="margin-right: 15px;" plain>批量添加</el-button>
+            <el-button style="margin-right: 15px;" plain>批量添加</el-button>
             <template #tip>
               <div class="el-upload__tip">
-
               </div>
             </template>
           </el-upload>
           <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
-          
+
         </div>
 
       </div>
@@ -31,7 +30,7 @@
               <el-input v-model="addteacher.name" style="width:400px" />
             </el-form-item>
             <el-form-item label="电话" prop="tel">
-              <el-input v-model="addteacher.tel" style="width:400px; margin-top:20px" />
+              <el-input max="11" v-model="addteacher.tel" style="width:400px; margin-top:20px" />
             </el-form-item>
             <el-form-item label="部门" style="margin-top:15px">
               <el-cascader :options="tertiary.arr" v-model="addteacher.depid" :props="props1" @change="selectCasc"
