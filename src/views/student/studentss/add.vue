@@ -1,6 +1,6 @@
 <template>
-  <el-dialog ref="ruleFormRef" v-model="dialogVisible" title="添加" width="30%">
-    <el-form :model="form" label-width="70px">
+  <el-dialog v-model="dialogVisible" title="添加" width="30%">
+    <el-form :model="form" ref="ruleFormRef" label-width="70px">
       <el-form-item label="姓名">
         <el-input v-model="form.name" />
       </el-form-item>
@@ -39,10 +39,10 @@
 
 <script lang="ts" setup>
 import { Ref, ref, defineExpose, reactive, defineProps, onMounted } from "vue";
-import { ElMessageBox, FormInstance, ElMessage } from "element-plus";
+import { FormInstance, ElMessage } from "element-plus";
 import { studentupdata } from "../../../api/student";
 import { reqList } from "../../../api/department";
-import { it } from "element-plus/es/locale";
+import { classeslist } from "../../../api/classes";
 interface users {
   id: number;
   name: string;
@@ -90,7 +90,6 @@ defineExpose({
 });
 // 子传父
 
-
 // 添加学生
 const ruleFormRef = ref<FormInstance>();
 const addstudent = async (formEl: FormInstance | undefined) => {
@@ -98,7 +97,16 @@ const addstudent = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       // console.log(addData);
-      let res: any = await studentupdata(form);
+      let res: any = await studentupdata({
+        id: form.id,
+        name: form.name, //姓名
+        classid: form.classid, //班级
+        mobile: form.mobile, //手机号
+        username: form.username, //账号
+        pass: form.pass, //密码
+        remarks: form.remarks, //备注
+        depid: form.depid,
+      });
       console.log("添加学生", res);
       if (res.errCode !== 10000) {
         ElMessage({
@@ -124,10 +132,17 @@ const addstudent = async (formEl: FormInstance | undefined) => {
 const department = async () => {
   let res: any = await reqList();
   console.log(res);
-  deparlist.list=res.data.list
+  deparlist.list = res.data.list;
+};
+
+// 班级
+const getdata = async (val: any) => {
+  console.log(val);
+  form.depid = val;
 };
 onMounted(() => {
   department();
+  // getdata();
 });
 </script>
 

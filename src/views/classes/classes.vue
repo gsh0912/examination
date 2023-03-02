@@ -28,10 +28,10 @@
     <div class="classes_table">
       <el-table ref="multipleTableRef" :data="from.tableData" style="width: 100%"
         @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
-        <el-table-column property="name" label="班级名称" />
-        <el-table-column property="depname" label="部门" />
-        <el-table-column property="address" label="操作">
+        <el-table-column type="selection"  align="center" width="55" />
+        <el-table-column property="name" align="center" label="班级名称" />
+        <el-table-column property="depname"  align="center" label="部门" />
+        <el-table-column property="address" align="center" label="操作">
           <template #default="scope">
             <el-button link type="primary" size="small" @click="classFn(scope.row)">修改</el-button>
             <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)">删除</el-button>

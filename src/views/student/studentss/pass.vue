@@ -7,7 +7,7 @@
           <el-step />
         </el-steps>
         <div class="el_box">
-          <p class="p_first">下载 <span>学生信息模板</span> 批量导入试题</p>
+          <p class="p_first">下载 <span @click="downloads">学生信息模板</span> 批量导入试题</p>
           <p class="p_text">
             注:从其他Excel或Word复制试题时请使用选择性粘贴 Word:右键一选择性粘贴-文本，
             Excel:右键一选择性粘贴一只勾选 “值”
@@ -44,6 +44,8 @@ import {
   UploadProps,
   UploadUserFile,
 } from "element-plus";
+import {downLoad} from "../../../utils/downLoad"
+
 
 // 子传父
 let dialogformshow: any = (dialogVisible: Ref<boolean>) => {
@@ -73,6 +75,9 @@ const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
   console.log(uploadFiles);
 };
 // 文件上传
+const downloads=()=>{
+  downLoad("http://estate.eshareedu.cn/exam/upload/question.xlsx")
+}
 </script>
 
 <style scoped lang="less">

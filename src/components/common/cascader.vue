@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps,defineEmits } from 'vue';
 interface Iprops {
   value: string,
   label: string,
@@ -13,13 +13,20 @@ interface Iprops {
 }
 const props = withDefaults(defineProps<{
   cascaderProps: Iprops,
-  options: Array<Iprops>,
-  cascaderChange: Function
+  options: Array<Iprops>
 }>(), {
   cascaderProps: () => {
     return { value: 'id', label: 'name', children: [] }
   }
 })
+const emits=defineEmits(['getDepid'])
+const cascaderChange=(val:any)=>{
+  
+  // console.log(val)
+  emits('getDepid',val)
+  // student.depid=val
+  // console.log(student.depid)
+}
 </script>
 
 <style scoped></style>

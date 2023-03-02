@@ -26,12 +26,16 @@
           <cascader
             :options="options"
             :cascaderProps="cascaderProps"
-            :cascaderChange="cascaderChange"
+            @getDepid="getDepid"
           />
         </el-form-item>
         <el-form-item label="班级">
-          <el-select placeholder="请选择班级">
-            <el-option label="Zone one" value="shanghai" />
+          <el-select placeholder="请选择班级" v-model="student.classid">
+            <el-option
+              v-for="item in student.classlist"
+              :label="item.name"
+              value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -49,14 +53,19 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
-      <el-table-column property="name" label="学生姓名" />
-      <el-table-column property="remark" label="备注" />
-      <el-table-column property="depname" label="所属部门" />
-      <el-table-column property="classname" label="所在班级" />
-      <el-table-column property="pass" label="账号" />
-      <el-table-column property="addtime" label="添加时间" />
-      <el-table-column property="address" label="操作" show-overflow-tooltip>
+      <el-table-column align="center" type="selection" width="55" />
+      <el-table-column align="center" property="name" label="学生姓名" />
+      <el-table-column align="center" property="remark" label="备注" />
+      <el-table-column align="center" property="depname" label="所属部门" />
+      <el-table-column align="center" property="classname" label="所在班级" />
+      <el-table-column align="center" property="pass" label="账号" />
+      <el-table-column align="center" property="addtime" label="添加时间" />
+      <el-table-column
+        align="center"
+        property="address"
+        label="操作"
+        show-overflow-tooltip
+      >
         <template #default="scope">
           <el-button link type="primary" size="small" @click="uppass(scope.row)"
             >重置密码</el-button
@@ -94,7 +103,7 @@
     <pass ref="dialogformshow"></pass>
 
     <!-- 修改 -->
-    <el-dialog ref="ruleFormRef" v-model="student.dialogVisible" title="添加" width="30%">
+    <el-dialog ref="ruleFormRef" v-model="student.dialogVisible" title="修改" width="30%">
       <el-form :model="form" label-width="70px">
         <el-form-item label="姓名">
           <el-input v-model="form.name" />
@@ -109,8 +118,13 @@
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="form.classid" placeholder="please select your zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+            <el-select placeholder="请选择班级">
+              <l-option
+                v-for="item in student.classlist"
+                :label="item.name"
+                value="item.id"
+              />
+            </el-select>
           </el-select>
         </el-form-item>
         <el-form-item label="备注">
@@ -132,12 +146,18 @@
       width="30%"
       align-center
     >
-      <el-form-item label="姓名" prop="pass">{{ password.name }}</el-form-item>
+      <el-form-item label="姓名" prop="name">{{ password.name }}</el-form-item>
       <el-form-item label="新密码" prop="pass">
-        <el-input v-model="password.pass" type="password" label-width="200" autocomplete="off" />
+        <el-input
+          v-model="password.pass"
+          type="password"
+        />
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPass">
-        <el-input v-model="student.oldpass" type="password" label-width="200" autocomplete="off" />
+      <el-form-item label="确认密码" prop="password">
+        <el-input
+          v-model="student.oldpass"
+          type="password"
+        />
       </el-form-item>
       <template #footer>
         <span class="dialog-footer">
@@ -151,12 +171,10 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable, FormInstance } from "element-plus";
+import { ElTable,ElMessage, ElMessageBox} from "element-plus";
 import { reactive, ref, onMounted, toRefs } from "vue";
 import { studentlist, studentdelete, classesdes, studentupdata } from "../../api/student";
-import { classeslist } from "../../api/classes";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { classesdepartment } from "../../api/classes";
+import { classesdepartment, classeslist } from "../../api/classes";
 import add from "./studentss/add.vue";
 import pass from "./studentss/pass.vue";
 import { reqList } from "../../api/department";
@@ -178,6 +196,7 @@ const student = reactive<any>({
   centerDialogVisible: false,
   id: 1,
   list: [],
+  classlist: [],
   dialogVisible: false,
   total: 0,
   page: 1,
@@ -203,11 +222,11 @@ const list = async () => {
   let { data }: any = await studentlist({
     page: student.page,
     psize: student.psize,
+    key: student.key,
+    depid: student.depid,
   });
   student.tableData = data.list;
   student.total = data.counts;
-  data.key = student.key;
-  student.depid = data.depid;
 };
 // 表格
 
@@ -287,7 +306,16 @@ const arrall_del = () => {
       });
     });
 };
-
+const getDepid = async (val: any) => {
+  console.log(val);
+  student.depid = val;
+  console.log(student.depid, "student");
+  const res: any = await classeslist({ depid: student.depid });
+  console.log(res);
+  if (res.errCode === 10000) {
+    student.classlist = res.data.list;
+  }
+};
 // 批量删除
 
 // 添加
@@ -349,6 +377,7 @@ const uponfirm = async () => {
 let id = ref<Number>();
 console.log("111111111111111123", id);
 const cascaderChange = (val: Array<number>) => {
+  console.log(student.depid);
   if (val && val.length) {
     student.depid = val[val.length - 1];
   } else {
@@ -374,18 +403,19 @@ interface IcascaderProps {
   label: string;
   expandTrigger?: string;
   checkStrictly: boolean;
+  emitPath: boolean;
 }
 const cascaderProps = ref<IcascaderProps>({
   label: "name",
   value: "id",
   expandTrigger: "hover" as const,
   checkStrictly: true,
+  emitPath: false,
 });
 // 部门级联
 
 // 搜索
 const searchfn = () => {
-  console.log(student.key);
   list();
 };
 
@@ -393,11 +423,6 @@ const searchfn = () => {
 const centerDialogVisible = ref(false);
 const uppass = (data: any) => {
   student.centerDialogVisible = true;
-  // password.value.name = data.name;
-  // password.value.pass = data.pass;
-  // password.value.oldpass = data.oldpass;
-  // password.value.username=data.username
-  // password.value.checkPass=data.checkPass
   password.value.name = data.name;
   password.value.classid = data.classid;
   password.value.id = data.id;
@@ -413,14 +438,14 @@ const adduppass = async () => {
     pass: password.value.pass,
     username: password.value.username,
   });
-  console.log(2342,res);
-  if(res.errCode===10000){
-    student.centerDialogVisible=false
+  console.log(2342, res);
+  if (res.errCode === 10000) {
+    student.centerDialogVisible = false;
     ElMessage({
       type: "success",
       message: "重置成功",
     });
-    list()
+    list();
   }
 };
 // 重置密码
