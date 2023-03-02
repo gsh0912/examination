@@ -9,6 +9,9 @@
   display: flex;
   justify-content: space-between;
 }
+.header_box {
+  display: flex;
+}
 .el-form {
   display: flex;
 }
