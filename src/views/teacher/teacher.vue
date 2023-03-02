@@ -5,18 +5,19 @@
       <div class="heade">
         <div style="font-size:20px;font-weight: 400;">
           师资管理</div>
-        <div>
+        <div class="header_box">
           <!-- 批量添加 -->
           <el-upload class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple
             :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="3"
             :on-exceed="handleExceed">
-            <el-button>批量添加</el-button>
-            <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
+            <el-button  style="margin-right: 15px;" plain>批量添加</el-button>
             <template #tip>
               <div class="el-upload__tip">
+
               </div>
             </template>
           </el-upload>
+          <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
           
         </div>
 
