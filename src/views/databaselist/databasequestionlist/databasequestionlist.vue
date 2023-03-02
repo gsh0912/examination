@@ -9,8 +9,8 @@
         </template>
       </el-page-header>
       <div>
-        <el-button>添加试题</el-button>
-        <el-button type="primary">批量添加试题</el-button>
+        <el-button @click="addDatabasequestion">添加试题</el-button>
+        <el-button type="primary" @click="addDatabasequestions">批量添加试题</el-button>
       </div>
     </div>
     <div>
@@ -22,12 +22,7 @@
           <el-input v-model="Data.admin" placeholder="请输入创建人" clearable />
         </el-form-item>
         <el-form-item label="题目类型：">
-          <el-select
-            @change="select"
-            v-model="Data.type"
-            placeholder="请选择"
-            clearable
-          >
+          <el-select @change="select" v-model="Data.type" placeholder="请选择" clearable>
             <el-option label="单选题" value="单选题" />
             <el-option label="多选题" value="多选题" />
             <el-option label="判断题" value="判断题" />
@@ -36,19 +31,10 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" @click="search">查询</el-button>
-        <el-button
-          type="danger"
-          @click="delAll"
-          :disabled="multipleSelection.length === 0"
-          >批量删除</el-button
-        >
-        <el-button>导出execel</el-button>
+        <el-button type="danger" @click="delAll" :disabled="multipleSelection.length === 0">批量删除</el-button>
+        <el-button @click="importExcel">导出excel</el-button>
       </el-form>
-      <el-table
-        :data="tableData.list"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table :data="tableData.list" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="题目名称">
           <template #default="scope">
@@ -70,21 +56,16 @@
         </el-table-column>
       </el-table>
       <div class="paging">
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[5, 10, 15, 20]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
+          :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </div>
   </div>
+  <!-- 添加试题抽屉 -->
+  <drawer ref="leftDrawer" />
+  <!-- 添加批量考试试题 -->
+  <addDialog ref="addDialogRef" />
 </template>
 
 <script setup lang="ts">
@@ -96,8 +77,12 @@ import {
   databasequestion,
   databasequestionDel,
   databasequestionDelall,
+  exportExcel
 } from '../../../api/databaselist';
 import router from '../../../router';
+import drawer from './drawer.vue';
+import addDialog from './addDialog.vue'
+
 let route = useRoute();
 //分页数据
 const currentPage = ref(4);
@@ -109,6 +94,35 @@ const disabled = ref(false);
 const goBack = () => {
   router.push('/index/databaselist');
 };
+// 添加试题
+const leftDrawer = ref()
+const addDatabasequestion = () => {
+  leftDrawer.value.drawer = true
+  leftDrawer.value.title = '试题添加'
+}
+// 添加批量试题
+const addDialogRef = ref()
+const addDatabasequestions = () => {
+  addDialogRef.value.dialogVisible = true
+}
+
+// 导出Excel表格
+const importExcel = async () => {
+  const res: any = await exportExcel({
+    id: route.query.id
+  }); //请求接口返回文件流
+  console.log(res);
+  let blob = new Blob([res], { type: 'application/vnd.ms-excel' });
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url;
+  a.setAttribute('download', '123.xlsx');
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 // 列表
 interface Ipaper {
   databaseid: number;
@@ -221,27 +235,33 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
 }
+
 .el-form {
   margin-top: 15px;
   margin-bottom: 10px;
   display: flex;
+
   .el-form-item {
     display: flex;
     align-items: center;
     margin-left: 10px;
+
     .el-input {
       width: 170px;
       height: 30px;
     }
+
     .el-select {
       width: 150px;
       height: 30px;
     }
   }
+
   .el-button {
     margin-left: 10px;
   }
 }
+
 .paging {
   width: 100%;
   display: flex;

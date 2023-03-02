@@ -24,3 +24,8 @@ export const databasequestionDel = (params: any) => {
 export const databasequestionDelall = (data: any) => {
   return post('/api/databasequestion/deleteall', data);
 };
+// 
+export const exportExcel = (params: any = {}, responseType?: Object) => {
+  return get('/api/databasequestion/exportExcel', params, { responseType: 'blob' });
+
+};
