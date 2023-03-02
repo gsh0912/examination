@@ -2,7 +2,7 @@
   <div>
     <!-- 标题 -->
     <header>
-      <div class="back"><span>←</span>返回</div>
+      <div class="back" @click="goBack"><span>←</span>返回</div>
       <div class="headerBorder"></div>
       <div class="title">数据分析:{{ model.title }}</div>
     </header>
@@ -153,10 +153,18 @@
           v-for="(item, index) in lookOver.questions"
           :key="item.id"
         >
-          <span class="typeItem">{{ index + 1 }}.{{ item.type }}</span>
+          <div class="questionType">
+            <div class="type">
+              <div class="num">{{ index + 1 }}</div>
+              <div class="typeTitle">{{ item.type }}</div>
+            </div>
+            <span class="score">分值：{{ item.scores }}</span>
+            <div :class="item.studentscores===0?'zero':'have'">得分:{{ item.studentscores }}</div>
+          </div>
+          <!-- <span class="typeItem">{{ index + 1 }}.{{ item.type }}</span>
           <span class="scoresItem"
             >分值: <span class="scores">{{ item.scores }}</span>
-          </span>
+          </span> -->
           <div class="titleItem" v-html="item.title"></div>
           <div v-if="item.type === '单选题'">
             <!-- 
@@ -262,12 +270,16 @@
 <script setup lang="ts">
 import { getAnalyse, reqStudent, getForResult } from '../../../api/test';
 import { ref, reactive, onMounted, nextTick, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import pieEcharts from './pieEcharts.vue';
 import columnarEcharts from './columnarEcharts.vue';
 import { classesdepartment } from '../../../api/teacher';
 import { classeslist } from '../../../api/classes';
 import moment from 'moment';
+import router from '../../../router';
+const goBack = () => {
+  router.back();
+};
 // tabs默认显示学员统计
 const activeName = ref('student');
 const route = useRoute();
@@ -571,5 +583,57 @@ header {
 .bg {
   background-color: #fcf3f3;
   border: 1px solid #0089ff;
+}
+.questionType {
+  display: flex;
+  align-items: center;
+  .type {
+    height: 20px;
+    width: 80px;
+    border: 1px #3377f9 solid;
+    display: flex;
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: 13px;
+    .num {
+      width: 30%;
+      height: 100%;
+      background-color: #3377f9;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .typeTitle {
+      flex: 1;
+      height: 100%;
+      background-color: #f1f5fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #3377f9;
+    }
+  }
+  .score {
+    font-size: 12px;
+    color: #aca4ab;
+    margin: 0 10px;
+  }
+  .have {
+    font-size: 12px;
+    border: #4cc0a4 1px solid;
+    color: #4cc0a4;
+    border-radius: 3px;
+    padding: 0 5px;
+    height: 16px;
+  }
+  .zero{
+    height: 16px;
+    font-size: 12px;
+    border: #ee0000 solid 1px;
+    border-radius: 3px;
+    color: #e00;
+    padding: 0 5px;
+  }
 }
 </style>

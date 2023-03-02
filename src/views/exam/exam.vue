@@ -95,7 +95,7 @@ let tableData: ItableData = reactive({
   psize: 5,
   key: '',
   admin: '',
-  ismy: 1,
+  ismy: 0,
   opentime: 1,
   begindate: '',
   enddate: '',
