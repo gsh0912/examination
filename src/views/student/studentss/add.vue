@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="添加" width="30%">
-    <el-form :model="form" ref="ruleFormRef" label-width="70px">
+  <el-dialog v-model="dialogVisible" title="添加" width="33%">
+    <el-form :model="form" ref="ruleFormRef" label-width="50px">
       <el-form-item label="姓名">
         <el-input v-model="form.name" />
       </el-form-item>
@@ -8,14 +8,12 @@
         <el-input v-model="form.mobile" />
       </el-form-item>
       <el-form-item label="部门">
-        <el-select v-model="form.depid" placeholder="please select your zone">
+        <el-select v-model="form.depid" placeholder="请选择部门">
           <el-option v-for="item in deparlist.list" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="班级">
         <el-select v-model="form.classid" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
         </el-select>
       </el-form-item>
       <el-form-item label="备注">
@@ -27,13 +25,14 @@
       <el-form-item label="密码">
         <el-input v-model="form.pass" />
       </el-form-item>
-    </el-form>
-    <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="addstudent(ruleFormRef)"> 确定 </el-button>
       </span>
-    </template>
+    </el-form>
+    <!-- <template #footer>
+    
+    </template> -->
   </el-dialog>
 </template>
 
@@ -42,7 +41,6 @@ import { Ref, ref, defineExpose, reactive, defineProps, onMounted } from "vue";
 import { FormInstance, ElMessage } from "element-plus";
 import { studentupdata } from "../../../api/student";
 import { reqList } from "../../../api/department";
-import { classeslist } from "../../../api/classes";
 interface users {
   id: number;
   name: string;
@@ -72,7 +70,7 @@ const deparlist = reactive<any>({
 });
 
 // 接收父组件传来的值
-let props = defineProps({
+let props: any = defineProps({
   getlist: {
     type: Function,
     required: true,
@@ -96,7 +94,6 @@ const addstudent = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      // console.log(addData);
       let res: any = await studentupdata({
         id: form.id,
         name: form.name, //姓名
@@ -107,7 +104,6 @@ const addstudent = async (formEl: FormInstance | undefined) => {
         remarks: form.remarks, //备注
         depid: form.depid,
       });
-      console.log("添加学生", res);
       if (res.errCode !== 10000) {
         ElMessage({
           message: "操作失败！",
@@ -128,11 +124,10 @@ const addstudent = async (formEl: FormInstance | undefined) => {
 };
 
 // 部门列表
-
 const department = async () => {
   let res: any = await reqList();
-  console.log(res);
   deparlist.list = res.data.list;
+  form.depid = res.data.list.depid;
 };
 
 // 班级
@@ -146,4 +141,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.dialog-footer {
+  margin-left: 390px;
+}
+</style>

@@ -5,18 +5,22 @@
       <div class="heade">
         <div style="font-size:20px;font-weight: 400;">
           师资管理</div>
-        <div>
+        <div class="header_box">
           <!-- 批量添加 -->
           <el-upload class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple
             :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="3"
             :on-exceed="handleExceed">
-            <el-button>批量添加</el-button>
-            <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
+            <el-button style="margin-right: 15px;" plain>批量添加</el-button>
             <template #tip>
               <div class="el-upload__tip">
               </div>
             </template>
           </el-upload>
+<<<<<<< HEAD
+=======
+          <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
+
+>>>>>>> cc3a7a43553b5fd64831748eea4a9f538d438abc
         </div>
       </div>
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
@@ -28,7 +32,7 @@
               <el-input v-model="addteacher.name" style="width:400px" />
             </el-form-item>
             <el-form-item label="电话" prop="tel">
-              <el-input v-model="addteacher.tel" style="width:400px; margin-top:20px" />
+              <el-input max="11" v-model="addteacher.tel" style="width:400px; margin-top:20px" />
             </el-form-item>
             <el-form-item label="部门" style="margin-top:15px">
               <el-cascader :options="tertiary.arr" v-model="addteacher.depid" :props="props1" @change="selectCasc"

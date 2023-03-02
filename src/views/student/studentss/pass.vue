@@ -36,11 +36,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineExpose, reactive, defineProps, onMounted } from "vue";
+import { Ref, ref, defineExpose } from "vue";
 import {
-  ElMessageBox,
-  FormInstance,
-  ElMessage,
   UploadProps,
   UploadUserFile,
 } from "element-plus";
@@ -65,14 +62,11 @@ const fileList:any = ref<UploadUserFile[]>([
   },
 ]);
 
-console.log(123,fileList);
 
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
   // fileList.value = fileList.value.slice(-3);
   fileList.value.name=uploadFile.name
   fileList.value.url=uploadFile.url
-  console.log("1111111111111111111",fileList.value.nam);
-  console.log(uploadFiles);
 };
 // 文件上传
 const downloads=()=>{

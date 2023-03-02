@@ -103,8 +103,8 @@
     <pass ref="dialogformshow"></pass>
 
     <!-- 修改 -->
-    <el-dialog ref="ruleFormRef" v-model="student.dialogVisible" title="修改" width="30%">
-      <el-form :model="form" label-width="70px">
+    <el-dialog v-model="student.dialogVisible" title="修改" width="32%">
+      <el-form :model="form" label-width="60px">
         <el-form-item label="姓名">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -112,17 +112,17 @@
           <el-input v-model="form.mobile" />
         </el-form-item>
         <el-form-item label="部门">
-          <el-select v-model="form.depid" placeholder="please select your zone">
+          <el-select v-model="form.depid" placeholder="请选择部门">
             <el-option v-for="item in student.list" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
-          <el-select v-model="form.classid" placeholder="please select your zone">
+          <el-select v-model="form.classid" placeholder="请选择班级">
             <el-select placeholder="请选择班级">
-              <l-option
+              <el-option
                 v-for="item in student.classlist"
                 :label="item.name"
-                value="item.id"
+                :value="item.id"
               />
             </el-select>
           </el-select>
@@ -130,49 +130,36 @@
         <el-form-item label="备注">
           <el-input v-model="form.remarks" type="textarea" />
         </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
+        <span class="dialog-footer footer_qu">
+          <el-button @click="dialog">取消</el-button>
           <el-button type="primary" @click="uponfirm()"> 确定 </el-button>
         </span>
-      </template>
+      </el-form>
     </el-dialog>
 
     <!-- 重置密码 -->
-    <el-dialog
-      v-model="student.centerDialogVisible"
-      title="重置密码"
-      width="30%"
-      align-center
-    >
-      <el-form-item label="姓名" prop="name">{{ password.name }}</el-form-item>
-      <el-form-item label="新密码" prop="pass">
-        <el-input
-          v-model="password.pass"
-          type="password"
-        />
-      </el-form-item>
-      <el-form-item label="确认密码" prop="password">
-        <el-input
-          v-model="student.oldpass"
-          type="password"
-        />
-      </el-form-item>
-      <template #footer>
+    <el-dialog v-model="student.centerDialogVisible" title="重置密码" width="32%">
+      <el-form label-width="75px">
+        <el-form-item label="姓名" prop="name">{{ password.name }}</el-form-item>
+        <el-form-item label="新密码" prop="pass">
+          <el-input v-model="password.pass" type="password" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="password">
+          <el-input v-model="student.oldpass" type="password" />
+        </el-form-item>
         <span class="dialog-footer">
           <el-button @click="student.centerDialogVisible = false">取消</el-button>
           <el-button type="primary" @click="adduppass"> 确定 </el-button>
         </span>
-      </template>
+      </el-form>
     </el-dialog>
     <!-- 重置密码 -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElTable,ElMessage, ElMessageBox} from "element-plus";
-import { reactive, ref, onMounted, toRefs } from "vue";
+import { ElTable, ElMessage, ElMessageBox } from "element-plus";
+import { reactive, ref, onMounted } from "vue";
 import { studentlist, studentdelete, classesdes, studentupdata } from "../../api/student";
 import { classesdepartment, classeslist } from "../../api/classes";
 import add from "./studentss/add.vue";
@@ -190,6 +177,17 @@ const form = ref<any>({
   pass: "",
   classname: "",
   remarks: "",
+});
+
+const ss = reactive({
+  name: "",
+  region: "",
+  date1: "",
+  date2: "",
+  delivery: false,
+  type: [],
+  resource: "",
+  desc: "",
 });
 
 const student = reactive<any>({
@@ -246,14 +244,12 @@ const handleCurrentChange = (val: number) => {
 
 // 删除
 const stu_delete = (id: string) => {
-  console.log(id);
   ElMessageBox.confirm("确定要删除此条消息吗", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: " 取消",
     type: "warning",
   })
     .then(async () => {
-      let res: any = await studentdelete({ id });
       ElMessage({
         type: "success",
         message: "删除成功",
@@ -270,15 +266,11 @@ const stu_delete = (id: string) => {
 // 删除
 
 // 批量删除
-let ids = ref("");
+let ids = ref<any>("");
 const handleSelectionChange = (val: []) => {
-  // multipleSelection.value = val;
-  console.log(val);
   const arr: any = val.map((item: { id: any }) => {
     return item.id;
   });
-
-  console.log(arr);
   ids = arr;
 };
 const arrall_del = () => {
@@ -290,7 +282,6 @@ const arrall_del = () => {
   })
     .then(async () => {
       let res: any = await classesdes(ids);
-      console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
           type: "success",
@@ -307,11 +298,8 @@ const arrall_del = () => {
     });
 };
 const getDepid = async (val: any) => {
-  console.log(val);
   student.depid = val;
-  console.log(student.depid, "student");
   const res: any = await classeslist({ depid: student.depid });
-  console.log(res);
   if (res.errCode === 10000) {
     student.classlist = res.data.list;
   }
@@ -324,7 +312,7 @@ const addstudent = () => {
   dialogshow.value.dialogVisible = true;
 };
 
-// 批量添加
+//添加
 const dialogformshow = ref<any>();
 const addALL = () => {
   dialogformshow.value.dialogVisible = true;
@@ -333,21 +321,23 @@ const addALL = () => {
 
 const department = async () => {
   let res: any = await reqList();
-  console.log(res);
   student.list = res.data.list;
 };
 
 // 修改
-const dialogVisible = ref(false);
+const dialog=()=>{
+  student.dialogVisible=false
+}
 const updatelist = (data: any) => {
   let res = JSON.parse(JSON.stringify(data));
   student.dialogVisible = true;
   form.value.id = res.id;
   form.value.name = res.name;
   form.value.classid = res.classid;
+  form.value.remarks = res.remarks;
   form.value.depid = res.depid;
   form.value.classname = res.classname;
-  (form.value.remarks = res.remarks), (form.value.mobile = res.mobile);
+  form.value.mobile = res.mobile;
   form.value.username = res.username;
 };
 const uponfirm = async () => {
@@ -361,7 +351,6 @@ const uponfirm = async () => {
     mobile: form.value.mobile,
     username: form.value.username,
   });
-  console.log(12312, res);
   if (res.errCode === 10000) {
     ElMessage({
       type: "success",
@@ -375,17 +364,6 @@ const uponfirm = async () => {
 
 // 部门级联
 let id = ref<Number>();
-console.log("111111111111111123", id);
-const cascaderChange = (val: Array<number>) => {
-  console.log(student.depid);
-  if (val && val.length) {
-    student.depid = val[val.length - 1];
-  } else {
-    student.depid = 0;
-  }
-  student.depid = id;
-  list();
-};
 const classes = async () => {
   let res: any = await classesdepartment({});
   if (res.errCode === 10000) {
@@ -420,7 +398,6 @@ const searchfn = () => {
 };
 
 // 重置秘密
-const centerDialogVisible = ref(false);
 const uppass = (data: any) => {
   student.centerDialogVisible = true;
   password.value.name = data.name;
@@ -438,7 +415,6 @@ const adduppass = async () => {
     pass: password.value.pass,
     username: password.value.username,
   });
-  console.log(2342, res);
   if (res.errCode === 10000) {
     student.centerDialogVisible = false;
     ElMessage({

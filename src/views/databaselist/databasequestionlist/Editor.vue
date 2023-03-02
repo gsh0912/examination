@@ -13,7 +13,7 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 // 内容 HTML
-const valueHtml = ref('123')
+const valueHtml = ref('')
 const toolbarConfig = {}
 const editorConfig = { placeholder: '' }
 // 组件销毁时，也及时销毁编辑器
