@@ -79,6 +79,8 @@ const data = reactive({
     (item: any) => item.postion === 'left'
   ),
 });
+// console.log(data.menuList);
+
 interface Imenu {
   checked: boolean;
   children?: [];

@@ -1,4 +1,8 @@
 // 标题
+.title{
+  display: flex;
+  justify-content: space-between;
+}
 .classes_p{
   font-size: 22px;
 }
@@ -8,28 +12,17 @@
   margin-top: 20px
 }
 
+// 表格
+.el-table{
+  :deep(.el-table-column){
+    height: 100px;
+  }
+}
+
+
 // 分页
-.classes_pagsing{
-  width: 100%;
-  // text-align: center;
+.demo-pagination-block{
   display: flex;
-  justify-content: center;
-  margin-top: 22px
-}
-
-.from_width{
-  margin-left: 55px;
-  .el-form-item__content{
-    margin-top: 10px;
-    // height: 60px;
-  }
-}
-.el-dialog {
-  display: flex;
-  text-align: center;
-  /* width: 450px; */
-  .el-form-item {
-    width: 350px;
-  }
-
+justify-content: center;
+margin-top: 30px;
 }

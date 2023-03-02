@@ -31,6 +31,13 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: '/index/Analyse',
+        component: () => import('../views/test/Analyse/Analyse.vue'),
+        meta: {
+          title: '数据分析',
+        },
+      },
+      {
         path: '/index/testAdd',
         component: () => import('../views/test/testAdd/testAdd.vue'),
         meta: {
@@ -54,6 +61,13 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/index/subjects',
         component: () => import('../views/subjects/subjects.vue'),
+        meta: {
+          title: '试卷管理',
+        },
+      },
+      {
+        path: '/index/subjectAdd',
+        component: () => import('../views/subjects/subjectAdd/subjectAdd.vue'),
         meta: {
           title: '试卷管理',
         },

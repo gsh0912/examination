@@ -26,8 +26,6 @@
             </div>
           </div>
           <div class="checkbox" v-if="item.type === '多选题'">
-          {{item.studentanswer}}
-          {{item.answerno}}
             <div class="checkboxItem" v-for="data in item.answers" :key="data.id" @click="checkboxFn(item, data)"
               :class="item.studentanswer ? (item.studentanswer.includes(data.answerno) ? 'checkboxchecked' : '') : ''">
               <div class="checkboxleft"
@@ -70,7 +68,7 @@
       </div>
       <div class="bottom">
         <p> 共 <span>{{ okDone }}</span>题,剩余<span>{{ okDone - done }}</span>题未完成</p>
-        <el-button type="primary">交卷</el-button>
+        <el-button type="primary" @click="testPaper">交卷</el-button>
       </div>
     </div>
   </div>
@@ -85,6 +83,10 @@ onMounted(() => {
   getTopic()
 })
 const radioFlag = ref<boolean>(false)
+// 点击提交试卷 
+const testPaper = ()=>{
+  console.log( topic.topicList);
+}
 
 
 //判断题点击事件

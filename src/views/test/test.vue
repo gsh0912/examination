@@ -7,7 +7,8 @@
   </header>
   <!-- 搜索 -->
   <div class="search">
-    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable @keyup.enter="searchFn"/>
+    关键字 <el-input v-model="tableData.listConfig.key" placeholder="考试名称" style="width:130px;margin:0 10px;" clearable
+      @keyup.enter="searchFn" />
     创建人 <el-input v-model="tableData.listConfig.admin" @input="inpAdmin" placeholder="创建人"
       style="width:130px;margin:0 10px;" clearable />
     <div class="ismy">
@@ -71,7 +72,7 @@
           <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id)">可见</span>
           <div class="border"></div>
           <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id)">阅卷老师</span>
-          <span class="spanActive">分析</span>
+          <span class="spanActive" @click="analyseFn(scope.row.id)">分析</span>
           <div class="border"></div>
           <span class="spanActive">编辑</span>
           <div class="border"></div>
@@ -87,7 +88,7 @@
       @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
   <!-- title弹出框 -->
-  <titleDialog ref="dialogTitle" :titleData="titleData" />
+  <titleDialog ref="dialogTitle" :testNameId="testNameId" :titleData="titleData" />
   <!-- visible弹出框 -->
   <visibleDialog ref="dialogVisible" :visibleTitle="visibleTitle" />
 </template>
@@ -115,6 +116,14 @@ const visibleDialogFn = async (title: string, id: number) => {
   dialogVisible.value.dialogVisible = true
 }
 
+// 点击分析 跳转页面
+const analyseFn = async (id: number) => {
+  router.push({
+    path: '/index/Analyse',
+    query: { id }
+  })
+}
+
 // 创建考试
 const createTest = () => {
   router.push('/index/testAdd')
@@ -125,7 +134,9 @@ onMounted(() => {
 })
 // 点击考试名称
 const titleData = ref({})
+let testNameId = ref<number>(0)
 const titleFn = async (testid: number) => {
+  testNameId.value = testid
   let res = await testStart({ testid })
   titleData.value = res.data
   dialogTitle.value.dialogVisible = true

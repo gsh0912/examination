@@ -1,15 +1,21 @@
 <template>
   <div>
     <!-- 标题 -->
-    <p class="classes_p">班级管理</p>
+    <div class="title">
+      <p class="classes_p">班级管理</p>
+      <p>
+        <el-button @click="addALL">批量添加</el-button>
+        <el-button type="primary" @click="addstudent">添加学生</el-button>
+      </p>
+    </div>
     <!-- 标题 -->
 
     <!-- 搜索 -->
     <div class="classes_search">
-      <el-form :inline="true" :model="from" class="demo-form-inline">
+      <el-form :inline="true" :model="student" class="demo-form-inline">
         <el-form-item label="班级名称">
           <el-input
-            v-model="from.config.key"
+            v-model="student.key"
             @keyup.enter.native="searchfn"
             @submit.native.prevent
             clearable
@@ -17,285 +23,246 @@
           />
         </el-form-item>
         <el-form-item label="部门">
-          <el-cascader :options="options" :props="props1" clearable />
+          <cascader
+            :options="options"
+            :cascaderProps="cascaderProps"
+            :cascaderChange="cascaderChange"
+          />
         </el-form-item>
         <el-form-item label="班级">
-          <el-select v-model="from.name" placeholder="please select your zone">
+          <el-select placeholder="请选择班级">
             <el-option label="Zone one" value="shanghai" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
-          <el-button type="danger" disabled>批量删除</el-button>
+          <el-button type="danger" @click="arrall_del">批量删除</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 搜索 -->
 
     <!-- 表格 -->
-    <div class="classes_table">
-      <el-table
-        ref="multipleTableRef"
-        :data="from.tableData"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column property="name" label="学生姓名" />
-        <el-table-column property="pass" label="备注" />
-        <el-table-column property="classname"  label="所属部门" />
-        <el-table-column property="depname"  label="所在班级" />
-        <el-table-column property="username" label="账号" />
-        <el-table-column property="addtime" label="添加时间" />
-        <el-table-column property="address"  label="操作">
-          <template #default="scope">
-            <el-button link type="primary" size="small" @click="uppassword(scope.row)"
-              >重置密码</el-button
-            >
-            <el-button link type="primary" size="small" @click="updatelist(scope.row)"
-              >修改</el-button
-            >
-            <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <el-table
+      ref="multipleTableRef"
+      :data="student.tableData"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column property="name" label="学生姓名" />
+      <el-table-column property="remark" label="备注" />
+      <el-table-column property="depname" label="所属部门" />
+      <el-table-column property="classname" label="所在班级" />
+      <el-table-column property="pass" label="账号" />
+      <el-table-column property="addtime" label="添加时间" />
+      <el-table-column property="address" label="操作" show-overflow-tooltip>
+        <template #default="scope">
+          <el-button link type="primary" size="small" @click="uppass(scope.row)"
+            >重置密码</el-button
+          >
+          <el-button link type="primary" size="small" @click="updatelist(scope.row)"
+            >修改</el-button
+          >
+          <el-button link type="primary" size="small" @click="stu_delete(scope.row.id)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
     <!-- 表格 -->
 
     <!-- 分页 -->
-    <div class="classes_pagsing">
+    <div class="demo-pagination-block">
       <el-pagination
         v-model:current-page="currentPage4"
         v-model:page-size="pageSize4"
         :page-sizes="[10, 20, 30, 40]"
-        :small="small"
-        :disabled="disabled"
         :background="background"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="from.total"
+        :total="student.total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
     </div>
     <!-- 分页 -->
 
-    <!-- 修改弹窗 -->
-    <el-dialog v-model="from.dialogFormVisible" width="30%" title="修改">
-      <el-form :model="from" class="from_width">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="from.updata.name" />
+    <!-- 添加 -->
+    <add ref="dialogshow" :getlist="list"></add>
+
+    <!-- 重置密码 -->
+    <pass ref="dialogformshow"></pass>
+
+    <!-- 修改 -->
+    <el-dialog ref="ruleFormRef" v-model="student.dialogVisible" title="添加" width="30%">
+      <el-form :model="form" label-width="70px">
+        <el-form-item label="姓名">
+          <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="电话" prop="region">
-          <el-input v-model="from.updata.mobile" />
+        <el-form-item label="电话">
+          <el-input v-model="form.mobile" />
         </el-form-item>
         <el-form-item label="部门">
-          <el-select v-model="from.updata.classid">
-            <el-option
-              v-for="item in from.carlist"
-              :label="item.label"
-              :value="item.name"
-            />
+          <el-select v-model="form.depid" placeholder="please select your zone">
+            <el-option v-for="item in student.list" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="班级" v-model="from.updata.classid">
-          <el-select>
-            <el-option label="" value="" />
+        <el-form-item label="班级">
+          <el-select v-model="form.classid" placeholder="please select your zone">
+            <el-option label="Zone one" value="shanghai" />
+            <el-option label="Zone two" value="beijing" />
           </el-select>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" />
+          <el-input v-model="form.remarks" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="uplist"> 确定 </el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="uponfirm()"> 确定 </el-button>
         </span>
       </template>
     </el-dialog>
-    <!-- 修改弹窗 -->
 
-    <!-- 重置密码弹窗 -->
-    <el-dialog v-model="from.centerDialogVisible" title="重置密码" width="30%">
-      <el-form
-        ref="ruleFormRef"
-        :model="from.updata"
-        status-icon
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="姓名" prop="pass">
-          {{ from.passw.name }}
-        </el-form-item>
-        <el-form-item label="新密码" prop="pass">
-          <el-input v-model="from.passw.pass" type="password" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="确认密码" prop="checkPass">
-          <el-input v-model="from.passw.oldpass" type="password" autocomplete="off" />
-        </el-form-item>
-      </el-form>
+    <!-- 重置密码 -->
+    <el-dialog
+      v-model="student.centerDialogVisible"
+      title="重置密码"
+      width="30%"
+      align-center
+    >
+      <el-form-item label="姓名" prop="pass">{{ password.name }}</el-form-item>
+      <el-form-item label="新密码" prop="pass">
+        <el-input v-model="password.pass" type="password" label-width="200" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="确认密码" prop="checkPass">
+        <el-input v-model="student.oldpass" type="password" label-width="200" autocomplete="off" />
+      </el-form-item>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="from.centerDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="uppass()"> 确定 </el-button>
+          <el-button @click="student.centerDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="adduppass"> 确定 </el-button>
         </span>
       </template>
     </el-dialog>
-    <!-- 重置密码弹窗 -->
+    <!-- 重置密码 -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ElTable, FormInstance } from "element-plus";
-import { reactive, ref, onMounted } from "vue";
-import {
-  studentlist,
-  studentdelete,
-  studentupdata,
-  classesdepartment,
-} from "../../api/student";
+import { reactive, ref, onMounted, toRefs } from "vue";
+import { studentlist, studentdelete, classesdes, studentupdata } from "../../api/student";
+import { classeslist } from "../../api/classes";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { classesdepartment } from "../../api/classes";
+import add from "./studentss/add.vue";
+import pass from "./studentss/pass.vue";
+import { reqList } from "../../api/department";
+import cascader from "../../components/common/cascader.vue";
 
-// 搜索
-const from = reactive({
-  id: 0,
-  dialogFormVisible: false, //修改弹窗
-  centerDialogVisible: false, //重置弹窗
-  disabled: false,
+const form = ref<any>({
+  id: 1,
   name: "",
+  classid: "",
   depid: "",
-  tableData: [], //表格数据
-  carlist: [] as any[],
-  //修改数据
-  updata: {
-    id: 1,
-    name: "",
-    classid: "",
-    mobile: "",
-    username: "",
-    pass: "",
-    classname: "",
-  },
-  total: 0,
-  //分页搜索
-  config: {
-    depid: "",
-    key: "",
-    page: 1,
-    psize: 10,
-  },
-  passw: {
-    oldpass: "",
-    pass: "",
-    checkPass: "",
-    id: 0,
-    name: "",
-    classid: "",
-    username: "",
-  },
+  mobile: "",
+  username: "",
+  pass: "",
+  classname: "",
+  remarks: "",
 });
 
-// 搜索
-const searchfn = () => {};
-// 搜索
+const student = reactive<any>({
+  centerDialogVisible: false,
+  id: 1,
+  list: [],
+  dialogVisible: false,
+  total: 0,
+  page: 1,
+  psize: 10,
+  key: "",
+  depid: "",
+  classid: "",
+  tableData: [],
+});
 
-// 部门级联
-const classes = async () => {
-  let res: any = await classesdepartment({});
-  console.log(111, 2, res);
-  if (res.errCode === 10000) {
-    from.carlist = res.data.list;
-  }
-};
-const props1 = {
-  lazy: true,
-  checkStrictly: true,
-};
-const options: any = [
-  {
-    value: "",
-    label: "",
-    children: [],
-  },
-];
-// 部门级联
-
+const password = ref({
+  oldpass: "",
+  pass: "",
+  checkPass: "",
+  id: 0,
+  name: "",
+  classid: "",
+  username: "",
+});
 
 // 表格
-interface User {
-  date: string;
-  name: string;
-  address: string;
-}
-const multipleTableRef = ref<InstanceType<typeof ElTable>>();
-const multipleSelection = ref<User[]>([]);
-const toggleSelection = (rows?: User[]) => {
-};
-const handleSelectionChange = (val: User[]) => {
-  multipleSelection.value = val;
-};
-// 表格
-
-// 列表请求
 const list = async () => {
-  let res: any = await studentlist({
-    page: from.config.page,
-    psize: from.config.psize,
+  let { data }: any = await studentlist({
+    page: student.page,
+    psize: student.psize,
   });
-  console.log(res);
-  if (res.errCode === 10000) {
-    from.tableData = res.data.list;
-    from.total = res.data.counts;
-  }
+  student.tableData = data.list;
+  student.total = data.counts;
+  data.key = student.key;
+  student.depid = data.depid;
 };
-// 列表请求
+// 表格
 
 // 分页
-const currentPage4 = ref(1); //默认页
-const pageSize4 = ref(10); //默认条
-const small = ref(false); //按钮大小
-const background = ref(true); //是否开启背景颜色
-const disabled = ref(false); //是否禁用
+const currentPage4 = ref(1);
+const pageSize4 = ref(10);
+const background = ref(true);
 const handleSizeChange = (val: number) => {
-  from.config.psize = val;
+  student.psize = val;
   list();
 };
 const handleCurrentChange = (val: number) => {
-  from.config.page = val;
+  student.page = val;
   list();
 };
 // 分页
 
-
-// 批量删除
-const open = () => {
-  ElMessageBox.confirm("确定要删除选定的班级？", {
+// 删除
+const stu_delete = (id: string) => {
+  console.log(id);
+  ElMessageBox.confirm("确定要删除此条消息吗", "提示", {
     confirmButtonText: "确定",
-    cancelButtonText: "取消",
+    cancelButtonText: " 取消",
     type: "warning",
-    center: false,
   })
-    .then(() => {
+    .then(async () => {
+      let res: any = await studentdelete({ id });
       ElMessage({
         type: "success",
         message: "删除成功",
       });
+      list();
     })
     .catch(() => {
       ElMessage({
-        type: "error",
-        message: "已取消删除",
+        type: "info",
+        message: "取消删除",
       });
     });
 };
+// 删除
+
 // 批量删除
+let ids = ref("");
+const handleSelectionChange = (val: []) => {
+  // multipleSelection.value = val;
+  console.log(val);
+  const arr: any = val.map((item: { id: any }) => {
+    return item.id;
+  });
 
-
-// 单个删除
-const deleclasses = (index: any) => {
-  console.log(index);
+  console.log(arr);
+  ids = arr;
+};
+const arrall_del = () => {
   ElMessageBox.confirm("确定要删除选定的班级？", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
@@ -303,7 +270,7 @@ const deleclasses = (index: any) => {
     center: false,
   })
     .then(async () => {
-      let res: any = await studentdelete({ id: index });
+      let res: any = await classesdes(ids);
       console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
@@ -320,68 +287,148 @@ const deleclasses = (index: any) => {
       });
     });
 };
-// 单个删除
 
+// 批量删除
+
+// 添加
+let dialogshow = ref<any>();
+const addstudent = () => {
+  dialogshow.value.dialogVisible = true;
+};
+
+// 批量添加
+const dialogformshow = ref<any>();
+const addALL = () => {
+  dialogformshow.value.dialogVisible = true;
+};
+// 添加
+
+const department = async () => {
+  let res: any = await reqList();
+  console.log(res);
+  student.list = res.data.list;
+};
 
 // 修改
-const dialogFormVisible = ref(false);
+const dialogVisible = ref(false);
 const updatelist = (data: any) => {
-  from.dialogFormVisible = true;
-  from.updata = data;
+  let res = JSON.parse(JSON.stringify(data));
+  student.dialogVisible = true;
+  form.value.id = res.id;
+  form.value.name = res.name;
+  form.value.classid = res.classid;
+  form.value.depid = res.depid;
+  form.value.classname = res.classname;
+  (form.value.remarks = res.remarks), (form.value.mobile = res.mobile);
+  form.value.username = res.username;
 };
-const uplist = async () => {
-  if (from.id === 1) {
-    let res: any = await studentupdata({
-      id: from.updata.id,
-      name: from.updata.name,
-      mobile: from.updata.mobile,
-      classid: from.updata.classid,
+const uponfirm = async () => {
+  let res: any = await studentupdata({
+    id: form.value.id,
+    name: form.value.name,
+    classid: form.value.classid,
+    depid: form.value.depid,
+    classname: form.value.classname,
+    remarks: form.value.remarks,
+    mobile: form.value.mobile,
+    username: form.value.username,
+  });
+  console.log(12312, res);
+  if (res.errCode === 10000) {
+    ElMessage({
+      type: "success",
+      message: "修改成功",
     });
-    if (res.errCode === 10000) {
-      ElMessage({
-        type: "success",
-        message: "修改成功",
-      });
-      from.dialogFormVisible = false;
-      list();
-    }
+    list();
+    student.dialogVisible = false;
   }
 };
 // 修改
 
-
-// 重置密码
-const uppassword = (data: any) => {
-  console.log(data);
-  from.passw.name = data.name;
-  from.passw.classid = data.classid;
-  from.passw.id = data.id;
-  from.passw.oldpass = data.oldpass;
-  from.passw.username = data.username;
-  from.centerDialogVisible = true;
+// 部门级联
+let id = ref<Number>();
+console.log("111111111111111123", id);
+const cascaderChange = (val: Array<number>) => {
+  if (val && val.length) {
+    student.depid = val[val.length - 1];
+  } else {
+    student.depid = 0;
+  }
+  student.depid = id;
+  list();
 };
-const uppass = async () => {
-  if (from.id === 0) {
-    let res: any = await studentupdata({
-      classid: from.passw.classid,
-      id: from.passw.id,
-      name: from.passw.name,
-      oldpass: from.passw.pass,
-      pass: from.passw.pass,
-      username: from.passw.username,
+const classes = async () => {
+  let res: any = await classesdepartment({});
+  if (res.errCode === 10000) {
+    options.value = res.data.list;
+  }
+};
+interface Iprops {
+  value: string;
+  label: string;
+  children?: [];
+}
+const options = ref<Array<Iprops>>([]);
+interface IcascaderProps {
+  value: string;
+  label: string;
+  expandTrigger?: string;
+  checkStrictly: boolean;
+}
+const cascaderProps = ref<IcascaderProps>({
+  label: "name",
+  value: "id",
+  expandTrigger: "hover" as const,
+  checkStrictly: true,
+});
+// 部门级联
+
+// 搜索
+const searchfn = () => {
+  console.log(student.key);
+  list();
+};
+
+// 重置秘密
+const centerDialogVisible = ref(false);
+const uppass = (data: any) => {
+  student.centerDialogVisible = true;
+  // password.value.name = data.name;
+  // password.value.pass = data.pass;
+  // password.value.oldpass = data.oldpass;
+  // password.value.username=data.username
+  // password.value.checkPass=data.checkPass
+  password.value.name = data.name;
+  password.value.classid = data.classid;
+  password.value.id = data.id;
+  password.value.oldpass = data.oldpass;
+  password.value.username = data.username;
+};
+const adduppass = async () => {
+  let res: any = await studentupdata({
+    classid: password.value.classid,
+    id: password.value.id,
+    name: password.value.name,
+    oldpass: password.value.pass,
+    pass: password.value.pass,
+    username: password.value.username,
+  });
+  console.log(2342,res);
+  if(res.errCode===10000){
+    student.centerDialogVisible=false
+    ElMessage({
+      type: "success",
+      message: "重置成功",
     });
-    console.log(1111, res);
+    list()
   }
 };
 // 重置密码
-
-
 onMounted(() => {
   list();
+  department();
   classes();
 });
-
-
 </script>
 <style scoped>
 @import url("./student.css");
