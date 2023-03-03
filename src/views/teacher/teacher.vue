@@ -101,6 +101,7 @@
         layout="total, sizes, prev, pager, next, jumper" :total="ruleForm.counts" @size-change="handleSizeChange"
         @current-change="handleCurrentChange" class="paging" />
     </div>
+    <!-- 重置密码 -->
     <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm"
       :hide-required-asterisk="false">
       <el-dialog v-model="centerDialogVisible" title="重置密码" width="30%">
@@ -161,6 +162,7 @@ const props1 = {
   checkStrictly: true,
 };
 const roless = ref("");
+
 const addteacher = reactive({
   id: 0,
   username: "",
@@ -171,7 +173,7 @@ const addteacher = reactive({
   roleid: "",
   depids: ''
 });
-// 记住以后分开写不要写一起
+
 const ruleForm = reactive({
   psize: 10,
   page: 1,
@@ -240,7 +242,7 @@ list();
 //   console.log(res);
 //   list()
 // }
-// 弹框
+// 删除弹框
 const delet = (id: any) => {
   ElMessageBox.confirm("确定要删除该账号吗?", "提示", {
     confirmButtonText: "确定",
@@ -390,16 +392,16 @@ const rest = async (data: any) => {
 };
 const amend = () => { };
 // 批量上传
-// const fileList = ref<UploadUserFile[]>([
-//   {
-//     name: 'element-plus-logo.svg',
-//     url: 'https://element-plus.org/images/element-plus-logo.svg',
-//   },
-//   {
-//     name: 'element-plus-logo2.svg',
-//     url: 'https://element-plus.org/images/element-plus-logo.svg',
-//   },
-// ])
+const fileList = ref<UploadUserFile[]>([
+  {
+    name: 'element-plus-logo.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+  {
+    name: 'element-plus-logo2.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+])
 
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
   console.log(file, uploadFiles)
