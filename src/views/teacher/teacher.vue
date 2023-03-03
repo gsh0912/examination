@@ -16,11 +16,9 @@
               </div>
             </template>
           </el-upload>
-<<<<<<< HEAD
-=======
           <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
 
->>>>>>> cc3a7a43553b5fd64831748eea4a9f538d438abc
+
         </div>
       </div>
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
