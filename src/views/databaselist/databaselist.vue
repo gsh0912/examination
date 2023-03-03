@@ -58,7 +58,7 @@
         <span class="isActive" @click="delFn(scope.row.id)">删除</span>
       </template>
     </el-table-column>
-    />
+
   </el-table>
   <!-- 分页 -->
   <div class="pagination">

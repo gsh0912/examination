@@ -40,7 +40,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
-          <el-button type="danger" @click="arrall_del">批量删除</el-button>
+          <el-button type="danger" :disabled="student.disabled" @click="arrall_del">批量删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -188,6 +188,7 @@ const ss = reactive({
   type: [],
   resource: "",
   desc: "",
+
 });
 
 const student = reactive<any>({
@@ -203,6 +204,7 @@ const student = reactive<any>({
   depid: "",
   classid: "",
   tableData: [],
+  disabled:true
 });
 
 const password = ref({
@@ -269,6 +271,7 @@ const stu_delete = (id: string) => {
 let ids = ref<any>("");
 const handleSelectionChange = (val: []) => {
   const arr: any = val.map((item: { id: any }) => {
+    student.disabled=false
     return item.id;
   });
   ids = arr;
