@@ -15,12 +15,6 @@
               </div>
             </template>
           </el-upload>
-<<<<<<< HEAD
-=======
-          <el-button type="primary" @click="onShow" style="float:right">添加教资</el-button>
-
-
->>>>>>> bfff4056fa9676c5d33cdee6ed81dd15c1b0feb3
         </div>
       </div>
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
@@ -112,7 +106,7 @@
           </el-form-item>
 
           <el-form-item label="密码" style="margin-top:20px" prop="pass">
-            <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
+            <el-input v-model="ruleForm.pass" type="password" autocomplete="off"/>
           </el-form-item>
           <el-form-item label="确认密码" prop="checkPass">
             <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" />
