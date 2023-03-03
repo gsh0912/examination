@@ -39,3 +39,7 @@ export const reqStudent = (params: any = {}) => {
 export const getForResult = (parms: any) => {
   return get('/api/test/getForResult', parms);
 };
+// 创建考试
+export const testAdd = (data: any) => {
+  return post('/api/test/add', data);
+};
