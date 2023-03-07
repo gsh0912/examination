@@ -162,12 +162,19 @@ const compileFn = (data: any) => {
   console.log(data.title);
 };
 
-// 添加试题
+// 添加试题 点击时清空上次数据
 const addDatabasequestion = () => {
   flag.value = true;
   nextTick(() => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.title = '试题添加';
+    leftDrawer.value.radio = '单选题';
+    leftDrawer.value.rightAnswers = ''
+    leftDrawer.value.scores = 1
+    leftDrawer.value.EditorRef.valueHtml ? leftDrawer.value.EditorRef.valueHtml = '' : ''
+    leftDrawer.value.state.answers.forEach((item: any) => {
+      item.content = ''
+    })
   });
 };
 // 添加批量试题

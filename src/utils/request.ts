@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+// 添加loding效果
+import { ElLoading } from 'element-plus'
 interface McAxiosRequestConfig extends AxiosRequestConfig {
-
   extraConfig?: {
     tokenRetryCount: number; // 标记当前请求的csrf token重试次数
   };
@@ -17,6 +18,8 @@ const config: McAxiosRequestConfig = {
 
 
 const instance = axios.create(config);
+// 创建全局loding实例
+let loadingInstance:any = null
 
 instance.interceptors.request.use(async (config: any) => {
   if (!config.extraConfig?.tokenRetryCount) {
@@ -25,11 +28,16 @@ instance.interceptors.request.use(async (config: any) => {
     };
   }
   (config.headers as any)["Authorization"] = <string>sessionStorage.getItem("token");
+  loadingInstance = ElLoading.service({
+    lock: true,
+    text: "加载中……"
+  });
   return config;
 });
 
 instance.interceptors.response.use(
   (response) => {
+    loadingInstance.close()
     return response.data;
   },
   async (err: any) => {
@@ -61,12 +69,14 @@ instance.interceptors.response.use(
           break;
       }
     }
+    loadingInstance.close()
     return err.response;
   }
+
 );
 
-const get = (url: string, params?: any,responseType?:any): Promise<AxiosResponse<any>> => {
-  return instance.get(url, { params,...responseType });
+const get = (url: string, params?: any, responseType?: any): Promise<AxiosResponse<any>> => {
+  return instance.get(url, { params, ...responseType });
 }
 const post = (url: string, data?: any, config?: any): Promise<AxiosResponse<any>> => {
   return instance.post(url, data, config);

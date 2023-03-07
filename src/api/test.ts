@@ -39,7 +39,11 @@ export const reqStudent = (params: any = {}) => {
 export const getForResult = (parms: any) => {
   return get('/api/test/getForResult', parms);
 };
-// 创建考试
-export const testAdd = (data: any) => {
-  return post('/api/test/add', data);
+// 获取老师列表 
+export const getTeacher = (parms: any = {}) => {
+  return get('/api/teacher/list', parms);
+};
+// 获取考试阅卷老师
+export const getMarkTeachers = (parms: any = {}) => {
+  return get('/api/test/getmarkteachers', parms);
 };

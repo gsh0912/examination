@@ -67,11 +67,11 @@
     <el-table-column label="操作" width="160">
       <template #default="scope">
         <div class="operate">
-          <span class="spanActive" @click="visibleDialogFn('学生可见列表', scope.row.id)">学生</span>
+          <span class="spanActive" @click="visibleDialogFn('学生可见列表', scope.row.id,'学生')">学生</span>
           <div class="border"></div>
-          <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id)">可见</span>
+          <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id, '可见')">可见</span>
           <div class="border"></div>
-          <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id)">阅卷老师</span>
+          <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id, '阅卷老师')">阅卷老师</span>
           <span class="spanActive" @click="analyseFn(scope.row)">分析</span>
           <div class="border"></div>
           <span class="spanActive">编辑</span>
@@ -107,7 +107,7 @@ const dialogTitle = ref()
 const dialogVisible = ref()
 const visibleTitle = ref<string>('')
 // 点击学生/可见/阅卷老师
-const visibleDialogFn = async (title: string, id: number) => {
+const visibleDialogFn = async (title: string, id: number, flag: string) => {
   let res = await testGet({ id })
   console.log(res);
   visibleTitle.value = title
@@ -116,6 +116,9 @@ const visibleDialogFn = async (title: string, id: number) => {
   nextTick(() => {
     dialogVisible.value.id = id
     dialogVisible.value.getStudentList()
+    dialogVisible.value.formFlag = flag
+    dialogVisible.value.getDepartmentList()
+    dialogVisible.value.state.searchForm.depid = '请选择'
   })
 }
 
