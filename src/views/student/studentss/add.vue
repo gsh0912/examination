@@ -1,28 +1,39 @@
 <template>
   <el-dialog v-model="dialogVisible" title="添加" width="33%">
-    <el-form :model="form" ref="ruleFormRef" label-width="50px">
-      <el-form-item label="姓名">
+    <el-form :model="form" ref="ruleFormRef" :rules="rules" label-width="70px">
+      <el-form-item label="姓名" prop="name">
         <el-input v-model="form.name" />
       </el-form-item>
-      <el-form-item label="电话">
+      <el-form-item label="电话" prop="mobile">
         <el-input v-model="form.mobile" />
       </el-form-item>
-      <el-form-item label="部门">
-        <el-select v-model="form.depid" placeholder="请选择部门">
-          <el-option v-for="item in deparlist.list" :label="item.name" :value="item.id" />
+      <el-form-item label="部门" prop="depid">
+        <el-select v-model="form.depid" value-key="id" placeholder="请选择部门">
+          <el-option
+            v-for="item in deparlist.list"
+            :label="item.name"
+            :value="item.id"
+            :key="item.id"
+            @click.native="changeGateway(item)"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="班级">
+      <el-form-item label="班级" prop="classid">
         <el-select v-model="form.classid" placeholder="please select your zone">
+          <el-option
+            v-for="item in deparlist.classlist"
+            :label="item.name"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="备注">
+      <el-form-item label="备注" prop="remarks">
         <el-input v-model="form.remarks" type="textarea" />
       </el-form-item>
-      <el-form-item label="账号">
+      <el-form-item label="账号" prop="username">
         <el-input v-model="form.username" />
       </el-form-item>
-      <el-form-item label="密码">
+      <el-form-item label="密码" prop="pass">
         <el-input v-model="form.pass" />
       </el-form-item>
       <span class="dialog-footer">
@@ -30,17 +41,15 @@
         <el-button type="primary" @click="addstudent(ruleFormRef)"> 确定 </el-button>
       </span>
     </el-form>
-    <!-- <template #footer>
-    
-    </template> -->
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { Ref, ref, defineExpose, reactive, defineProps, onMounted } from "vue";
-import { FormInstance, ElMessage } from "element-plus";
+import { FormInstance, ElMessage, FormRules } from "element-plus";
 import { studentupdata } from "../../../api/student";
 import { reqList } from "../../../api/department";
+import { classeslist } from "../../../api/classes";
 interface users {
   id: number;
   name: string;
@@ -67,6 +76,7 @@ const form = reactive<users>({
 
 const deparlist = reactive<any>({
   list: [],
+  classlist: [],
 });
 
 // 接收父组件传来的值
@@ -88,6 +98,23 @@ defineExpose({
 });
 // 子传父
 
+//
+const rules = reactive<FormRules>({
+  name: [
+    { required: true, message: "请输入姓名", trigger: "blur" },
+    { min: 1, max: 8, message: "班级名称为1-8个字符", trigger: "blur" },
+  ],
+  username: [
+    { required: true, message: "请输入账号", trigger: "blur" },
+    { min: 1, max: 8, message: "班级名称为1-8个字符", trigger: "blur" },
+  ],
+  pass: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 1, max: 12, message: "班级名称为1-12个字符", trigger: "blur" },
+  ],
+});
+//
+
 // 添加学生
 const ruleFormRef = ref<FormInstance>();
 const addstudent = async (formEl: FormInstance | undefined) => {
@@ -106,7 +133,7 @@ const addstudent = async (formEl: FormInstance | undefined) => {
       });
       if (res.errCode !== 10000) {
         ElMessage({
-          message: "操作失败！",
+          message: "添加失败！",
           type: "error",
         });
         return false;
@@ -117,27 +144,31 @@ const addstudent = async (formEl: FormInstance | undefined) => {
         });
       }
       dialogVisible.value = false;
+      props.getlist(); //调用父级的列表  刷新
+      formEl.resetFields(); //重置表单
     }
-    props.getlist(); //调用父级的列表  刷新
-    formEl.resetFields(); //重置表单
   });
 };
-
 // 部门列表
 const department = async () => {
   let res: any = await reqList();
   deparlist.list = res.data.list;
-  form.depid = res.data.list.depid;
+};
+// 部门列表
+
+// 班级
+const changeGateway = async (val: any) => {
+  console.log(val.id);
+  let res: any = await classeslist({ depid: val.id });
+  console.log(res);
+  if (res.errCode === 10000) {
+    deparlist.classlist = res.data.list;
+  }
 };
 
 // 班级
-const getdata = async (val: any) => {
-  console.log(val);
-  form.depid = val;
-};
 onMounted(() => {
   department();
-  // getdata();
 });
 </script>
 

@@ -62,13 +62,12 @@ const fileList:any = ref<UploadUserFile[]>([
   },
 ]);
 
-
+   
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-  // fileList.value = fileList.value.slice(-3);
   fileList.value.name=uploadFile.name
   fileList.value.url=uploadFile.url
 };
-// 文件上传
+// 文件导出
 const downloads=()=>{
   downLoad("http://estate.eshareedu.cn/exam/upload/question.xlsx")
 }
@@ -76,18 +75,13 @@ const downloads=()=>{
 
 <style scoped lang="less">
 .pass_student {
-  // height: 200px;
-  // background-color: aqua;
   display: flex;
   .el-steps {
     width: 5%;
     height: 140px;
-    // background-color: antiquewhite;
   }
   .el_box {
     width: 95%;
-    // height: 170px;
-    // background-color: antiquewhite;
     span {
       color: rgb(19, 79, 253);
     }

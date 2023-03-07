@@ -375,13 +375,6 @@ const open2 = () => {
 const rest = async (data: any) => {
   addteacher.name = data.name;
   console.log(data);
-  // addteacher.username = data.username;
-  // addteacher.name = data.name;
-  // addteacher.tel = data.tel;
-  // addteacher.depid = data.depid;
-  // addteacher.roleid = data.roleid;
-
-  // let res = await add();
   centerDialogVisible.value = true;
 };
 const amend = () => { };

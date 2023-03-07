@@ -34,12 +34,6 @@
     </div>
     <!-- 搜索 -->
 
-    <!-- 批量删除 -->
-    <!-- <div> -->
-    <!-- <el-button type="danger">Danger</el-button> -->
-    <!-- </div> -->
-    <!-- 批量删除 -->
-
     <!-- 表格 -->
     <div class="classes_table">
       <el-table
@@ -97,6 +91,7 @@
         </el-form-item>
         <el-form-item label="部门" prop="depid">
           <cascader
+            v-model="ruleForm.depid"
             :options="options"
             :cascaderProps="cascaderProps"
             :cascaderChange="cascaderChangeClass"
@@ -111,6 +106,42 @@
       </template>
     </el-dialog>
     <!-- 修改弹窗 -->
+
+    <!-- 添加弹框 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="添加"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm"
+        status-icon
+      >
+        <el-form-item label="班级名称" prop="name">
+          <el-input v-model="ruleForm.name" />
+        </el-form-item>
+        <el-form-item label="部门" prop="depid">
+          <cascader
+            v-model="ruleForm.depid"
+            :options="options"
+            :cascaderProps="cascaderProps"
+            :cascaderChange="cascaderChangeClass"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="add"> Confirm </el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 添加弹框 -->
   </div>
 </template>
 
@@ -127,51 +158,47 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import cascader from "../../components/common/cascader.vue";
 import type { FormInstance, FormRules } from "element-plus";
+import { add } from "lodash";
 // 关闭修改弹出框
 const closeClass = () => {
   console.log(1111);
-
-  ruleForm.depid = 0;
+  // ruleForm.depid = 0;
   dialogFormVisible.value = false;
 };
 
 // 添加 / 修改 班级
 const classFn = (val: any) => {
-  if (val === 0) {
-    ruleForm.id = 0;
-    ruleForm.name = "";
-    ruleForm.depid = 0;
-  } else {
-    ruleForm.name = val.name;
-    ruleForm.depid = val.depid;
-    ruleForm.id = val.id;
-  }
-  dialogFormVisible.value = true;
+    if (val === 0) {
+      ruleForm.id = 0;
+      ruleForm.name = "";
+      ruleForm.depid = 0;
+    } else {
+      ruleForm.name = val.name;
+      ruleForm.depid = val.depid;
+      ruleForm.id = val.id;
+    }
+    dialogFormVisible.value = true;
 };
 // 点击确定 提交
 const updateStudent = () => {
-  console.log({
-    id: ruleForm.id,
-    name: ruleForm.name,
-    depid: ruleForm.depid,
-  });
-  ruleFormRef.value.validate(async (valid: boolean) => {
-    if (valid) {
-      let res: any = await addClasses({
-        id: ruleForm.id,
-        name: ruleForm.name,
-        depid: ruleForm.depid,
-      });
-      console.log(res);
-      if (res.errCode === 10000) {
-        ElMessage.success("修改成功");
-        list();
-        dialogFormVisible.value = false;
+    ruleFormRef.value.validate(async (valid: boolean) => {
+      if (valid) {
+      //   console.log(111111,valid)
+        let res: any = await addClasses({
+          id: ruleForm.id,
+          name: ruleForm.name,
+          depid: ruleForm.depid,
+        });
+        console.log(res);
+        if (res.errCode === 10000) {
+          ElMessage.success("修改成功");
+          list();
+          dialogFormVisible.value = false;
+        }
+      } else {
+        console.log("error submit!");
       }
-    } else {
-      console.log("error submit!");
-    }
-  });
+    });
 };
 
 const ruleForm = reactive({
@@ -197,8 +224,6 @@ const rules = reactive<FormRules>({
 // 搜索
 const from = reactive({
   isshow: false,
-  // user: "",
-  // region: "",
   name: "",
   depid: "",
   tableData: [],
@@ -210,7 +235,6 @@ const from = reactive({
     psize: 10,
   },
 });
-
 // 搜索
 const searchfn = () => {
   list();
@@ -222,6 +246,7 @@ const cascaderChange = (val: Array<number>) => {
   } else {
     from.config.depid = 0;
   }
+
   list();
 };
 // dialog里的弹出框
@@ -313,7 +338,7 @@ const open = () => {
           message: "删除成功",
         });
         list();
-        from.isshow=false
+        from.isshow = false;
       }
     })
     .catch(() => {
@@ -355,6 +380,45 @@ const deleclasses = (index: any) => {
 // 修改
 const dialogFormVisible = ref(false);
 // 修改
+
+// 添加
+const dialogVisible = ref(false);
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      done();
+    })
+    .catch(() => {
+      // catch error
+    });
+};
+const classFnone = () => {
+  ruleForm.id = 0;
+  ruleForm.name = "";
+  ruleForm.depid = 0;
+  dialogVisible.value = true;
+};
+const add = () => {
+  ruleFormRef.value.validate(async (valid: boolean) => {
+    if (valid) {
+
+      let res: any = await addClasses({
+        id: ruleForm.id,
+        name: ruleForm.name,
+        depid: ruleForm.depid,
+      });
+      console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage.success("添加成功");
+        list();
+        dialogVisible.value = false;
+      }
+    } else {
+      console.log("error submit!");
+    }
+  });
+};
+// 添加
 
 onMounted(() => {
   list();

@@ -40,7 +40,9 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
-          <el-button type="danger" :disabled="student.disabled" @click="arrall_del">批量删除</el-button>
+          <el-button type="danger" :disabled="student.disabled" @click="arrall_del"
+            >批量删除</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -139,17 +141,17 @@
 
     <!-- 重置密码 -->
     <el-dialog v-model="student.centerDialogVisible" title="重置密码" width="32%">
-      <el-form label-width="75px">
-        <el-form-item label="姓名" prop="name">{{ password.name }}</el-form-item>
+      <el-form label-width="80px" :model="password" :rules="rules" ref="ruleFormRef">
+        <el-form-item label="姓名">{{ password.name }}</el-form-item>
         <el-form-item label="新密码" prop="pass">
           <el-input v-model="password.pass" type="password" />
         </el-form-item>
-        <el-form-item label="确认密码" prop="password">
-          <el-input v-model="student.oldpass" type="password" />
+        <el-form-item label="确认密码" prop="oldpass">
+          <el-input v-model="password.oldpass" type="password" />
         </el-form-item>
         <span class="dialog-footer">
           <el-button @click="student.centerDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="adduppass"> 确定 </el-button>
+          <el-button type="primary" @click="adduppass(ruleFormRef)"> 确定 </el-button>
         </span>
       </el-form>
     </el-dialog>
@@ -158,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable, ElMessage, ElMessageBox } from "element-plus";
+import { ElTable, ElMessage, ElMessageBox, FormRules, FormInstance } from "element-plus";
 import { reactive, ref, onMounted } from "vue";
 import { studentlist, studentdelete, classesdes, studentupdata } from "../../api/student";
 import { classesdepartment, classeslist } from "../../api/classes";
@@ -188,7 +190,6 @@ const ss = reactive({
   type: [],
   resource: "",
   desc: "",
-
 });
 
 const student = reactive<any>({
@@ -204,7 +205,7 @@ const student = reactive<any>({
   depid: "",
   classid: "",
   tableData: [],
-  disabled:true
+  disabled: true,
 });
 
 const password = ref({
@@ -219,14 +220,14 @@ const password = ref({
 
 // 表格
 const list = async () => {
-  let { data }: any = await studentlist({
+  let res: any = await studentlist({
     page: student.page,
     psize: student.psize,
     key: student.key,
     depid: student.depid,
   });
-  student.tableData = data.list;
-  student.total = data.counts;
+  student.tableData = res.data.list;
+  student.total = res.data.counts;
 };
 // 表格
 
@@ -252,11 +253,14 @@ const stu_delete = (id: string) => {
     type: "warning",
   })
     .then(async () => {
-      ElMessage({
-        type: "success",
-        message: "删除成功",
-      });
-      list();
+      let res: any = await studentdelete({ id: id });
+      if (res.errCode === 10000) {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        list();
+      }
     })
     .catch(() => {
       ElMessage({
@@ -271,7 +275,7 @@ const stu_delete = (id: string) => {
 let ids = ref<any>("");
 const handleSelectionChange = (val: []) => {
   const arr: any = val.map((item: { id: any }) => {
-    student.disabled=false
+    student.disabled = false;
     return item.id;
   });
   ids = arr;
@@ -291,6 +295,7 @@ const arrall_del = () => {
           message: "删除成功",
         });
         list();
+        student.disabled = true;
       }
     })
     .catch(() => {
@@ -328,9 +333,9 @@ const department = async () => {
 };
 
 // 修改
-const dialog=()=>{
-  student.dialogVisible=false
-}
+const dialog = () => {
+  student.dialogVisible = false;
+};
 const updatelist = (data: any) => {
   let res = JSON.parse(JSON.stringify(data));
   student.dialogVisible = true;
@@ -354,6 +359,7 @@ const uponfirm = async () => {
     mobile: form.value.mobile,
     username: form.value.username,
   });
+  console.log(res);
   if (res.errCode === 10000) {
     ElMessage({
       type: "success",
@@ -400,7 +406,18 @@ const searchfn = () => {
   list();
 };
 
-// 重置秘密
+// 重置密码
+const ruleFormRef = ref<FormInstance>();
+const rules = reactive<FormRules>({
+  pass: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 1, max: 8, message: "班级名称为1-8个字符", trigger: "blur" },
+  ],
+  oldpass: [
+    { required: true, message: "请确认密码", trigger: "blur" },
+    { min: 1, max: 12, message: "班级名称为1-12个字符", trigger: "blur" },
+  ],
+});
 const uppass = (data: any) => {
   student.centerDialogVisible = true;
   password.value.name = data.name;
@@ -409,23 +426,28 @@ const uppass = (data: any) => {
   password.value.oldpass = data.oldpass;
   password.value.username = data.username;
 };
-const adduppass = async () => {
-  let res: any = await studentupdata({
-    classid: password.value.classid,
-    id: password.value.id,
-    name: password.value.name,
-    oldpass: password.value.pass,
-    pass: password.value.pass,
-    username: password.value.username,
+const adduppass = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      let res: any = await studentupdata({
+        classid: password.value.classid,
+        id: password.value.id,
+        name: password.value.name,
+        oldpass: password.value.pass,
+        pass: password.value.pass,
+        username: password.value.username,
+      });
+      if (res.errCode === 10000) {
+        student.centerDialogVisible = false;
+        ElMessage({
+          type: "success",
+          message: "重置成功",
+        });
+        list();
+      }
+    }
   });
-  if (res.errCode === 10000) {
-    student.centerDialogVisible = false;
-    ElMessage({
-      type: "success",
-      message: "重置成功",
-    });
-    list();
-  }
 };
 // 重置密码
 onMounted(() => {
