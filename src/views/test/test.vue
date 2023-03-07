@@ -133,11 +133,23 @@
     <el-table-column label="操作" width="160">
       <template #default="scope">
         <div class="operate">
-          <span class="spanActive" @click="visibleDialogFn('学生可见列表', scope.row.id,'学生')">学生</span>
+          <span
+            class="spanActive"
+            @click="visibleDialogFn('学生可见列表', scope.row.id, '学生')"
+            >学生</span
+          >
           <div class="border"></div>
-          <span class="spanActive" @click="visibleDialogFn('可见老师', scope.row.id, '可见')">可见</span>
+          <span
+            class="spanActive"
+            @click="visibleDialogFn('可见老师', scope.row.id, '可见')"
+            >可见</span
+          >
           <div class="border"></div>
-          <span class="spanActive" @click="visibleDialogFn('阅卷老师', scope.row.id, '阅卷老师')">阅卷老师</span>
+          <span
+            class="spanActive"
+            @click="visibleDialogFn('阅卷老师', scope.row.id, '阅卷老师')"
+            >阅卷老师</span
+          >
           <span class="spanActive" @click="analyseFn(scope.row)">分析</span>
           <div class="border"></div>
           <span class="spanActive" @click="handleAnalyse(scope.row)">编辑</span>
@@ -196,19 +208,19 @@ const dialogVisible = ref();
 const visibleTitle = ref<string>('');
 // 点击学生/可见/阅卷老师
 const visibleDialogFn = async (title: string, id: number, flag: string) => {
-  let res = await testGet({ id })
+  let res = await testGet({ id });
   console.log(res);
   visibleTitle.value = title;
   dialogVisible.value.dialogVisible = true;
   console.log(dialogVisible.value.id);
   nextTick(() => {
-    dialogVisible.value.id = id
-    dialogVisible.value.getStudentList()
-    dialogVisible.value.formFlag = flag
-    dialogVisible.value.getDepartmentList()
-    dialogVisible.value.state.searchForm.depid = '请选择'
-  })
-}
+    dialogVisible.value.id = id;
+    dialogVisible.value.getStudentList();
+    dialogVisible.value.formFlag = flag;
+    dialogVisible.value.getDepartmentList();
+    dialogVisible.value.state.searchForm.depid = '请选择';
+  });
+};
 
 // 点击分析 跳转页面
 const analyseFn = async (data: any) => {
@@ -232,6 +244,9 @@ const analyseFn = async (data: any) => {
 
 // 创建考试
 const createTest = () => {
+  store.$patch((state: any) => {
+    state.createTestData = {};
+  });
   router.push('/index/testAdd');
 };
 // 编辑
@@ -241,7 +256,7 @@ const handleAnalyse = async (data: any) => {
   const res: any = await testGet({ id: data.id });
   if (res.errCode === 10000) {
     router.push('/index/testAdd');
-    store.$patch((state:any) => {
+    store.$patch((state: any) => {
       state.createTestData = res.data;
     });
   }
