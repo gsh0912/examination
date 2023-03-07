@@ -35,24 +35,14 @@
                 <el-button>添加题目</el-button>
                 <el-button>批量导入</el-button>
                 <el-button>从题库中导入</el-button>
-                <el-button>选择已有试卷</el-button>
               </div>
             </div>
           </el-form-item>
           <el-form-item label="试题存入题库：" style="margin-left: -30px">
-            <el-select
-              v-model="myData.list.region"
-              placeholder="请选择题库"
-            >
-              <el-option
-                v-for="item in myData.list.questionBank"
-                :label="item.title"
-                :value="item.id"
-              ></el-option>
+            <el-select v-model="myData.list.region" placeholder="请选择题库">
+              <el-option v-for="item in myData.questionBank" :label="item.title" :value="item.id"></el-option>
             </el-select>
-            <el-button style="font-size: 13px; margin-left: 13px"
-              >+ 创建试题库</el-button
-            >
+            <el-button style="font-size: 13px; margin-left: 13px">+ 创建试题库</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -65,37 +55,63 @@
       <div class="viTeacher">
         <el-form :model="myData.list" label-width="130px">
           <el-form-item label="可见老师：">
-            <el-button>+ 选择</el-button>
+            <div class="teacherBtn">
+              <el-button @click="transferFn">+ 选择</el-button>
+              <span>{{teachers}}</span>
+            </div>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <div class="but">
-      <el-button type="primary">提交</el-button>
+      <el-button type="primary" @click="submitFn">提交</el-button>
       <el-button>取消</el-button>
     </div>
   </div>
+  <visibleDialog ref="visibleDialogRef" :valueFn="valueFn" />
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { reqList } from '../../../api/databaselist';
+import visibleDialog from '../../test/visibleDialog/visibleDialog.vue';
+
+const visibleDialogRef = ref()
+const teachers = ref(0)
+// 子传父 传来的选中数据
+const valueFn = ((val: any) => {
+  teachers.value = val.value.length
+  console.log(val.value.length);
+})
+// 点击选择可见教师
+const transferFn = () => {
+  visibleDialogRef.value.formFlag = '可见'
+  visibleDialogRef.value.dialogVisible = true
+  visibleDialogRef.value.getDepartmentList()
+  teachers.value = visibleDialogRef.value.value.length
+  console.log(teachers.value);
+}
 const myData = reactive<any>({
   list: {
     title: '', //考试名称
     region: '', //下拉框
-    questionBank: '', //题库下拉框
   },
+  questionBank: '', //题库下拉框
 });
 // 题库下拉框
 const getquestionBank = async () => {
   let res = await reqList();
-  console.log(res); 
-  myData.list.questionBank = res.data.list;
+  console.log(res);
+  myData.questionBank = res.data.list;
 };
 onMounted(() => {
   getquestionBank();
 });
+
+const submitFn = () => {
+  console.log(myData.list);
+}
+
 </script>
 
 <style scoped lang="less">
@@ -127,44 +143,54 @@ onMounted(() => {
       }
     }
   }
+
   .form {
     width: 500px;
     margin-left: 78px;
     margin-top: 10px;
     font-size: 14px;
   }
+
   .Setup {
     margin-top: 20px;
+
     .one {
       height: 40px;
       display: flex;
       align-items: center;
       background-color: #f9faff;
       padding: 5px 30px;
+
       .ones {
         font-size: 35px;
         color: #c7e5ff;
       }
     }
+
     .content {
       margin-left: 119px;
       margin-top: 10px;
+
       .god {
         width: 1025px;
         border: 1px solid #dcdfe6;
+
         .godTop {
           padding: 10px 15px;
           border-bottom: 1px solid #dcdfe6;
           display: flex;
           justify-content: space-between;
+
           .right {
             display: flex;
             color: #90909e;
+
             .ad {
               padding: 0 40px;
             }
           }
         }
+
         .button {
           padding: 10px 15px;
           font-size: 12px;
@@ -173,24 +199,47 @@ onMounted(() => {
       }
     }
   }
+
   .Teachers {
     margin-top: 20px;
+
     .one {
       height: 40px;
       display: flex;
       align-items: center;
       background-color: #f9faff;
       padding: 5px 30px;
+
       .ones {
         font-size: 35px;
         color: #c7e5ff;
       }
     }
+
     .viTeacher {
       margin-left: 70px;
       margin-top: 10px;
+
+      .teacherBtn {
+        position: relative;
+
+        span {
+          position: absolute;
+          top: -8px;
+          right: -10px;
+          font-size: 12px;
+          background-color: #409eff;
+          width: 20px;
+          height: 20px;
+          text-align: center;
+          color: white;
+          line-height: 20px;
+          border-radius: 50%;
+        }
+      }
     }
   }
+
   .but {
     padding-left: 228px;
     margin-top: 46px;

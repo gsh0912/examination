@@ -98,11 +98,12 @@ const goBack = () => {
 // 点击编辑
 const leftDrawer = ref();
 const compileFn = (data: any) => {
+  console.log(data);
   leftDrawer.value.drawer = true
   // 判断什么题型
   leftDrawer.value.radio = data.type
   nextTick(() => {
-    leftDrawer.value.EditorRef.valueHtml= data.title
+    leftDrawer.value.EditorRef.valueHtml = data.title
   })
   console.log(data.title);
   // 选项
@@ -121,7 +122,7 @@ const compileFn = (data: any) => {
   if (data.type === '单选题') {
     leftDrawer.value.rightAnswers = data.answer
     console.log(data);
-    
+
   }
   if (data.type === '判断题') {
     leftDrawer.value.estimateAnswer = data.answer
@@ -131,12 +132,19 @@ const compileFn = (data: any) => {
   }
 }
 
-// 添加试题
+// 添加试题 点击时清空上次数据
 const addDatabasequestion = () => {
   flag.value = true;
   nextTick(() => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.title = '试题添加';
+    leftDrawer.value.radio = '单选题';
+    leftDrawer.value.rightAnswers = ''
+    leftDrawer.value.scores = 1
+    leftDrawer.value.EditorRef.valueHtml ? leftDrawer.value.EditorRef.valueHtml = '' : ''
+    leftDrawer.value.state.answers.forEach((item: any) => {
+      item.content = ''
+    })
   });
 };
 // 添加批量试题

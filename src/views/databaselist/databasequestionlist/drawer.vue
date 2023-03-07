@@ -66,7 +66,7 @@
         </div>
         <el-form-item label="分值" prop="name">
           <div class="score">
-            <el-input-number v-model="num" class="mx-4" :min="1" :max="10" controls-position="right"
+            <el-input-number v-model="scores" class="mx-4" :min="1" :max="10" controls-position="right"
               @change="handleChange" />
           </div>
         </el-form-item>
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineExpose, reactive, toRefs } from 'vue';
+import { ref, defineExpose, reactive, toRefs, watch } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import Editor from './Editor.vue';
@@ -179,6 +179,8 @@ const addChecked = () => {
   }
 };
 
+
+
 // 选项数据
 const state = reactive({
   answers: [
@@ -203,7 +205,7 @@ const state = reactive({
 const { answers } = toRefs(state);
 
 // 分值
-const num = ref(1);
+const scores = ref(1);
 const handleChange = (value: number) => {
   console.log(value);
 };
@@ -226,7 +228,9 @@ defineExpose({
   EditorRef,
   rightcehckboxAnswers,
   rightAnswers,
-  radio
+  radio,
+  estimateAnswer,
+  scores
 });
 
 // 点击旁白或关闭按钮 关闭右侧抽屉
@@ -247,7 +251,7 @@ const info = reactive<Iinfo>({
   type: '',
   answer: [],
   answers: [],
-  scores: num.value,
+  scores: scores.value,
   databaseid: Number(route.query.id),
 });
 
