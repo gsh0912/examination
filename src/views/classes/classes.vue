@@ -4,7 +4,7 @@
       <!-- 标题 -->
       <p class="classes_p">班级管理</p>
       <!-- 标题 -->
-      <el-button @click="classFn(0)" type="primary">添加班级</el-button>
+      <el-button @click="classFn" type="primary">添加班级</el-button>
     </header>
 
     <!-- 搜索 -->
@@ -30,7 +30,9 @@
           <el-button type="primary" @click="searchfn">查询</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="danger" v-if="from.isshow" @click="open">批量删除</el-button>
+      <el-button type="danger" v-if="from.isshow" @click="open"
+        >批量删除</el-button
+      >
     </div>
     <!-- 搜索 -->
 
@@ -47,10 +49,18 @@
         <el-table-column property="depname" align="center" label="部门" />
         <el-table-column property="address" align="center" label="操作">
           <template #default="scope">
-            <el-button link type="primary" size="small" @click="classFn(scope.row)"
+            <el-button
+              link
+              type="primary"
+              size="small"
+              @click="classFnup(scope.row)"
               >修改</el-button
             >
-            <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)"
+            <el-button
+              link
+              type="primary"
+              size="small"
+              @click="deleclasses(scope.row.id)"
               >删除</el-button
             >
           </template>
@@ -76,169 +86,131 @@
     </div>
     <!-- 分页 -->
 
-    <!-- 修改弹窗 -->
-    <el-dialog v-model="dialogFormVisible" title="修改">
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
-        status-icon
-      >
-        <el-form-item label="班级名称" prop="name">
-          <el-input v-model="ruleForm.name" />
-        </el-form-item>
-        <el-form-item label="部门" prop="depid">
-          <cascader
-            v-model="ruleForm.depid"
-            :options="options"
-            :cascaderProps="cascaderProps"
-            :cascaderChange="cascaderChangeClass"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="closeClass">取消</el-button>
-          <el-button type="primary" @click="updateStudent"> 确定 </el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!-- 修改弹窗 -->
+    <!-- 添加 -->
+    <classadd ref="dialogshow" :getlist="list"></classadd>
 
-    <!-- 添加弹框 -->
-    <el-dialog
-      v-model="dialogVisible"
-      title="添加"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
-        status-icon
-      >
+    <!-- 添加 -->
+
+    <!-- 修改弹窗 -->
+    <el-dialog v-model="from.dialogFormVisible" title="修改">
+      <el-form :model="ruleForm" label-width="80px">
         <el-form-item label="班级名称" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="部门" prop="depid">
           <cascader
-            v-model="ruleForm.depid"
+            ref="cascaderRef"
             :options="options"
             :cascaderProps="cascaderProps"
             :cascaderChange="cascaderChangeClass"
+            @getDepid="getDepid"
           />
         </el-form-item>
       </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="add"> Confirm </el-button>
-        </span>
-      </template>
+      <!-- <template #footer> -->
+      <span class="dialog-footer">
+        <el-button @click="closeClass">取消</el-button>
+        <el-button type="primary" @click="updateStudent"> 确定 </el-button>
+      </span>
+      <!-- </template> -->
     </el-dialog>
-    <!-- 添加弹框 -->
+    <!-- 修改弹窗 -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElTable } from "element-plus";
-import { reactive, ref, onMounted } from "vue";
+import { ElTable } from 'element-plus';
+import { reactive, ref, onMounted,nextTick } from 'vue';
 import {
   classeslist,
   classesdelete,
   classesdepartment,
   addClasses,
   classesides,
-} from "../../api/classes";
-import { ElMessage, ElMessageBox } from "element-plus";
-import cascader from "../../components/common/cascader.vue";
-import type { FormInstance, FormRules } from "element-plus";
-import { add } from "lodash";
+} from '../../api/classes';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import cascader from '../../components/common/cascader.vue';
+import type { FormInstance, FormRules } from 'element-plus';
+import classadd from './classadd.vue';
+// 获取部门id
+const getDepid=(val:any)=>{
+  console.log(val)
+  ruleForm.depid=val
+}
+// 添加
+let dialogshow = ref<any>();
+const classFn = () => {
+  dialogshow.value.dialogVisible = true;
+};
+// 修改
 // 关闭修改弹出框
 const closeClass = () => {
-  console.log(1111);
-  // ruleForm.depid = 0;
-  dialogFormVisible.value = false;
+  from.dialogFormVisible = false;
+};
+const cascaderRef = ref();
+const classFnup = (data: any) => {
+  from.dialogFormVisible = true;
+  let res = JSON.parse(JSON.stringify(data));
+  console.log(res);
+  ruleForm.id = res.id;
+  nextTick(() => {
+    cascaderRef.value.value = res.depid;
+  });
+  ruleForm.name = res.name;
+  ruleForm.depid=res.depid;
+  console.log(1111, ruleForm.depid);
 };
 
-// 添加 / 修改 班级
-const classFn = (val: any) => {
-    if (val === 0) {
-      ruleForm.id = 0;
-      ruleForm.name = "";
-      ruleForm.depid = 0;
-    } else {
-      ruleForm.name = val.name;
-      ruleForm.depid = val.depid;
-      ruleForm.id = val.id;
-    }
-    dialogFormVisible.value = true;
-};
-// 点击确定 提交
-const updateStudent = () => {
-    ruleFormRef.value.validate(async (valid: boolean) => {
-      if (valid) {
-      //   console.log(111111,valid)
-        let res: any = await addClasses({
-          id: ruleForm.id,
-          name: ruleForm.name,
-          depid: ruleForm.depid,
+const updateStudent = async (val: any) => {
+  let res: any = await addClasses({
+    name: ruleForm.name,
+    depid: ruleForm.depid,
+    id: ruleForm.id,
+  });
+  console.log(ruleForm)
+  if (res.errCode === 10000) {
+    from.dialogFormVisible = false
+        ElMessage({
+          type: "success",
+          message: "修改成功",
         });
-        console.log(res);
-        if (res.errCode === 10000) {
-          ElMessage.success("修改成功");
-          list();
-          dialogFormVisible.value = false;
-        }
-      } else {
-        console.log("error submit!");
-      }
-    });
+        list();
+   }
 };
+// 修改
+
+
 
 const ruleForm = reactive({
-  name: "",
+  name: '',
   depid: 0,
   id: 0,
 });
-const ruleFormRef = ref();
-const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: "请输入班级名称", trigger: "blur" },
-    { min: 1, max: 8, message: "班级名称为1-8个字符", trigger: "blur" },
-  ],
-  depid: [
-    {
-      required: true,
-      message: "请选择部门",
-      trigger: "change",
-    },
-  ],
-});
-
 // 搜索
 const from = reactive({
   isshow: false,
-  name: "",
-  depid: "",
+  name: '',
+  depid: '',
   tableData: [],
   total: 0,
   config: {
     depid: 0,
-    key: "",
+    key: '',
     page: 1,
     psize: 10,
   },
+  dialogFormVisible: false,
 });
 // 搜索
+
+
+
 const searchfn = () => {
   list();
 };
+
+
+
 // 获取搜索级联框
 const cascaderChange = (val: Array<number>) => {
   if (val && val.length) {
@@ -252,6 +224,7 @@ const cascaderChange = (val: Array<number>) => {
 // dialog里的弹出框
 const cascaderChangeClass = (val: Array<number>) => {
   ruleForm.depid = val[val.length - 1];
+  console.log(val)
 };
 // 部门级联
 const classes = async () => {
@@ -271,11 +244,13 @@ interface IcascaderProps {
   label: string;
   expandTrigger?: string;
   checkStrictly: boolean;
+  emitPath: boolean;
 }
 const cascaderProps = ref<IcascaderProps>({
-  label: "name",
-  value: "id",
-  expandTrigger: "hover" as const,
+  label: 'name',
+  value: 'id',
+  expandTrigger: 'hover' as const,
+  emitPath:false,
   checkStrictly: true,
 });
 
@@ -314,7 +289,7 @@ const handleCurrentChange = (val: number) => {
 // 分页
 
 // 批量删除
-let ids = ref<any>("");
+let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
   const arr: any = val.map((item: { id: any }) => {
     from.isshow = true;
@@ -323,10 +298,10 @@ const handleSelectionChange = (val: []) => {
   ids = arr;
 };
 const open = () => {
-  ElMessageBox.confirm("确定要删除选定的班级？", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除选定的班级？', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
     center: false,
   })
     .then(async () => {
@@ -334,8 +309,8 @@ const open = () => {
       console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
-          type: "success",
-          message: "删除成功",
+          type: 'success',
+          message: '删除成功',
         });
         list();
         from.isshow = false;
@@ -343,8 +318,8 @@ const open = () => {
     })
     .catch(() => {
       ElMessage({
-        type: "error",
-        message: "已取消删除",
+        type: 'error',
+        message: '已取消删除',
       });
     });
 };
@@ -352,10 +327,10 @@ const open = () => {
 
 // 单个删除
 const deleclasses = (index: any) => {
-  ElMessageBox.confirm("确定要删除选定的班级？", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除选定的班级？', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
     center: false,
   })
     .then(async () => {
@@ -363,62 +338,19 @@ const deleclasses = (index: any) => {
       console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
-          type: "success",
-          message: "删除成功",
+          type: 'success',
+          message: '删除成功',
         });
         list();
       }
     })
     .catch(() => {
       ElMessage({
-        type: "error",
-        message: "已取消删除",
+        type: 'error',
+        message: '已取消删除',
       });
     });
 };
-
-// 修改
-const dialogFormVisible = ref(false);
-// 修改
-
-// 添加
-const dialogVisible = ref(false);
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm("Are you sure to close this dialog?")
-    .then(() => {
-      done();
-    })
-    .catch(() => {
-      // catch error
-    });
-};
-const classFnone = () => {
-  ruleForm.id = 0;
-  ruleForm.name = "";
-  ruleForm.depid = 0;
-  dialogVisible.value = true;
-};
-const add = () => {
-  ruleFormRef.value.validate(async (valid: boolean) => {
-    if (valid) {
-
-      let res: any = await addClasses({
-        id: ruleForm.id,
-        name: ruleForm.name,
-        depid: ruleForm.depid,
-      });
-      console.log(res);
-      if (res.errCode === 10000) {
-        ElMessage.success("添加成功");
-        list();
-        dialogVisible.value = false;
-      }
-    } else {
-      console.log("error submit!");
-    }
-  });
-};
-// 添加
 
 onMounted(() => {
   list();
@@ -428,5 +360,5 @@ onMounted(() => {
 // 表格
 </script>
 <style scoped>
-@import url("./classes.css");
+@import url('./classes.css');
 </style>

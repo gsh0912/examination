@@ -143,7 +143,7 @@ const exam = (val: number, data: string) => {
   font-size: 20px;
   margin-bottom: 15px;
 }
-/deep/.el-form-item__label {
+:deep(.el-form-item__label ){
   font-size: 16px;
 }
 .el-input {

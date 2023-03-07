@@ -1,11 +1,12 @@
 <template>
   <div>
-    <el-cascader :options="options" :props="cascaderProps" @change="cascaderChange" clearable />
+    <el-cascader v-model="value" :options="options" :props="cascaderProps" @change="cascaderChange" clearable />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps,defineEmits } from 'vue';
+import { defineProps,defineEmits,ref,defineExpose } from 'vue';
+let value = ref<string>()
 interface Iprops {
   value: string,
   label: string,
@@ -22,11 +23,14 @@ const props = withDefaults(defineProps<{
 const emits=defineEmits(['getDepid'])
 const cascaderChange=(val:any)=>{
   
-  // console.log(val)
+  console.log(val)
   emits('getDepid',val)
   // student.depid=val
   // console.log(student.depid)
 }
+defineExpose({
+  value
+})
 </script>
 
 <style scoped></style>

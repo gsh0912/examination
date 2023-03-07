@@ -127,7 +127,7 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="less">
-/deep/.el-main {
+:deep(.el-main){
   background-color: #fafbfd;
 
   .main {
