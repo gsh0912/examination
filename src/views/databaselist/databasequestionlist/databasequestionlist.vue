@@ -10,7 +10,9 @@
       </el-page-header>
       <div>
         <el-button @click="addDatabasequestion">添加试题</el-button>
-        <el-button type="primary" @click="addDatabasequestions">批量添加试题</el-button>
+        <el-button type="primary" @click="addDatabasequestions"
+          >批量添加试题</el-button
+        >
       </div>
     </div>
     <div>
@@ -22,7 +24,12 @@
           <el-input v-model="Data.admin" placeholder="请输入创建人" clearable />
         </el-form-item>
         <el-form-item label="题目类型：">
-          <el-select @change="select" v-model="Data.type" placeholder="请选择" clearable>
+          <el-select
+            @change="select"
+            v-model="Data.type"
+            placeholder="请选择"
+            clearable
+          >
             <el-option label="单选题" value="单选题" />
             <el-option label="多选题" value="多选题" />
             <el-option label="判断题" value="判断题" />
@@ -31,10 +38,19 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" @click="search">查询</el-button>
-        <el-button type="danger" @click="delAll" :disabled="multipleSelection.length === 0">批量删除</el-button>
+        <el-button
+          type="danger"
+          @click="delAll"
+          :disabled="multipleSelection.length === 0"
+          >批量删除</el-button
+        >
         <el-button @click="importExcel">导出excel</el-button>
       </el-form>
-      <el-table :data="tableData.list" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table
+        :data="tableData.list"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="题目名称">
           <template #default="scope">
@@ -50,20 +66,34 @@
         <el-table-column align="center" prop="admin" label="创建人" />
         <el-table-column align="center" label="操作">
           <template #default="scope">
-            <el-link style="margin-right: 10px" type="primary" @click="compileFn(scope.row)">编辑</el-link>
+            <el-link
+              style="margin-right: 10px"
+              type="primary"
+              @click="compileFn(scope.row)"
+              >编辑</el-link
+            >
             <el-link type="primary" @click="del(scope.row.id)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
       <div class="paging">
-        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
-          :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[5, 10, 15, 20]"
+          :small="small"
+          :disabled="disabled"
+          :background="background"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
   </div>
   <!-- 添加试题抽屉 -->
-  <drawer ref="leftDrawer" @getChildren="submit" />
+  <drawer ref="leftDrawer" @getChildren="submit" v-if="flag" />
   <!-- 添加批量考试试题 -->
   <addDialog ref="addDialogRef" />
 </template>
@@ -98,45 +128,53 @@ const goBack = () => {
 // 点击编辑
 const leftDrawer = ref();
 const compileFn = (data: any) => {
-  leftDrawer.value.drawer = true
-  // 判断什么题型
-  leftDrawer.value.radio = data.type
+  flag.value = true;
   nextTick(() => {
-    leftDrawer.value.EditorRef.valueHtml= data.title
-  })
-  console.log(data.title);
-  // 选项
-  data.answers.forEach((element: any) => {
-    leftDrawer.value.state.answers.forEach((item: any) => {
-      if (item.answerno === element.answerno) {
-        item.content = element.content
-      }
-    })
+    leftDrawer.value.drawer = true;
+    leftDrawer.value.radio = data.type;
+    nextTick(() => {
+      leftDrawer.value.EditorRef.valueHtml = data.title;
+    });
+    // // 选项
+    data.answers.forEach((element: any) => {
+      leftDrawer.value.state.answers.forEach((item: any) => {
+        if (item.answerno === element.answerno) {
+          item.content = element.content;
+        }
+      });
+    });
+    // 分值
+    leftDrawer.value.scores = data.scores;
+    if (data.type === '多选题') {
+      leftDrawer.value.rightcehckboxAnswers = data.answer.split('|');
+    }
+    if (data.type === '单选题') {
+      leftDrawer.value.rightAnswers = data.answer;
+      console.log(data);
+    }
+    if (data.type === '判断题') {
+      leftDrawer.value.estimateAnswer = data.answer;
+    }
+    if (data.type === '填空题' || data.type === '问答题') {
+      leftDrawer.value.tags = data.tags;
+    }
   });
-  // 分值
-  leftDrawer.value.scores = data.scores
-  if (data.type === '多选题') {
-    leftDrawer.value.rightcehckboxAnswers = data.answer.split('|')
-  }
-  if (data.type === '单选题') {
-    leftDrawer.value.rightAnswers = data.answer
-    console.log(data);
-    
-  }
-  if (data.type === '判断题') {
-    leftDrawer.value.estimateAnswer = data.answer
-  }
-  if (data.type === '填空题' || data.type === '问答题') {
-    leftDrawer.value.tags = data.tags
-  }
-}
+  console.log(data.title);
+};
 
-// 添加试题
+// 添加试题 点击时清空上次数据
 const addDatabasequestion = () => {
   flag.value = true;
   nextTick(() => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.title = '试题添加';
+    leftDrawer.value.radio = '单选题';
+    leftDrawer.value.rightAnswers = ''
+    leftDrawer.value.scores = 1
+    leftDrawer.value.EditorRef.valueHtml ? leftDrawer.value.EditorRef.valueHtml = '' : ''
+    leftDrawer.value.state.answers.forEach((item: any) => {
+      item.content = ''
+    })
   });
 };
 // 添加批量试题

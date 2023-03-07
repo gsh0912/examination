@@ -1,8 +1,8 @@
 import {get,post} from '../utils/request'
 
-//班级列表
-export const classeslist = (data:any)=>{
- return get('/api/classes/list',data)
+
+export const classeslist = (params:any={})=>{
+ return get('/api/classes/list',params)
 }
 
 // 班级单个删除
