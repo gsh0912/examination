@@ -11,3 +11,31 @@ export const examInfo = (params: any) => {
 export const getForResult = (params: any) => {
   return get('/api/test/getForResult', params);
 };
+// 学生答题
+export const studentanswerAdd = (data: any) => {
+  return post('/api/studentanswer/add', data);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

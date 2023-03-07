@@ -34,7 +34,9 @@
               <div class="checkboxright">{{ data.content }}</div>
             </div>
           </div>
-          <div class="" v-if="item.type === '填空题'"></div>
+          <div class="" v-if="item.type === '填空题'">
+
+          </div>
           <div class="" v-if="item.type === '问答题'">
             <el-input v-model="item.studentanswer" :rows="4" type="textarea" />
           </div>
@@ -77,15 +79,70 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { testStart } from '../../api/test'
-import { onMounted, ref, reactive, toRefs, computed, watch } from 'vue';
+import { onMounted, ref, reactive, toRefs, watch, nextTick } from 'vue';
+import { studentanswerAdd } from '../../api/stutest'
 const route = useRoute()
 onMounted(() => {
   getTopic()
 })
 const radioFlag = ref<boolean>(false)
+const nums = ref<number>(0)
+const datas = ref<any>([])
+const studentid = sessionStorage.getItem('model')
 // 点击提交试卷 
-const testPaper = ()=>{
-  console.log( topic.topicList);
+const testPaper = async () => {
+
+
+
+  topic.topicList.questions.forEach((item: any) => {
+    let data = {}
+    if (item.type === '问答题' || item.type === '判断题' || item.type === '填空题') {
+      data = {
+        "testid": item.testid,
+        "studentid": JSON.parse(studentid!).id,
+        "questionid": item.id,
+        "answer": item.studentanswer,
+        "scores": item.type === '问答题' || item.type === '填空题'
+          ? null
+          : item.type === '单选题' || item.type === '判断题'
+            ? item.studentanswer === item.answer
+              ? item.scores
+              : 0
+            : !item.studentanswer
+              ? 0
+              : nums.value === item.answer.split('|').length
+                ? item.scores
+                : 0,
+      }
+    } else {
+      data = {
+        "testid": item.testid,
+        "studentid": JSON.parse(studentid!).id,
+        "questionid": item.answers[0].questionid,
+        "answer": item.studentanswer,
+        "scores": item.type === '问答题' || item.type === '填空题'
+          ? null
+          : item.type === '单选题' || item.type === '判断题'
+            ? item.studentanswer === item.answer
+              ? item.scores
+              : 0
+            : !item.studentanswer
+              ? 0
+              : nums.value === item.answer.split('|').length
+                ? item.scores
+                : 0,
+      }
+    }
+
+
+    datas.value.push(data)
+  })
+  let res = await studentanswerAdd(datas.value)
+  console.log(datas.value);
+  
+  console.log(res);
+
+
 }
 
 
@@ -95,12 +152,9 @@ const estimateFn = (val: any, text: string) => {
   val.studentanswer = text
 }
 
-
 // 答题卡点击事件
 const examListRef = ref() //通过ref 获取每个元素的高度
 const examListFn = (index: number) => {
-  console.log(examListRef.value[index].offsetTop); //当前元素的高度
-  console.log(examListRef.value[index]); //当前元素
   window.scrollTo({
     top: examListRef.value[index].offsetTop - 100,
     left: 0,
@@ -109,10 +163,10 @@ const examListFn = (index: number) => {
 }
 // 多选框事件
 const checkboxFn = (item: any, data: any) => {
-  if(!item.studentanswer){
+  if (!item.studentanswer) {
     item.studentanswer = ''
   }
-  item.studentanswer += data.answerno +'|'
+  item.studentanswer += data.answerno + '|'
 }
 
 // 单选框点击事件
@@ -129,6 +183,7 @@ const topic = reactive<Item>({
   topicList: []
 })
 const { topicList } = toRefs(topic)
+
 // 获取考试题目
 const getTopic = async () => {
   let res = await testStart({
@@ -136,12 +191,30 @@ const getTopic = async () => {
   })
   res.data.questions = res.data.questions.map((data: any) => {
     if (data.type === '填空题') {
-      data.title = data.title.replaceAll("[]", `<input type="text" style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`)
+      data.title = data.title.replaceAll("[]", `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`)
     }
     return data
   })
   console.log(res.data);
   topic.topicList = res.data
+  nextTick(() => {
+    let inps: any = document.querySelectorAll('.inps')
+    inps.forEach((item: any) => {
+      item.oninput = (event: any) => {
+        topic.topicList.questions.forEach((data: any) => {
+          if (data.id === Number(event?.target.getAttribute('data'))) {
+            data.studentanswer ? data.studentanswer : data.studentanswer = ''
+            data.studentanswer = ''
+            for (let i = 0; i < inps.length; i++) {
+              data.studentanswer += (inps[i].value + '|')
+            }
+          }
+        })
+        console.log(topic.topicList);
+      }
+    })
+  })
+
 }
 // 已完成的数量
 const done = ref<number>(0)
