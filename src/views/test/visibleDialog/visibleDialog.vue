@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineExpose, defineProps, onMounted, nextTick, reactive, toRefs } from 'vue'
+import { ref, defineExpose, defineProps,reactive, toRefs} from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { reqStudent, getTeacher, getMarkTeachers } from '../../../api/test'
 import { reqList } from '../../../api/department'
@@ -64,6 +64,7 @@ const getDepartmentList = async () => {
   console.log(res);
   state.DepartmentList = res.data.list
 }
+
 
 // 部门改变事件
 const classFlag = ref<boolean>(true)

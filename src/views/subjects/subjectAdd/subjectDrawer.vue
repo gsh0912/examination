@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-drawer
-      v-model="drawer"
-      :title="title"
-      :direction="direction"
-      :before-close="handleClose"
-    >
+    <el-drawer v-model="drawer" :title="title" :direction="direction" :before-close="handleClose">
       <div class="radioTitle">
         <el-radio-group v-model="radio" class="ml-4">
           <el-radio label="单选题" size="large">单选题</el-radio>
@@ -15,15 +10,8 @@
           <el-radio label="问答题" size="large">问答题</el-radio>
         </el-radio-group>
       </div>
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="85px"
-        class="demo-ruleForm"
-        :size="formSize"
-        status-icon
-      >
+      <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="85px" class="demo-ruleForm"
+        :size="formSize" status-icon>
         <el-form-item label="题干" prop="name">
           <div class="editor">
             <Editor ref="EditorRef" />
@@ -31,11 +19,7 @@
         </el-form-item>
         <div class="Item" v-show="radio === '单选题' || radio === '多选题'">
           <el-form-item label="选项" prop="name">
-            <div
-              class="checked"
-              v-for="(item, index) in answers"
-              :key="item.answerno"
-            >
+            <div class="checked" v-for="(item, index) in answers" :key="item.answerno">
               <span>{{ item.answerno }}:</span>
               <el-input type="textarea" rows="1" v-model="item.content" />
               <span stype="fontSize:12px">
@@ -54,24 +38,14 @@
             <div class="rightAnswers">
               <div class="radioGroup" v-if="radio === '单选题'">
                 <el-radio-group v-model="rightAnswers" class="ml-4">
-                  <el-radio
-                    :label="item.answerno"
-                    size="large"
-                    v-for="item in answers"
-                    :key="item.answerno"
-                    >{{ item.answerno }}</el-radio
-                  >
+                  <el-radio :label="item.answerno" size="large" v-for="item in answers" :key="item.answerno">{{
+                    item.answerno }}</el-radio>
                 </el-radio-group>
               </div>
               <div class="checkboxGroup" v-if="radio === '多选题'">
                 <el-checkbox-group v-model="rightcehckboxAnswers" class="ml-4">
-                  <el-checkbox
-                    :label="item.answerno"
-                    size="large"
-                    v-for="item in answers"
-                    :key="item.answerno"
-                    >{{ item.answerno }}</el-checkbox
-                  >
+                  <el-checkbox :label="item.answerno" size="large" v-for="item in answers" :key="item.answerno">{{
+                    item.answerno }}</el-checkbox>
                 </el-checkbox-group>
               </div>
             </div>
@@ -87,24 +61,13 @@
         </div>
         <div class="Item" v-show="radio === '填空题' || radio === '问答题'">
           <el-form-item label="解析">
-            <el-input
-              type="textarea"
-              v-model="gapfilling"
-              rows="4"
-              style="width: 50%"
-            ></el-input>
+            <el-input type="textarea" v-model="gapfilling" rows="4" style="width: 50%"></el-input>
           </el-form-item>
         </div>
         <el-form-item label="分值" prop="name">
           <div class="score">
-            <el-input-number
-              v-model="scores"
-              class="mx-4"
-              :min="1"
-              :max="10"
-              controls-position="right"
-              @change="handleChange"
-            />
+            <el-input-number v-model="scores" class="mx-4"  controls-position="right"
+              @change="handleChange" />
           </div>
         </el-form-item>
       </el-form>
@@ -118,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineExpose, reactive, toRefs } from 'vue';
+import { ref, defineExpose, reactive, toRefs, defineProps } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import Editor from './Editor.vue';
@@ -126,10 +89,6 @@ import { CircleClose, CirclePlus } from '@element-plus/icons-vue';
 import { questionAdd } from '../../../api/databaselist';
 // 表单验证
 import type { FormInstance, FormRules } from 'element-plus';
-import { number } from 'echarts';
-const route = useRoute();
-// console.log(route.query.id);
-
 const formSize = ref('default');
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
@@ -141,6 +100,12 @@ const rules = reactive<FormRules>({
     { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
   ],
 });
+const props = defineProps({
+  addSave: {
+    type: Function,
+    required: true
+  }
+})
 
 // 单删选项
 const deleteOneFn = (index: number) => {
@@ -256,17 +221,7 @@ const drawer = ref<boolean>(false);
 const direction = ref<string>('rtl');
 const title = ref<string>('');
 const EditorRef = ref<any>(''); //富文本
-defineExpose({
-  drawer,
-  title,
-  state,
-  EditorRef,
-  rightcehckboxAnswers,
-  rightAnswers,
-  radio,
-  estimateAnswer,
-  scores,
-});
+
 
 // 点击旁白或关闭按钮 关闭右侧抽屉
 const handleClose = (done: () => void) => {
@@ -289,8 +244,6 @@ const info = reactive<Iinfo>({
 });
 
 // 提交按钮
-const emits = defineEmits(['getChildren']);
-
 const save = async () => {
   info.title = EditorRef.value.valueHtml;
   info.scores = scores.value;
@@ -309,11 +262,26 @@ const save = async () => {
   } else if (radio.value === '问答题') {
     (info.type = radio.value), (info.answer = gapfilling.value);
   }
-  emits('getChildren', info);
+  console.log(info);
+  
+  props.addSave()
+
 };
 const cancel = () => {
   drawer.value = false;
 };
+defineExpose({
+  drawer,
+  title,
+  state,
+  EditorRef,
+  rightcehckboxAnswers,
+  rightAnswers,
+  radio,
+  estimateAnswer,
+  scores,
+  info
+});
 </script>
 
 <style scoped lang="less">

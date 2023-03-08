@@ -7,3 +7,7 @@ export const subjectsList = (params: any) => {
 export const subjectsDel = (params: any) => {
   return get('/api/subjects/delete', params);
 };
+// 添加试卷
+export const subjectsAdd = (data: any) => {
+  return post('/api/subjects/add', data);
+};

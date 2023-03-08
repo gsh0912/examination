@@ -32,3 +32,7 @@ export const exportExcel = (params: any = {}, responseType?: Object) => {
 export const questionAdd =(data:any)=>{
   return post('/api/databasequestion/add',data)
 }
+// 添加题库
+export const databaseAdd =(data:any)=>{
+  return post('/api/database/add',data)
+}
