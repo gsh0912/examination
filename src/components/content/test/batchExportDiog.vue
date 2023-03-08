@@ -21,7 +21,7 @@
           </el-step>
           <el-step title="上传写好的试题表" />
         </el-steps>
-        <el-upload
+        <!-- <el-upload
           v-if="store.showExportDialog == true"
           name="file"
           ref="Aupload"
@@ -31,8 +31,9 @@
           :auto-upload="true"
           :on-success="handleSuccess"
         >
-          <el-button type="primary">点击上传文件</el-button>
-        </el-upload>
+        <el-button type="primary">点击上传文件</el-button>
+        </el-upload> -->
+        <el-button type="primary">点击上传文件</el-button>
       </div>
     </template>
     <template #button>
@@ -43,17 +44,17 @@
 </template>
 
 <script lang="ts" setup>
-import publicDialog from "../../common/publicDialog.vue";
-import { useMainStore } from "../../../stores/dialog";
-import { ElMessage } from "element-plus";
-import { ref } from "vue";
-const emit = defineEmits(["onBatch"]);
-const store = useMainStore();
+import publicDialog from '../../common/publicDialog.vue';
+import { useMainStore } from '../../../stores/dialog';
+import { ElMessage } from 'element-plus';
+import { ref } from 'vue';
+const emit = defineEmits(['onBatch']);
+const store: any = useMainStore();
 const dataFile = ref([]);
 // 关闭弹框触发
 const onClose = () => {
   // 关闭弹框
-  store.$patch((state) => {
+  store.$patch((state: any) => {
     state.showExportDialog = false;
   });
 };
@@ -63,8 +64,8 @@ const handleSuccess = (res: any) => {
   if (res.errCode === 10000) dataFile.value = res.data;
 };
 const onExport = () => {
-  if (!dataFile.value.length) return ElMessage.error("请上传有效的文件");
-  emit("onBatch", dataFile.value);
+  if (!dataFile.value.length) return ElMessage.error('请上传有效的文件');
+  emit('onBatch', dataFile.value);
   onClose();
 };
 </script>

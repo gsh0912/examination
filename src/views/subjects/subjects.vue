@@ -12,9 +12,17 @@
           <el-input v-model="subjects.admin" clearable placeholder="创建人" />
         </el-form-item>
         <el-form-item label="" style="margin-left: 20px">
-          <el-checkbox label="只看我创建的" @change="myestablish" true-label="1" false-label="0" v-model="subjects.ismy" />
+          <el-checkbox
+            label="只看我创建的"
+            @change="myestablish"
+            true-label="1"
+            false-label="0"
+            v-model="subjects.ismy"
+          />
         </el-form-item>
-        <el-button @click="search" type="primary" style="margin-left: 10px">查询</el-button>
+        <el-button @click="search" type="primary" style="margin-left: 10px"
+          >查询</el-button
+        >
       </el-form>
       <div style="margin-top: -35px">
         <el-button type="primary" @click="createSubject">创建考试</el-button>
@@ -44,9 +52,18 @@
       </el-table-column>
     </el-table>
     <div class="paging">
-      <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
-        :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
-        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15, 20]"
+        :small="small"
+        :disabled="disabled"
+        :background="background"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -55,20 +72,21 @@
 import moment from 'moment';
 import { ref, reactive, onMounted } from 'vue';
 import { subjectsList, subjectsDel } from '../../api/subjects';
-import router from '../../router';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 onMounted(() => {
   getList();
 });
 // 点击创建考试
 const createSubject = () => {
   console.log(111);
-  router.push('/index/subjectAdd')
-}
+  router.push('/index/subjectAdd');
+};
 // 编辑
-const compile =(val:any)=>{
-console.log(val);
-router.push("/index/subjectAdd");
-}
+const compile = (val: any) => {
+  console.log(val);
+  router.push({ path: '/index/subjectAdd', query: { id: val.id } });
+};
 
 const currentPage = ref(1);
 const pageSize = ref(10);
