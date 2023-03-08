@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column align="center" prop="address" label="操作">
         <template #default="scope">
-          <el-link type="primary">编辑</el-link>
+          <el-link type="primary" @click="compile(scope.row)">编辑</el-link>
           <span style="margin: 0px 5px">|</span>
           <el-link type="primary" @click="del(scope.row.id)">删除</el-link>
         </template>
@@ -62,8 +62,12 @@ onMounted(() => {
 // 点击创建考试
 const createSubject = () => {
   console.log(111);
-  
   router.push('/index/subjectAdd')
+}
+// 编辑
+const compile =(val:any)=>{
+console.log(val);
+router.push("/index/subjectAdd");
 }
 
 const currentPage = ref(1);

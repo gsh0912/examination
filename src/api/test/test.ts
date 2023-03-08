@@ -62,6 +62,11 @@ const reqStudentanswer = (data: any) => post('/api/studentanswer/add', data);
 // 修改密码
 const reqChangePass = (data: { oldpass: string; pass: string }) =>
   post('/api/student/changepass', data);
+// 题库列表
+const tikList = (params: any) => get('/api/database/list', params);
+// 试卷添加
+const addText=(data:any)=>post('/api/subjects/add',data)
+
 export default {
   reqTestList,
   reqTestDel,
@@ -91,4 +96,6 @@ export default {
   reqTestStart,
   reqStudentanswer,
   reqChangePass,
+  tikList,
+  addText
 };
