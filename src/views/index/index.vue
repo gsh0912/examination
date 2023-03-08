@@ -36,7 +36,7 @@
               />
               <span class="title">密码</span>
             </div>
-            <div class="accountName">设置</div>
+            <div class="accountName" @click="set">设置</div>
           </div>
           <div class="accountBox">
             <div class="account">
@@ -122,6 +122,9 @@ const logout = () => {
   setTimeout(() => {
     router.push('/login');
   }, 500);
+};
+const set = () => {
+  router.push('/index/set');
 };
 </script>
 
