@@ -57,10 +57,10 @@
     >
       <el-table-column align="center" type="selection" width="55" />
       <el-table-column align="center" property="name" label="学生姓名" />
-      <el-table-column align="center" property="remark" label="备注" />
+      <el-table-column align="center" property="remarks" label="备注" />
       <el-table-column align="center" property="depname" label="所属部门" />
       <el-table-column align="center" property="classname" label="所在班级" />
-      <el-table-column align="center" property="pass" label="账号" />
+      <el-table-column align="center" property="username" label="账号" />
       <el-table-column align="center" property="addtime" label="添加时间" />
       <el-table-column
         align="center"
@@ -169,7 +169,7 @@ import pass from "./studentss/pass.vue";
 import { reqList } from "../../api/department";
 import cascader from "../../components/common/cascader.vue";
 
-const form = ref<any>({
+const form = ref<any>({  //修改数据
   id: 1,
   name: "",
   classid: "",
@@ -179,17 +179,6 @@ const form = ref<any>({
   pass: "",
   classname: "",
   remarks: "",
-});
-
-const ss = reactive({
-  name: "",
-  region: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
 });
 
 const student = reactive<any>({
@@ -216,6 +205,7 @@ const password = ref({
   name: "",
   classid: "",
   username: "",
+  remarks:""
 });
 
 // 表格
@@ -231,6 +221,7 @@ const list = async () => {
 };
 // 表格
 
+
 // 分页
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
@@ -244,6 +235,7 @@ const handleCurrentChange = (val: number) => {
   list();
 };
 // 分页
+
 
 // 删除
 const stu_delete = (id: string) => {
@@ -270,6 +262,7 @@ const stu_delete = (id: string) => {
     });
 };
 // 删除
+
 
 // 批量删除
 let ids = ref<any>("");
@@ -314,22 +307,17 @@ const getDepid = async (val: any) => {
 };
 // 批量删除
 
+
 // 添加
 let dialogshow = ref<any>();
 const addstudent = () => {
   dialogshow.value.dialogVisible = true;
 };
 
-//添加
+//批量添加
 const dialogformshow = ref<any>();
 const addALL = () => {
   dialogformshow.value.dialogVisible = true;
-};
-// 添加
-
-const department = async () => {
-  let res: any = await reqList();
-  student.list = res.data.list;
 };
 
 // 修改
@@ -359,7 +347,6 @@ const uponfirm = async () => {
     mobile: form.value.mobile,
     username: form.value.username,
   });
-  console.log(res);
   if (res.errCode === 10000) {
     ElMessage({
       type: "success",
@@ -369,9 +356,14 @@ const uponfirm = async () => {
     student.dialogVisible = false;
   }
 };
-// 修改
+
 
 // 部门级联
+const department = async () => {
+  let res: any = await reqList();
+  student.list = res.data.list;
+};
+
 let id = ref<Number>();
 const classes = async () => {
   let res: any = await classesdepartment({});

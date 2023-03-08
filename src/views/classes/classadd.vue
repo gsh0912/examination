@@ -4,7 +4,7 @@
       ref="ruleFormRef"
       :model="form"
       :rules="rules"
-      label-width="80px"
+      label-width="90px"
 
     >
       <el-form-item label="班级" prop="name">
@@ -14,10 +14,11 @@
         <el-cascader :options="tertiary.arr" v-model="form.depid" :props="props1" @change="selectCasc"
          clearable />
       </el-form-item>
-      <!-- <el-form-item> -->
-        <el-button @click="resetForm" class="dialog-footer">取消</el-button>
+      <el-form-item>
+          <el-button @click="resetForm" class="text">取消</el-button>
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 确定 </el-button>
-      <!-- </el-form-item> -->
+  
+      </el-form-item>
     </el-form>
   </el-dialog>
 </template>
@@ -26,7 +27,7 @@
 import { Ref, ref, defineExpose, reactive, defineProps, onMounted ,toRefs} from "vue";
 import { FormInstance, ElMessage, FormRules } from "element-plus";
 import { classesdepartment, addClasses } from "../../api/classes";
-import cascader from "../../components/common/cascader.vue";
+// import cascader from "../../components/common/cascader.vue";
 interface users {
   id: number;
   name: string;
@@ -49,7 +50,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       let res:any = await addClasses(form);
-      console.log(res)
       if (res.errCode !== 10000) {
         ElMessage({
           message: "添加失败！",
@@ -93,7 +93,6 @@ const selectCasc = (val: any) => {
 const { options } = toRefs(data);
 const lists = async () => {
   let res = await classesdepartment({});
-  console.log(res);
   tertiary.arr = res.data.list;
 };
 
@@ -121,8 +120,8 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-.dialog-footer {
-  margin-left: 390px;
+.text{
+  margin-left: 340px;
 }
 
 </style>

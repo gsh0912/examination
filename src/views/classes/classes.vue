@@ -92,8 +92,8 @@
     <!-- 添加 -->
 
     <!-- 修改弹窗 -->
-    <el-dialog v-model="from.dialogFormVisible" title="修改">
-      <el-form :model="ruleForm" label-width="80px">
+    <el-dialog v-model="from.dialogFormVisible" title="修改" width="35%">
+      <el-form :model="ruleForm" label-width="90px">
         <el-form-item label="班级名称" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
@@ -106,13 +106,11 @@
             @getDepid="getDepid"
           />
         </el-form-item>
-      </el-form>
-      <!-- <template #footer> -->
-      <span class="dialog-footer">
+        <span class="dialog-footer">
         <el-button @click="closeClass">取消</el-button>
         <el-button type="primary" @click="updateStudent"> 确定 </el-button>
       </span>
-      <!-- </template> -->
+      </el-form>
     </el-dialog>
     <!-- 修改弹窗 -->
   </div>
@@ -132,11 +130,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import cascader from '../../components/common/cascader.vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import classadd from './classadd.vue';
-// 获取部门id
-const getDepid=(val:any)=>{
-  console.log(val)
-  ruleForm.depid=val
-}
 // 添加
 let dialogshow = ref<any>();
 const classFn = () => {
@@ -151,14 +144,13 @@ const cascaderRef = ref();
 const classFnup = (data: any) => {
   from.dialogFormVisible = true;
   let res = JSON.parse(JSON.stringify(data));
-  console.log(res);
   ruleForm.id = res.id;
   nextTick(() => {
     cascaderRef.value.value = res.depid;
   });
   ruleForm.name = res.name;
   ruleForm.depid=res.depid;
-  console.log(1111, ruleForm.depid);
+  // console.log(1111, ruleForm.depid);
 };
 
 const updateStudent = async (val: any) => {
@@ -167,7 +159,7 @@ const updateStudent = async (val: any) => {
     depid: ruleForm.depid,
     id: ruleForm.id,
   });
-  console.log(ruleForm)
+  // console.log(ruleForm)
   if (res.errCode === 10000) {
     from.dialogFormVisible = false
         ElMessage({
@@ -180,12 +172,12 @@ const updateStudent = async (val: any) => {
 // 修改
 
 
-
 const ruleForm = reactive({
   name: '',
   depid: 0,
   id: 0,
 });
+
 // 搜索
 const from = reactive({
   isshow: false,
@@ -224,9 +216,13 @@ const cascaderChange = (val: Array<number>) => {
 // dialog里的弹出框
 const cascaderChangeClass = (val: Array<number>) => {
   ruleForm.depid = val[val.length - 1];
-  console.log(val)
 };
+
 // 部门级联
+// 获取部门id
+const getDepid=(val:any)=>{
+  ruleForm.depid=val
+}
 const classes = async () => {
   let res: any = await classesdepartment({});
   if (res.errCode === 10000) {
@@ -264,7 +260,6 @@ const list = async () => {
     depid: from.config.depid,
     key: from.config.key,
   });
-  console.log(res);
   if (res.errCode === 10000) {
     from.tableData = res.data.list;
     from.total = res.data.counts;
@@ -306,7 +301,6 @@ const open = () => {
   })
     .then(async () => {
       let res: any = await classesides(ids);
-      console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
           type: 'success',
@@ -335,7 +329,6 @@ const deleclasses = (index: any) => {
   })
     .then(async () => {
       let res: any = await classesdelete({ id: index });
-      console.log(res);
       if (res.errCode === 10000) {
         ElMessage({
           type: 'success',

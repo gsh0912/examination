@@ -1,3 +1,7 @@
+header {
+  display: flex;
+  justify-content: space-between;
+}
 .classes_p {
   font-size: 22px;
 }
@@ -9,6 +13,9 @@
   display: flex;
   justify-content: center;
   margin-top: 22px;
+}
+.dialog-footer {
+  margin-left: 430px;
 }
 .el-input__inner {
   width: 300px;

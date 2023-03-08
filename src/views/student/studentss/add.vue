@@ -8,7 +8,7 @@
         <el-input v-model="form.mobile" />
       </el-form-item>
       <el-form-item label="部门" prop="depid">
-        <el-select v-model="form.depid" value-key="id" placeholder="请选择部门">
+        <el-select value-key="id" placeholder="请选择部门"  v-model="form.depid">
           <el-option
             v-for="item in deparlist.list"
             :label="item.name"
@@ -23,6 +23,7 @@
           <el-option
             v-for="item in deparlist.classlist"
             :label="item.name"
+            :key="item.id"
             :value="item.id"
           />
         </el-select>
@@ -53,24 +54,24 @@ import { classeslist } from "../../../api/classes";
 interface users {
   id: number;
   name: string;
-  classid: number;
+  classid: string;
   username: string;
   pass: string;
   mobile: string;
   remarks: string;
-  depid: number;
+  depid: string;
   // delist:Array<AN>
 }
 
 const form = reactive<users>({
   id: 0,
   name: "", //姓名
-  classid: 1, //班级
+  classid: "请选择部门", //班级
   mobile: "", //手机号
   username: "", //账号
   pass: "", //密码
   remarks: "", //备注
-  depid: 1,
+  depid: "请选择部门",
   // delist:[]
 });
 
@@ -149,6 +150,7 @@ const addstudent = async (formEl: FormInstance | undefined) => {
     }
   });
 };
+
 // 部门列表
 const department = async () => {
   let res: any = await reqList();
@@ -158,7 +160,7 @@ const department = async () => {
 
 // 班级
 const changeGateway = async (val: any) => {
-  console.log(val.id);
+  // console.log(val.id);
   let res: any = await classeslist({ depid: val.id });
   console.log(res);
   if (res.errCode === 10000) {
