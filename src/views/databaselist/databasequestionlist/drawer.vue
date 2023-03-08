@@ -66,7 +66,7 @@
         </div>
         <el-form-item label="分值" prop="name">
           <div class="score">
-            <el-input-number v-model="scores" class="mx-4" :min="1" :max="10" controls-position="right"
+            <el-input-number v-model="scores" class="mx-4" :min="1"  controls-position="right"
               @change="handleChange" />
           </div>
         </el-form-item>
@@ -221,17 +221,7 @@ const drawer = ref<boolean>(false);
 const direction = ref<string>('rtl');
 const title = ref<string>('');
 const EditorRef = ref<any>(''); //富文本
-defineExpose({
-  drawer,
-  title,
-  state,
-  EditorRef,
-  rightcehckboxAnswers,
-  rightAnswers,
-  radio,
-  estimateAnswer,
-  scores
-});
+
 
 // 点击旁白或关闭按钮 关闭右侧抽屉
 const handleClose = (done: () => void) => {
@@ -245,6 +235,7 @@ interface Iinfo {
   answers: any[];
   scores: number;
   databaseid: number;
+  id:number
 }
 const info = reactive<Iinfo>({
   title: '',
@@ -253,6 +244,7 @@ const info = reactive<Iinfo>({
   answers: [],
   scores: scores.value,
   databaseid: Number(route.query.id),
+  id:0
 });
 
 // 提交按钮
@@ -281,6 +273,18 @@ const save = async () => {
 const cancel = () => {
   drawer.value = false;
 };
+defineExpose({
+  drawer,
+  title,
+  state,
+  EditorRef,
+  rightcehckboxAnswers,
+  rightAnswers,
+  radio,
+  estimateAnswer,
+  scores,
+  info
+});
 </script>
 
 <style scoped lang="less">
