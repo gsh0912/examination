@@ -130,9 +130,4 @@ const set = () => {
 
 <style scoped>
 @import url('./index.css');
-.iconfont {
-  font-size: 28px;
-  width: 29px;
-  height: 29px;
-}
 </style>
