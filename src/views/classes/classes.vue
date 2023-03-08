@@ -30,7 +30,7 @@
           <el-button type="primary" @click="searchfn">查询</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="danger" v-if="from.isshow" @click="open"
+      <el-button type="danger" v-show="ids.length > 0" @click="open"
         >批量删除</el-button
       >
     </div>
@@ -107,9 +107,9 @@
           />
         </el-form-item>
         <span class="dialog-footer">
-        <el-button @click="closeClass">取消</el-button>
-        <el-button type="primary" @click="updateStudent"> 确定 </el-button>
-      </span>
+          <el-button @click="closeClass">取消</el-button>
+          <el-button type="primary" @click="updateStudent"> 确定 </el-button>
+        </span>
       </el-form>
     </el-dialog>
     <!-- 修改弹窗 -->
@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { ElTable } from 'element-plus';
-import { reactive, ref, onMounted,nextTick } from 'vue';
+import { reactive, ref, onMounted, nextTick } from 'vue';
 import {
   classeslist,
   classesdelete,
@@ -149,7 +149,7 @@ const classFnup = (data: any) => {
     cascaderRef.value.value = res.depid;
   });
   ruleForm.name = res.name;
-  ruleForm.depid=res.depid;
+  ruleForm.depid = res.depid;
   // console.log(1111, ruleForm.depid);
 };
 
@@ -161,16 +161,15 @@ const updateStudent = async (val: any) => {
   });
   // console.log(ruleForm)
   if (res.errCode === 10000) {
-    from.dialogFormVisible = false
-        ElMessage({
-          type: "success",
-          message: "修改成功",
-        });
-        list();
-   }
+    from.dialogFormVisible = false;
+    ElMessage({
+      type: 'success',
+      message: '修改成功',
+    });
+    list();
+  }
 };
 // 修改
-
 
 const ruleForm = reactive({
   name: '',
@@ -195,13 +194,9 @@ const from = reactive({
 });
 // 搜索
 
-
-
 const searchfn = () => {
   list();
 };
-
-
 
 // 获取搜索级联框
 const cascaderChange = (val: Array<number>) => {
@@ -220,9 +215,9 @@ const cascaderChangeClass = (val: Array<number>) => {
 
 // 部门级联
 // 获取部门id
-const getDepid=(val:any)=>{
-  ruleForm.depid=val
-}
+const getDepid = (val: any) => {
+  ruleForm.depid = val;
+};
 const classes = async () => {
   let res: any = await classesdepartment({});
   if (res.errCode === 10000) {
@@ -246,7 +241,7 @@ const cascaderProps = ref<IcascaderProps>({
   label: 'name',
   value: 'id',
   expandTrigger: 'hover' as const,
-  emitPath:false,
+  emitPath: false,
   checkStrictly: true,
 });
 
@@ -284,13 +279,11 @@ const handleCurrentChange = (val: number) => {
 // 分页
 
 // 批量删除
-let ids = ref<any>('');
+let ids = ref<any>([]);
 const handleSelectionChange = (val: []) => {
-  const arr: any = val.map((item: { id: any }) => {
-    from.isshow = true;
+  ids.value = val.map((item: any) => {
     return item.id;
   });
-  ids = arr;
 };
 const open = () => {
   ElMessageBox.confirm('确定要删除选定的班级？', {
@@ -300,14 +293,15 @@ const open = () => {
     center: false,
   })
     .then(async () => {
-      let res: any = await classesides(ids);
+      console.log(ids.value);
+
+      let res: any = await classesides(ids.value);
       if (res.errCode === 10000) {
         ElMessage({
           type: 'success',
           message: '删除成功',
         });
         list();
-        from.isshow = false;
       }
     })
     .catch(() => {

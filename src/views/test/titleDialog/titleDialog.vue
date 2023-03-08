@@ -121,7 +121,7 @@ watch(() => props.titleData, (newVal) => {
 
 <style scoped lang="less">
 .titleBox {
-  /deep/ .el-dialog__body {
+  :deep(.el-dialog__body ) {
     padding: 10px 20px;
   }
 
@@ -147,11 +147,11 @@ watch(() => props.titleData, (newVal) => {
     }
   }
 
-  /deep/ .el-dialog__body {
+ :deep(.el-dialog__body ) {
     padding-bottom: 100px;
   }
 
-  /deep/.el-dialog {
+ :deep(.el-dialog) {
     --el-dialog-margin-top: 6vh;
   }
 
@@ -162,7 +162,7 @@ watch(() => props.titleData, (newVal) => {
     .topic {
       padding: 15px 10px;
 
-      /deep/ .el-checkbox__input {
+     :deep(.el-checkbox__input)  {
         margin: 0 5px 0 15px;
       }
 
@@ -174,7 +174,7 @@ watch(() => props.titleData, (newVal) => {
         padding: 8px;
       }
 
-      /deep/.checkboxNative {
+     :deep(.checkboxNative ){
         background-color: #eefaf6;
 
         .el-checkbox__label {
@@ -227,11 +227,11 @@ watch(() => props.titleData, (newVal) => {
           margin: 0 10px;
         }
 
-        /deep/.el-radio__label {
+       :deep(.el-radio__label ){
           color: #606266;
         }
 
-        /deep/.el-radio__input {
+        :deep(.el-radio__input ){
           margin: 0 5px 0 15px;
         }
       }

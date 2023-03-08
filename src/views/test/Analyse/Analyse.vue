@@ -479,7 +479,7 @@ header {
   .topic {
     padding: 15px 10px;
 
-    /deep/ .el-checkbox__input {
+   :deep(.el-checkbox__input)  {
       margin: 0 5px 0 15px;
     }
 
@@ -491,7 +491,7 @@ header {
       padding: 8px;
     }
 
-    /deep/.checkboxNative {
+   :deep(.checkboxNative ){
       background-color: #eefaf6;
 
       .el-checkbox__label {
@@ -543,14 +543,14 @@ header {
         margin: 0 10px;
       }
 
-      /deep/.el-radio__label {
+    :deep(.el-radio__label ){
         width: 740px;
         display: flex;
         color: #606266;
         justify-content: space-between;
       }
 
-      /deep/.el-radio__input {
+     :deep(.el-radio__input) {
         margin: 0 5px 0 15px;
       }
     }
