@@ -117,7 +117,7 @@ import { reactive, ref, watch, watchEffect } from 'vue';
 import moment from 'moment';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { useMainStore } from '../../../stores/dialog';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import studentText from '../../../components/content/test/studentText.vue';
 import quertionDialog from '../../../components/content/test/quertionDialog.vue';
 import questionsList from '../../../components/content/test/questionsList.vue';
@@ -125,8 +125,10 @@ import createTestDrawer from '../../../components/content/test/createTestDrawer.
 import batchExportDiog from '../../../components/content/test/batchExportDiog.vue';
 import testpaperDialog from '../../../components/content/test/testpaperDialog.vue';
 import Test from '../../../api/test/test';
+import { number } from 'echarts';
 const store: any = useMainStore();
 const router = useRouter();
+const route = useRoute();
 const databaseid = ref(); // 题库id
 const personType = ref(); //可见 学生 阅卷
 const duration = ref(1); // 是否限制时长
@@ -234,7 +236,7 @@ watchEffect(() => {
   ruleForm.scores = ruleForm.questions.reduce((pre: number, item: any) => {
     return pre + Number(item.scores);
   }, 0);
-  console.log(ruleForm.scores);
+  // console.log(ruleForm.scores);
 });
 // 监听数据回显
 watch(
@@ -377,7 +379,7 @@ const onAddTest = (state: number) => {
       if (!ruleForm.limits.length) return ElMessage.error('请添加可见老师');
       const res: any = await Test.addText(ruleForm);
       if (res.errCode === 10000) {
-        ElMessage.success(ruleForm.id ? '修改成功' : '添加成功');
+        ElMessage.success(route.query.id ? '修改成功' : '添加成功');
         router.push('/index/subjects');
       }
     }
@@ -473,6 +475,23 @@ const handleTestArr = (data: any) => {
     ruleForm.questions.push(obj);
   });
 };
+
+// 获取单条数据并进行回显操作
+const one = async () => {
+  let res: any = await Test.reqSubjectOne({ id: Number(route.query.id) });
+  // console.log(res.data.databaseid);
+  if (res.errCode === 10000) {
+    ruleForm.title = res.data.title;
+    ruleForm.blanks = res.data.blanks;
+    ruleForm.questions = res.data.questions;
+    ruleForm.databaseid = res.data.databaseid;
+  }
+};
+// 如果id大于0，就是修改
+if (Number(route.query.id) > 0) {
+  // console.log(route.query.id);
+  one();
+}
 </script>
 <style lang="less" scoped>
 .center {
