@@ -17,7 +17,8 @@
             <el-upload
               v-model:file-list="fileList"
               class="upload-demo"
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              action="http://estate.eshareedu.cn/exam/api/student/upload"
+              :headers="{Authorization:token}"
               :on-change="handleChange"
             >
               <el-button type="primary">点击上传文件</el-button>
@@ -43,6 +44,9 @@ import {
 } from "element-plus";
 import {downLoad} from "../../../utils/downLoad"
 
+const token = sessionStorage.getItem('token')
+console.log(token);
+
 
 // 子传父
 let dialogformshow: any = (dialogVisible: Ref<boolean>) => {
@@ -64,12 +68,13 @@ const fileList:any = ref<UploadUserFile[]>([
 
    
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-  fileList.value.name=uploadFile.name
-  fileList.value.url=uploadFile.url
+    console.log(uploadFile);
+    console.log(uploadFiles);
+    
 };
 // 文件导出
 const downloads=()=>{
-  downLoad("http://estate.eshareedu.cn/exam/upload/question.xlsx")
+  downLoad("http://estate.eshareedu.cn/exam/upload/student.xlsx")
 }
 </script>
 

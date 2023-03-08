@@ -21,19 +21,19 @@
           </el-step>
           <el-step title="上传写好的试题表" />
         </el-steps>
-        <!-- <el-upload
+        <el-upload
           v-if="store.showExportDialog == true"
           name="file"
           ref="Aupload"
           class="upload-demo upload"
+          :headers="{Authorization:token }"
           action="http://estate.eshareedu.cn/exam/api/test/upload"
           :limit="1"
           :auto-upload="true"
           :on-success="handleSuccess"
         >
         <el-button type="primary">点击上传文件</el-button>
-        </el-upload> -->
-        <el-button type="primary">点击上传文件</el-button>
+        </el-upload>
       </div>
     </template>
     <template #button>
@@ -51,6 +51,9 @@ import { ref } from 'vue';
 const emit = defineEmits(['onBatch']);
 const store: any = useMainStore();
 const dataFile = ref([]);
+const token = sessionStorage.getItem('token')
+console.log(token);
+
 // 关闭弹框触发
 const onClose = () => {
   // 关闭弹框
