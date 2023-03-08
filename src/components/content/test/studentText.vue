@@ -1,10 +1,5 @@
 <template>
-  <publicDialog
-    @onCloseDialog="onClose"
-    :dialogVisible="store.showSkyDialog"
-    :title="title"
-    :width="'45%'"
-  >
+  <publicDialog @onCloseDialog="onClose" :dialogVisible="store.showSkyDialog" :title="title" :width="'45%'">
     <template #content>
       <div class="content">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -13,36 +8,21 @@
             <el-col :span="12">
               <el-form-item label="部门">
                 <el-select v-model="formInline.depid" @change="getClass">
-                  <el-option
-                    v-for="(item, index) in departmentList"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.id"
-                  />
+                  <el-option v-for="(item, index) in departmentList" :key="index" :label="item.name" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="title === '学生考试列表'">
               <el-form-item label="班级">
                 <el-select v-model="formInline.classid" @change="getStudent">
-                  <el-option
-                    v-for="(item, index) in classList"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.id"
-                  />
+                  <el-option v-for="(item, index) in classList" :key="index" :label="item.name" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-        <el-transfer
-          @left-check-change="onLeft"
-          @right-check-change="onRight"
-          :titles="['未选', '全选']"
-          v-model="idValue"
-          :data="data"
-        />
+        <el-transfer @left-check-change="onLeft" @right-check-change="onRight" :titles="['未选', '全选']" v-model="idValue"
+          :data="data" />
       </div>
     </template>
     <template #button>
@@ -95,7 +75,7 @@ const props = defineProps({
   },
   testId: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
   createTest: {
     type: Boolean,
@@ -134,7 +114,7 @@ watch(
 );
 // 获取部门列表
 const getDepartmentList = async () => {
-  const res:any = await Test.reqDepartmentList();
+  const res: any = await Test.reqDepartmentList();
   if (res.errCode === 10000) {
     departmentList.value = res.data.list;
   }
@@ -145,12 +125,12 @@ const getClass = async (depid: number) => {
   if (title.value === "学生考试列表") {
     classList.value = [];
     formInline.classid = "";
-    const res:any = await Test.reqClassesList({ depid });
+    const res: any = await Test.reqClassesList({ depid });
     if (res.errCode === 10000) {
       classList.value = res.data.list;
     }
   } else if (title.value === "可见老师" || title.value === "阅卷老师") {
-    const res:any = await Test.reqTeacherList({ depid });
+    const res: any = await Test.reqTeacherList({ depid });
     if (res.errCode === 10000) {
       data.value = res.data.list.map((item: any) => {
         return {
@@ -164,7 +144,7 @@ const getClass = async (depid: number) => {
 // 获取学生考试列表
 const getStudent = async () => {
   console.log(formInline);
-  const res:any = await Test.reqStudentList(formInline);
+  const res: any = await Test.reqStudentList(formInline);
   if (res.errCode === 10000) {
     data.value = res.data.list.map((item: any) => {
       return {
@@ -192,7 +172,7 @@ const onClose = () => {
   formInline.classid = "";
   formInline.depid = "";
   // 关闭弹框
-  store.$patch((state) => {
+  store.$patch((state: any) => {
     state.showSkyDialog = false;
   });
 };
@@ -240,20 +220,25 @@ const onStudentAdd = async () => {
 .content {
   margin-top: -20px;
 }
+
 :deep(.el-transfer-panel__body) {
   height: 50vh;
   overflow: hidden;
 }
+
 :deep(.el-transfer-panel) {
   width: 280px;
 }
+
 .el-transfer {
   display: flex;
   justify-content: space-around;
 }
+
 :deep(.el-transfer__buttons) {
   display: none;
 }
+
 :deep(.el-transfer-panel__list) {
   overflow: hidden;
 }

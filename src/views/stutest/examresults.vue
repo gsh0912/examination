@@ -55,11 +55,11 @@
         <span></span>
         <span></span>
         <span></span>
-        <p :class="resultData.list.studentScores >= 60 ? 'pass' : 'fail'">
+        <p :class="resultData.list.studentScores >= resultData.list.scores ? 'pass' : 'fail'">
           {{ resultData.list.studentScores }}
         </p>
         <p>
-          <span v-if="resultData.list.studentScores >= 60">恭喜，通过考试</span>
+          <span v-if="resultData.list.studentScores >= resultData.list.scores">恭喜，通过考试</span>
           <span v-else>很可惜，未通过</span>
         </p>
         <span></span>
@@ -227,6 +227,7 @@
         style="background-color: rgb(20, 189, 131)"
         v-show="resultData.list.result === '已通过'"
         type="success"
+        @click="examine(resultData.list.id)"
         >查看考卷</el-button
       >
       <el-button

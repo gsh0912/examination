@@ -53,7 +53,7 @@ const dataFile = ref([]);
 // 关闭弹框触发
 const onClose = () => {
   // 关闭弹框
-  store.$patch((state) => {
+  store.$patch((state: { showExportDialog: boolean; }) => {
     state.showExportDialog = false;
   });
 };
