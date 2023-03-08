@@ -39,13 +39,5 @@ export const useMainStore = defineStore<any>('dialog', {
     };
   },
   getters: {},
-  actions: {},
-  // persist: {
-  //   // 修改存储中使⽤的键名称,默认为当前 store 的 id
-  //   key: 'test',
-  //   // 修改为存储⽅式,默认为 localStorage
-  //   storage: window.sessionStorage,
-  //   // 按需持久化部分数据,[]意味着没有状态被持久化(默认为undefined,持久化整个状态)
-  //   paths: ['createTestData'],
-  // },
+  actions: {}
 });

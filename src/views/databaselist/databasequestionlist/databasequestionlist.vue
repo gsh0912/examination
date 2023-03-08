@@ -132,6 +132,7 @@ const compileFn = (data: any) => {
   nextTick(() => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.radio = data.type;
+    leftDrawer.value.info.id = data.id
     nextTick(() => {
       leftDrawer.value.EditorRef.valueHtml = data.title;
     });

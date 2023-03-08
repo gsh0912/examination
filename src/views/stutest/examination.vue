@@ -81,6 +81,7 @@ import { useRoute } from 'vue-router';
 import { testStart } from '../../api/test'
 import { onMounted, ref, reactive, toRefs, watch, nextTick } from 'vue';
 import { studentanswerAdd } from '../../api/stutest'
+import router from '../../router';
 const route = useRoute()
 onMounted(() => {
   getTopic()
@@ -92,19 +93,20 @@ const studentid = sessionStorage.getItem('model')
 // 点击提交试卷 
 const testPaper = async () => {
 
-
-
   topic.topicList.questions.forEach((item: any) => {
+    if (item.type === '多选题' && item.studentanswer) {
+      item.studentanswer = item.studentanswer.substring(0, item.studentanswer.length - 1)
+    }
     let data = {}
     if (item.type === '问答题' || item.type === '判断题' || item.type === '填空题') {
       data = {
         "testid": item.testid,
         "studentid": JSON.parse(studentid!).id,
         "questionid": item.id,
-        "answer": item.studentanswer,
+        "answer": item.studentanswer ? item.studentanswer : "",
         "scores": item.type === '问答题' || item.type === '填空题'
           ? null
-          : item.type === '单选题' || item.type === '判断题'
+          : item.type === '单选题' || item.type === '判断题' || item.type === '多选题'
             ? item.studentanswer === item.answer
               ? item.scores
               : 0
@@ -119,10 +121,10 @@ const testPaper = async () => {
         "testid": item.testid,
         "studentid": JSON.parse(studentid!).id,
         "questionid": item.answers[0].questionid,
-        "answer": item.studentanswer,
+        "answer": item.studentanswer ? item.studentanswer : "",
         "scores": item.type === '问答题' || item.type === '填空题'
           ? null
-          : item.type === '单选题' || item.type === '判断题'
+          : item.type === '单选题' || item.type === '判断题' || item.type === '多选题'
             ? item.studentanswer === item.answer
               ? item.scores
               : 0
@@ -136,22 +138,20 @@ const testPaper = async () => {
 
 
     datas.value.push(data)
+    console.log(datas.value);
+
   })
-  let res = await studentanswerAdd(datas.value)
-  console.log(datas.value);
-  
+  let res: any = await studentanswerAdd(datas.value)
   console.log(res);
-
-
+  if (res.errCode === 10000) {
+    router.push(`/examresults?id=${topic.topicList.id}`)
+  }
 }
-
-
 //判断题点击事件
 const estimateFn = (val: any, text: string) => {
   console.log(val);
   val.studentanswer = text
 }
-
 // 答题卡点击事件
 const examListRef = ref() //通过ref 获取每个元素的高度
 const examListFn = (index: number) => {
