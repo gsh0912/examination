@@ -19,10 +19,11 @@
 
         </div>
       </div>
+       <!-- 添加教资 -->
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
         status-icon>
         <el-form-item class="add">
-          <!-- 添加教资 -->
+         
           <el-dialog v-model="dialogFormVisible" width="33%" :title="title + '老师'" v-if="dialogFormVisible == true">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="addteacher.name" style="width:400px" />
@@ -56,6 +57,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 搜索框 -->
     <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="60px" class="demo-ruleForm" status-icon>
       <el-form-item label="关键字">
         <el-input placeholder="请输入关键字" v-model="ruleForm.key" @keyup.enter="keys" />
@@ -91,6 +93,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
     <div class="demo-pagination-block">
       <el-pagination v-model:currentPage="currentPage4" v-model:page-size="pageSize4" background
         :page-sizes="[10, 20, 30, 40]" :small="small" :disabled="disabled"
@@ -100,23 +103,22 @@
     <!-- 重置密码 -->
     <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm"
       :hide-required-asterisk="false">
-      <el-dialog v-model="centerDialogVisible" title="重置密码" width="30%">
+      <el-dialog v-model="addteacher.centerDialogVisible" title="重置密码" width="30%">
         <span style="margin-left:80px">
           <el-form-item label="姓名" prop="name">
-            {{ addteacher.name }}
+            {{ ruleForm.name }}
 
           </el-form-item>
-
           <el-form-item label="密码" style="margin-top:20px" prop="pass">
             <el-input v-model="ruleForm.pass" type="password" autocomplete="off"/>
           </el-form-item>
-          <el-form-item label="确认密码" prop="checkPass">
-            <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" />
+          <el-form-item label="确认密码" prop="confirmPass">
+            <el-input v-model="ruleForm.confirmPass" type="password" autocomplete="off" />
           </el-form-item>
         </span>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="centerDialogVisible = false">取消</el-button>
+            <el-button @click="cancel">取消</el-button>
             <el-button type="primary" @click="open2">确定</el-button>
           </span>
         </template>
@@ -133,6 +135,7 @@ import { roleList } from '../../api/role'
 import { ref, reactive, toRefs } from "vue";
 import type { FormInstance, FormRules, UploadProps, UploadUserFile } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { ru } from 'element-plus/es/locale';
 const input = ref("");
 const isshow = ref(false);
 // const dialogTableVisible = ref(false);
@@ -166,11 +169,16 @@ const addteacher = reactive({
   name: "",
   tel: "",
   depid: 0,
-  roleid: "",
-  depids: ''
+  roleid: "请选择账号",
+  depids: '',
+  checkPass:'',
+  pass:'',
+  confirmPass:'',
+  oldpass:'',
+  centerDialogVisible:false
 });
 
-const ruleForm = reactive({
+const ruleForm = reactive<any>({
   psize: 10,
   page: 1,
   counts: 0,
@@ -178,8 +186,25 @@ const ruleForm = reactive({
   key: "",
   pass: "",
   checkPass: "",
-});
+  username:'',
+  name:'',
+  confirmPass:''
+});  
 
+// const password= reactive<any>({
+//   id: 0,
+//   username: "",
+//   pwd: "",
+//   name: "",
+//   tel: "",
+//   depid: 0,
+//   roleid: "",
+//   depids: '',
+//   checkPass:'',
+//   pass:'',
+//   confirmPass:'',
+//   oldpass:'',
+// })
 const data = reactive<any>({
   options: [],
 });
@@ -191,28 +216,8 @@ const selectCasc = (val: any) => {
 const selectCascs = (val: any) => {
   if (val.length > 0) addteacher.depids = val[val.length - 1];
 };
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 
-const validatePass = (rule: any, value: any, callback: any) => {
-  if (value === "") {
-    callback(new Error("请输入密码"));
-  } else {
-    if (ruleForm.checkPass !== "") {
-      if (!ruleFormRef.value) return;
-      ruleFormRef.value.validateField("checkPass", () => null);
-    }
-    callback();
-  }
-};
-const validatePass2 = (rule: any, value: any, callback: any) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
-  } else if (value !== ruleForm.pass) {
-    callback(new Error("输入密码两次不一致"));
-  } else {
-    callback();
-  }
-};
 
 const tableData = reactive({
   arr: [],
@@ -315,6 +320,7 @@ const revamp = async (val: any) => {
   addteacher.roleid = val.roleid;
   addteacher.pwd = val.pass;
   addteacher.depid = val.depid;
+  
   // console.log(val.pwd);
   dialogFormVisible.value = true;
   isshow.value = false;
@@ -354,31 +360,85 @@ const close = () => {
   addteacher.depid = 0;
   addteacher.roleid = "";
 };
+
+const validatePass = (rule: any, value: any, callback: any) => {
+      if (value === '') {
+        callback(new Error("请输入密码"));
+      } else if (value.toString().length < 6 || value.toString().length > 18) {
+        callback(new Error("密码长度为6-18位"));
+      } else {
+        callback();
+      }
+    };
+const validatePass2 = (rule:any,value:any,callback:any) => {
+  if (value === "") {
+    callback(new Error("请再次输入密码"));
+  } else if (value !== ruleForm.pass) {
+    callback(new Error("输入密码两次不一致"));
+  } else {
+    callback();
+  }
+};
 // 添加布局验证
 const rules = reactive<FormRules>({
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
   username: [{ required: true, message: "请输入账号", trigger: "blur" }],
   tel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-  pwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
+  pwd:[{required:true,message:'请输入密码',trigger:'blur'}],
   pass: [{ validator: validatePass, trigger: "blur" }],
-  checkPass: [{ validator: validatePass2, trigger: "blur" }],
+  confirmPass: [{ validator: validatePass2, trigger: "blur" }],
 });
-//修改密码
+//点击重置密码
+const rest = (data:any) => {
+  addteacher.centerDialogVisible=true
+  ruleForm.username = data.username
+  ruleForm.id=data.id
+  ruleForm.name = data.name
+  // ruleForm.pass = data.pass
+  ruleForm.checkPass = data.checkPass
+  ruleForm.confirmPass = data.confirmPass
+  ruleForm.oldpass = data.oldpass
+}
+// 点击确定修改按钮
+const open2 =async()=>{
+  ruleFormRef.value.validate(async (valid:boolean) => {
+    if (valid) {
+      console.log('submit!')
+          let arr={
+    id:ruleForm.id,
+    username: ruleForm.username,
+    pass:ruleForm.pass,
+    checkPass:ruleForm.checkPass,
+    name:ruleForm.name,
+    confirmPass:ruleForm.confirmPass,
+    oldpass:ruleForm.confirmPass
+  }
+  console.log(1111111,arr.id)
+  // 调用列表
+  let res :any = await addList(arr)
+  console.log(res)
+  if(res.errCode===10000){
+    addteacher.centerDialogVisible=false
+    ElMessage({
+      type:'success',
+      message:'重置成功',
+    })
+    list()
+  }
+    } else {
 
-const open2 = () => {
-  ElMessage({
-    message: '修改密码成功',
-    type: 'success',
-
+      console.log('error submit!')
+    }
   })
-  centerDialogVisible.value = false
 
 }
-const rest = async (data: any) => {
-  addteacher.name = data.name;
-  console.log(data);
-  centerDialogVisible.value = true;
-};
+
+const cancel = ()=>{
+  addteacher.centerDialogVisible=false
+  ruleForm.pass='',
+  ruleForm.confirmPass=''
+}
+
 const amend = () => { };
 // 批量上传
 const fileList = ref<UploadUserFile[]>([
