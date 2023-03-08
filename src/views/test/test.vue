@@ -57,13 +57,11 @@
       class="m-2"
       placeholder="请选择"
       style="width: 140px; margin-left: 10px"
+      @change="getState"
     >
-      <el-option
-        v-for="item in stateArr"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
+      <el-option label="所有" value="0" />
+      <el-option label="已发布" value="1" />
+      <el-option label="未发布" value="2" />
     </el-select>
     <el-button type="primary" class="searchBtn" @click="searchFn"
       >查询</el-button
@@ -487,6 +485,10 @@ const shortcuts = [
     },
   },
 ];
+// 状态查询
+const getState=()=>{
+  getTabList();
+}
 </script>
 
 <style scoped lang="less">
