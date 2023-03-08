@@ -156,10 +156,9 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { ElTable } from "element-plus";
-import type { ITable } from "../../types/table";
 import { useMainStore } from "../../stores/dialog";
 import moment from "moment"; // 时间格式化
-const store = useMainStore();
+const store:any = useMainStore();
 const multipleSelection = ref([]); // 复选框选中一行的数据存放在里面
 const emit = defineEmits([
   "onSelectMsg",
@@ -184,7 +183,7 @@ watch(
 const props = withDefaults(
   defineProps<{
     tableConfig: any;
-    tableData: Array<ITable>;
+    tableData: Array<any>
   }>(),
   {
     tableConfig: () => {},

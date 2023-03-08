@@ -190,7 +190,7 @@
 import { useMainStore } from "../../../stores/dialog";
 import moment from "moment";
 import { storeToRefs } from "pinia";
-const store = useMainStore();
+const store:any = useMainStore();
 const { showDrawer, drawerData } = storeToRefs(store);
 // 替换方法
 const rep = (str: string) => {

@@ -153,7 +153,7 @@ import { useMainStore } from '../../../stores/dialog';
 import MyEditor from '../../common/MyEditor.vue';
 import { CircleClose, CirclePlus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
-const store = useMainStore();
+const store:any = useMainStore();
 const types = ref('单选题');
 const refreshValue = ref({});
 const checkList = ref([]);
@@ -308,7 +308,7 @@ const onSave = (isSave: string) => {
     emit('onSendTest', form.value, store.createTestTitle);
     onRefreshs();
     form.value.type = types.value;
-    store.$patch((state) => {
+    store.$patch((state:any) => {
       state.createTestTitle = '添加';
     });
   }
@@ -316,7 +316,7 @@ const onSave = (isSave: string) => {
 // 关闭弹框清空数据
 const onClose = () => {
   onRefreshs();
-  store.$patch((state) => {
+  store.$patch((state:any) => {
     state.createAddTest = false;
   });
 };

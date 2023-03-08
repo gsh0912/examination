@@ -44,7 +44,7 @@ import Test from "../../../api/test/test";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 const emit = defineEmits(["onRefresh", "openDialog"]);
 const questionFromRef: any = ref<FormInstance>();
-const store = useMainStore();
+const store:any = useMainStore();
 const dialogVisible = ref(false);
 const questionFrom = ref({
   id: 0,

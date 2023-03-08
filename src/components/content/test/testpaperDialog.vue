@@ -105,7 +105,7 @@ import Test from "../../../api/test/test";
 import TableConfig from "../../common/TableConfig.vue";
 import { reactive, ref, watch } from "vue";
 import { useMainStore } from "../../../stores/dialog";
-const store = useMainStore();
+const store:any = useMainStore();
 const emit = defineEmits(["exportTest", "onTestArr"]);
 const databaseTitle = ref("");
 const testpaperId = ref(0);
@@ -220,7 +220,7 @@ const handleSelectRadio = (id: number) => {
 };
 // 关闭弹框
 const onClose = () => {
-  store.$patch((state) => {
+  store.$patch((state:any) => {
     state.showTestpaperDialog = false;
   });
   config.key = "";
@@ -232,7 +232,7 @@ const onClose = () => {
 };
 // 关闭弹框,试题弹框
 const onClose1 = () => {
-  store.$patch((state) => {
+  store.$patch((state:any) => {
     state.showTestpaperList = false;
   });
 };
@@ -249,7 +249,7 @@ const onConfirm = async () => {
     }
     // 如果是题库 关闭当前dialog，打开新的dialog（题库试题列表）
   } else if (store.testpaperTitle === "题库") {
-    store.$patch((state) => {
+    store.$patch((state:any) => {
       state.showTestpaperList = true;
       state.showTestpaperDialog = false;
     });

@@ -69,6 +69,8 @@ const updateFn = (data: any) => {
 const databaseListDialogRef = ref()
 const createQuestion = () => {
   databaseListDialogRef.value.ruleForm.id = 0
+  databaseListDialogRef.value.ruleForm.isshow = 1
+  databaseListDialogRef.value.ruleForm.title = ''
   databaseListDialogRef.value.dialogVisible = true
 }
 // 批量删除
