@@ -109,4 +109,35 @@
 .infobox .accountBox .accountName {
   color: #59a0ff;
   font-size: 13px;
+  cursor: pointer;
+}
+:deep(.icon-kaoshi_moren2x::before) {
+  font-size: 30px;
+}
+:deep(.icon-shenpishenhe::before) {
+  font-size: 33px;
+  margin-left: -1px;
+}
+:deep(.icon-changjianwenti::before) {
+  font-size: 23px;
+  margin-left: 1px;
+}
+:deep(.icon-a-1kehudanweitaizhang::before) {
+  font-size: 24.5px;
+  margin-left: 3px;
+}
+:deep(.icon-qiyeguanli_yuangongguanli::before) {
+  font-size: 27.5px;
+}
+:deep(.icon-banji::before) {
+  font-size: 24px;
+  margin-left: 2px;
+}
+:deep(.icon-wutouxiang::before) {
+  font-size: 25px;
+  margin-left: 2px;
+}
+:deep(.icon-bumen::before) {
+  font-size: 29px;
+  margin-left: 2px;
 }

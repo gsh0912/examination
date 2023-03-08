@@ -43,8 +43,8 @@
             <el-form-item label="账号" v-if="isshow" prop="username" style="margin-top:15px">
               <el-input v-model="addteacher.username" style="width:400px" />
             </el-form-item>
-            <el-form-item label="密码" prop="pwd" v-if="isshow" style="margin-top:15px">
-              <el-input v-model="addteacher.pwd" type="password" placeholder="" style="width:400px" />
+            <el-form-item label="密码" prop="pass" v-if="isshow" style="margin-top:15px">
+              <el-input v-model="addteacher.pass" type="password" placeholder="" style="width:400px" />
             </el-form-item>
             <template #footer>
               <span class="dialog-footer">
@@ -292,7 +292,7 @@ const adds = async (formEl: FormInstance | undefined) => {
       addteacher.tel = "";
       addteacher.roleid = "";
       addteacher.username = "";
-      addteacher.pwd = "";
+      addteacher.pass = "";
       list();
       if (addteacher.id == 0) {
         ElMessage({
@@ -318,7 +318,7 @@ const revamp = async (val: any) => {
   addteacher.name = val.name;
   addteacher.tel = val.tel;
   addteacher.roleid = val.roleid;
-  addteacher.pwd = val.pass;
+  addteacher.pass = val.pass;
   addteacher.depid = val.depid;
   
   // console.log(val.pwd);
@@ -356,7 +356,7 @@ const close = () => {
   addteacher.name = "";
   addteacher.tel = "";
   addteacher.username = "";
-  addteacher.pwd = "";
+  addteacher.pass = "";
   addteacher.depid = 0;
   addteacher.roleid = "";
 };
@@ -384,7 +384,7 @@ const rules = reactive<FormRules>({
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
   username: [{ required: true, message: "请输入账号", trigger: "blur" }],
   tel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-  pwd:[{required:true,message:'请输入密码',trigger:'blur'}],
+  // pwd:[{required:true,message:'请输入密码',trigger:'blur'}],
   pass: [{ validator: validatePass, trigger: "blur" }],
   confirmPass: [{ validator: validatePass2, trigger: "blur" }],
 });
