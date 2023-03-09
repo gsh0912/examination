@@ -28,7 +28,12 @@
         <el-button type="primary" @click="createSubject">创建考试</el-button>
       </div>
     </div>
-    <el-table :data="subjectsData.list" style="width: 100%; font-size: 12px">
+    <el-table
+      :data="subjectsData.list"
+      style="width: 100%; font-size: 12px"
+      :header-cell-style="{ background: '#f8f8f8' }"
+      :row-style="{ height: '50px' }"
+    >
       <el-table-column align="center" prop="title" label="试卷名称" />
       <el-table-column align="center" prop="counts" label="题量" />
       <el-table-column align="center" prop="singles" label="单选" />
@@ -40,7 +45,7 @@
       <el-table-column align="center" prop="admin" label="创建人" />
       <el-table-column align="center" label="更新时间">
         <template #default="scope">
-          {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
+          {{ moment(scope.row.addtime).format("YYYY-MM-DD HH:mm") }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="address" label="操作">
@@ -69,10 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import moment from 'moment';
-import { ref, reactive, onMounted } from 'vue';
-import { subjectsList, subjectsDel } from '../../api/subjects';
-import { useRouter } from 'vue-router';
+import moment from "moment";
+import { ref, reactive, onMounted } from "vue";
+import { subjectsList, subjectsDel } from "../../api/subjects";
+import { useRouter } from "vue-router";
 const router = useRouter();
 onMounted(() => {
   getList();
@@ -80,12 +85,12 @@ onMounted(() => {
 // 点击创建考试
 const createSubject = () => {
   console.log(111);
-  router.push('/index/subjectAdd');
+  router.push("/index/subjectAdd");
 };
 // 编辑
 const compile = (val: any) => {
   console.log(val);
-  router.push({ path: '/index/subjectAdd', query: { id: val.id } });
+  router.push({ path: "/index/subjectAdd", query: { id: val.id } });
 };
 
 const currentPage = ref(1);
@@ -107,8 +112,8 @@ interface Isubjects {
 const subjects: Isubjects = reactive({
   page: 1,
   psize: 10,
-  key: '',
-  admin: '',
+  key: "",
+  admin: "",
   ismy: 0,
 });
 const getList = async () => {
@@ -142,6 +147,9 @@ const myestablish = () => {
 </script>
 
 <style scoped lang="less">
+.el-table{
+  margin-top: 7px;
+}
 .title {
   font-size: 20px;
 }

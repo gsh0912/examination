@@ -14,47 +14,29 @@
     <div class="classes_search">
       <el-form :inline="true" :model="student" class="demo-form-inline">
         <el-form-item label="班级名称">
-          <el-input
-            v-model="student.key"
-            @keyup.enter.native="searchfn"
-            @submit.native.prevent
-            clearable
-            placeholder="请输入关键字"
-          />
+          <el-input v-model="student.key" @keyup.enter.native="searchfn" @submit.native.prevent clearable
+            placeholder="请输入关键字" />
         </el-form-item>
         <el-form-item label="部门">
-          <cascader
-            :options="options"
-            :cascaderProps="cascaderProps"
-            @getDepid="getDepid"
-          />
+          <cascader :options="options" :cascaderProps="cascaderProps" @getDepid="getDepid" />
         </el-form-item>
         <el-form-item label="班级">
           <el-select placeholder="请选择班级" v-model="student.classid">
-            <el-option
-              v-for="item in student.classlist"
-              :label="item.name"
-              value="item.id"
-            />
+            <el-option v-for="item in student.classlist" :label="item.name" value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
-          <el-button type="danger" :disabled="student.disabled" @click="arrall_del"
-            >批量删除</el-button
-          >
+          <el-button type="danger" :disabled="student.disabled" @click="arrall_del">批量删除</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 搜索 -->
 
     <!-- 表格 -->
-    <el-table
-      ref="multipleTableRef"
-      :data="student.tableData"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table ref="multipleTableRef" :data="student.tableData" style="width: 100%"
+      @selection-change="handleSelectionChange" :header-cell-style="{ 'background': '#f8f8f8' }"
+      :row-style="{ 'height': '50px' }">
       <el-table-column align="center" type="selection" width="55" />
       <el-table-column align="center" property="name" label="学生姓名" />
       <el-table-column align="center" property="remarks" label="备注" />
@@ -62,22 +44,11 @@
       <el-table-column align="center" property="classname" label="所在班级" />
       <el-table-column align="center" property="username" label="账号" />
       <el-table-column align="center" property="addtime" label="添加时间" />
-      <el-table-column
-        align="center"
-        property="address"
-        label="操作"
-        show-overflow-tooltip
-      >
+      <el-table-column align="center" property="address" label="操作" show-overflow-tooltip>
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="uppass(scope.row)"
-            >重置密码</el-button
-          >
-          <el-button link type="primary" size="small" @click="updatelist(scope.row)"
-            >修改</el-button
-          >
-          <el-button link type="primary" size="small" @click="stu_delete(scope.row.id)"
-            >删除</el-button
-          >
+          <el-button link type="primary" size="small" @click="uppass(scope.row)">重置密码</el-button>
+          <el-button link type="primary" size="small" @click="updatelist(scope.row)">修改</el-button>
+          <el-button link type="primary" size="small" @click="stu_delete(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,16 +56,9 @@
 
     <!-- 分页 -->
     <div class="demo-pagination-block">
-      <el-pagination
-        v-model:current-page="currentPage4"
-        v-model:page-size="pageSize4"
-        :page-sizes="[10, 20, 30, 40]"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="student.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[10, 20, 30, 40]"
+        :background="background" layout="total, sizes, prev, pager, next, jumper" :total="student.total"
+        @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
     <!-- 分页 -->
 
@@ -121,11 +85,7 @@
         <el-form-item label="班级">
           <el-select v-model="form.classid" placeholder="请选择班级">
             <el-select placeholder="请选择班级">
-              <el-option
-                v-for="item in student.classlist"
-                :label="item.name"
-                :value="item.id"
-              />
+              <el-option v-for="item in student.classlist" :label="item.name" :value="item.id" />
             </el-select>
           </el-select>
         </el-form-item>
@@ -160,14 +120,25 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable, ElMessage, ElMessageBox, FormRules, FormInstance } from "element-plus";
-import { reactive, ref, onMounted } from "vue";
-import { studentlist, studentdelete, classesdes, studentupdata } from "../../api/student";
-import { classesdepartment, classeslist } from "../../api/classes";
-import add from "./studentss/add.vue";
-import pass from "./studentss/pass.vue";
-import { reqList } from "../../api/department";
-import cascader from "../../components/common/cascader.vue";
+import {
+  ElTable,
+  ElMessage,
+  ElMessageBox,
+  FormRules,
+  FormInstance,
+} from 'element-plus';
+import { reactive, ref, onMounted, provide } from 'vue';
+import {
+  studentlist,
+  studentdelete,
+  classesdes,
+  studentupdata,
+} from '../../api/student';
+import { classesdepartment, classeslist } from '../../api/classes';
+import add from './studentss/add.vue';
+import pass from './studentss/pass.vue';
+import { reqList } from '../../api/department';
+import cascader from '../../components/common/cascader.vue';
 
 const form = ref<any>({  //修改数据
   id: 1,
@@ -205,7 +176,7 @@ const password = ref({
   name: "",
   classid: "",
   username: "",
-  remarks:""
+  remarks: ""
 });
 
 // 表格
@@ -219,6 +190,11 @@ const list = async () => {
   student.tableData = res.data.list;
   student.total = res.data.counts;
 };
+const Mylist = {
+  list,
+};
+const myListRef = ref(Mylist)
+provide('myListRef', myListRef);
 // 表格
 
 
@@ -267,6 +243,9 @@ const stu_delete = (id: string) => {
 // 批量删除
 let ids = ref<any>("");
 const handleSelectionChange = (val: []) => {
+  if (val.length === 0) {
+    student.disabled = true;
+  }
   const arr: any = val.map((item: { id: any }) => {
     student.disabled = false;
     return item.id;
@@ -399,15 +378,36 @@ const searchfn = () => {
 };
 
 // 重置密码
+const validatePass = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请输入密码'));
+  } else if (value.toString().length < 6 || value.toString().length > 18) {
+    callback(new Error('密码长度为6-18位'));
+  } else {
+    callback();
+  }
+};
+
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'));
+  } else if (value !== password.value.pass) {
+    callback(new Error('两次密码不一致'));
+  } else {
+    callback();
+  }
+};
+
 const ruleFormRef = ref<FormInstance>();
 const rules = reactive<FormRules>({
   pass: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 1, max: 8, message: "班级名称为1-8个字符", trigger: "blur" },
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, max: 18, message: '学员密码为6-18个字符', trigger: 'blur' },
+    { validator: validatePass, trigger: 'blur' },
   ],
   oldpass: [
-    { required: true, message: "请确认密码", trigger: "blur" },
-    { min: 1, max: 12, message: "班级名称为1-12个字符", trigger: "blur" },
+    { required: true, message: '请确认密码', trigger: 'blur' },
+    { validator: validatePass2, trigger: 'blur' },
   ],
 });
 const uppass = (data: any) => {

@@ -7,10 +7,12 @@
           <el-step />
         </el-steps>
         <div class="el_box">
-          <p class="p_first">下载 <span @click="downloads">学生信息模板</span> 批量导入试题</p>
+          <p class="p_first">
+            下载 <span @click="downloads">学生信息模板</span> 批量导入试题
+          </p>
           <p class="p_text">
-            注:从其他Excel或Word复制试题时请使用选择性粘贴 Word:右键一选择性粘贴-文本，
-            Excel:右键一选择性粘贴一只勾选 “值”
+            注:从其他Excel或Word复制试题时请使用选择性粘贴
+            Word:右键一选择性粘贴-文本， Excel:右键一选择性粘贴一只勾选 “值”
           </p>
           <p class="p_first">上传填写好的学生信息</p>
           <p>
@@ -18,8 +20,9 @@
               v-model:file-list="fileList"
               class="upload-demo"
               action="http://estate.eshareedu.cn/exam/api/student/upload"
-              :headers="{Authorization:token}"
+              :headers="{ Authorization: token }"
               :on-change="handleChange"
+              :on-success="uploadings"
             >
               <el-button type="primary">点击上传文件</el-button>
             </el-upload>
@@ -29,24 +32,22 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogVisible = false"> 确定 </el-button>
+          <el-button type="primary" @click="confirm"> 确定 </el-button>
         </span>
       </template>
     </el-dialog>
+    <Table ref="tableDatas" :mydata="updloadFile"></Table>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineExpose } from "vue";
-import {
-  UploadProps,
-  UploadUserFile,
-} from "element-plus";
-import {downLoad} from "../../../utils/downLoad"
-
-const token = sessionStorage.getItem('token')
+import { Ref, ref, defineExpose, nextTick } from 'vue';
+import { UploadProps, UploadUserFile, ElMessage } from 'element-plus';
+import { downLoad } from '../../../utils/downLoad';
+import Table from './Table.vue';
+import { fa } from 'element-plus/es/locale';
+const token = sessionStorage.getItem('token');
 console.log(token);
-
 
 // 子传父
 let dialogformshow: any = (dialogVisible: Ref<boolean>) => {
@@ -59,23 +60,52 @@ defineExpose({
 });
 
 // 文件上传
-const fileList:any = ref<UploadUserFile[]>([
+const fileList: any = ref<UploadUserFile[]>([
   {
-    name: "",
-    url: "",
+    name: '',
+    url: '',
   },
 ]);
-
-   
-const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-    console.log(uploadFile);
-    console.log(uploadFiles);
-    
+const updloadFile = ref<any>({});
+const handleChange: UploadProps['onChange'] = (
+  uploadFile: any,
+  uploadFiles: any
+) => {
+  status.value = uploadFile.status;
+  if(uploadFile.status==='success'){
+    ElMessage({
+    message: '上传成功',
+    type: 'success',
+  })
+  }
+};
+const status = ref<string>('');
+const tableDatas = ref();
+const uploadings = (uploadFile: any) => {
+  // console.log(uploadFile);
+  if (uploadFile.errCode === 10000) {
+    nextTick(() => {
+      tableDatas.value.tableData =[...tableDatas.value.tableData,...uploadFile.data];
+    });
+  }
 };
 // 文件导出
-const downloads=()=>{
-  downLoad("http://estate.eshareedu.cn/exam/upload/student.xlsx")
-}
+const downloads = () => {
+  downLoad('http://estate.eshareedu.cn/exam/upload/student.xlsx');
+};
+// 确定按钮
+const confirm = () => {
+  if (status.value === 'ready') {
+    ElMessage({
+      message: '文件上传中',
+      type:'warning'
+    });
+  }
+  if (status.value === 'success') {
+    dialogVisible.value = false;
+    tableDatas.value.dialog = true;
+  }
+};
 </script>
 
 <style scoped lang="less">

@@ -77,9 +77,10 @@
   <el-table
     ref="multipleTableRef"
     :data="tableData.tableArr"
-    :header-cell-style="{ 'text-align': 'center' }"
     :cell-style="{ 'text-align': 'center' }"
     @selection-change="handleSelectionChange"
+    :header-cell-style="{'background':'#f8f8f8','text-align': 'center'}"
+    :row-style="{'height':'50px'}"
   >
     <el-table-column type="selection" width="55" />
     <el-table-column label="考试名称" width="120">
@@ -501,6 +502,9 @@ header {
   }
 }
 
+.el-table{
+  margin-top: 15px;
+}
 .search {
   display: flex;
   color: #606266;

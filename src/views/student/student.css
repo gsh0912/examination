@@ -8,6 +8,9 @@
 .classes_search {
   margin-top: 20px;
 }
+.el-table {
+  margin-top: 8px;
+}
 .el-table :deep(.el-table-column) {
   height: 100px;
 }

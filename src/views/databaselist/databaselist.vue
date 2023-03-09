@@ -20,8 +20,10 @@
     <el-button type="danger" :disabled="tableChecked.length === 0" @click="delAllFn">批量删除</el-button>
   </div>
   <!-- 表格 -->
-  <el-table ref="multipleTableRef" :data="Data.tableData" style="width: 100%" @selection-change="handleSelectionChange"
-    :header-cell-style="{ 'text-align': 'center' }" :cell-style="{ 'text-align': 'center' }">
+  <el-table ref="multipleTableRef" 
+  :data="Data.tableData" style="width: 100%" @selection-change="handleSelectionChange"
+  :header-cell-style="{'background':'#f8f8f8','text-align': 'center' }"
+      :row-style="{'height':'50px'}" :cell-style="{ 'text-align': 'center' }">
     <el-table-column type="selection" width="55" />
     <el-table-column label="题库" width="120">
       <template #default="scope">{{ scope.row.title }}</template>
@@ -200,6 +202,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.el-table{
+  margin-top: 20px;
+}
 .top {
   display: flex;
   font-size: 20px;
@@ -209,6 +214,7 @@ onMounted(() => {
 .search {
   display: flex;
   align-items: center;
+  margin-top: 5px;
 }
 
 .el-form-item {
