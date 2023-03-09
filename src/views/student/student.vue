@@ -57,6 +57,8 @@
       :data="student.tableData"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      :header-cell-style="{'background':'#f8f8f8'}"
+      :row-style="{'height':'50px'}"
     >
       <el-table-column align="center" type="selection" width="55" />
       <el-table-column align="center" property="name" label="学生姓名" />
@@ -443,17 +445,6 @@ const searchfn = () => {
 };
 
 // 重置密码
-// const validatePass = (rule: any, value: any, callback: any) => {
-//   if (value === '') {
-//     callback(new Error('Please input the password'));
-//   } else {
-//     if (password.value.pass !== '') {
-//       if (!ruleFormRef.value) return;
-//       ruleFormRef.value.validateField('checkPass', () => null);
-//     }
-//     callback();
-//   }
-// };
 const validatePass = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请输入密码'));
@@ -479,7 +470,7 @@ const rules = reactive<FormRules>({
   pass: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 18, message: '学员密码为6-18个字符', trigger: 'blur' },
-    { validator: validatePass, trigger: 'blur' },
+    { validator: validatePass, trigger: 'blur'},
   ],
   oldpass: [
     { required: true, message: '请确认密码', trigger: 'blur' },

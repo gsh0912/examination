@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineExpose, reactive, defineProps, onMounted } from "vue";
+import { Ref, ref, defineExpose, reactive, onMounted } from "vue";
 import { FormInstance, ElMessage, FormRules } from "element-plus";
 import { studentupdata } from "../../../api/student";
 import { reqList } from "../../../api/department";
