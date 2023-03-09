@@ -315,6 +315,9 @@ const stu_delete = (id: string) => {
 // 批量删除
 let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
+  if(val.length===0){
+      student.disabled = true;
+    }
   const arr: any = val.map((item: { id: any }) => {
     student.disabled = false;
     return item.id;
