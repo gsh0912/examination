@@ -20,48 +20,39 @@
           </div>
           <div class="accountBox">
             <div class="account">
-              <img
-                style="width: 20px"
-                src="../../assets/images/index/userImg.png"
-              />
+              <img style="width: 20px" src="../../assets/images/index/userImg.png" />
               <span class="title">账号</span>
             </div>
             <div style="font-size: 13px">{{ infoData.info.username }}</div>
           </div>
           <div class="accountBox">
             <div class="account">
-              <img
-                style="width: 20px"
-                src="../../assets/images/index/userImg.png"
-              />
+              <img style="width: 20px" src="../../assets/images/index/userImg.png" />
               <span class="title">密码</span>
             </div>
             <div class="accountName" @click="set">设置</div>
           </div>
           <div class="accountBox">
             <div class="account">
-              <img
-                style="width: 20px"
-                src="../../assets/images/index/userImg.png"
-              />
+              <img style="width: 20px" src="../../assets/images/index/userImg.png" />
               <span class="title">微信</span>
             </div>
             <div class="accountName">未绑定</div>
           </div>
         </div>
-        <div
-          class="menu"
-          v-for="item in data.menuList"
-          :key="item.id"
-          :class="route.path === '/index' + item.url ? 'menuActive' : ''"
-          @click="menuFn(item)"
-        >
+        <div class="menu" v-for="(item, index) in data.menuList" :key="item.id"
+          :class="store.leftMenuIndex === index ? 'menuActive' : ''" @click="menuFn(item, index)">
           <i :class="item.ico" class="iconfont"></i>
           <p>{{ item.name }}</p>
         </div>
       </el-aside>
       <el-main @click="close">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <component :is="Component" v-if="!route.meta.keepAlive"></component>
+          <keep-alive>
+            <component :is="Component" v-if="route.meta.keepAlive"></component>
+          </keep-alive>
+        </router-view>
       </el-main>
     </el-container>
   </div>
@@ -69,8 +60,12 @@
 
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useMainStore } from '../../stores/dialog'
+const store: any = useMainStore()
+console.log();
+
 const route = useRoute();
 const router = useRouter();
 // 获取左侧菜单
@@ -79,7 +74,6 @@ const data = reactive({
     (item: any) => item.postion === 'left'
   ),
 });
-// console.log(data.menuList);
 
 interface Imenu {
   checked: boolean;
@@ -93,8 +87,11 @@ interface Imenu {
   url: string;
 }
 // 点击单个菜单 显示高亮and跳转页面
-const menuFn = (val: Imenu) => {
+const menuFn = (val: Imenu, index: number) => {
   router.push('/index' + val.url);
+  store.$patch({
+    leftMenuIndex: index
+  })
 };
 // 隐藏 开启 菜单框
 let flag = ref(false);

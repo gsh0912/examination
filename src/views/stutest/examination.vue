@@ -81,6 +81,7 @@ import { useRoute } from 'vue-router';
 import { testStart } from '../../api/test'
 import { onMounted, ref, reactive, toRefs, watch, nextTick } from 'vue';
 import { studentanswerAdd } from '../../api/stutest'
+import { htmlEncodeByRegExp } from '../../utils/htmlUtil'
 import router from '../../router';
 const route = useRoute()
 onMounted(() => {
@@ -152,6 +153,7 @@ const estimateFn = (val: any, text: string) => {
   console.log(val);
   val.studentanswer = text
 }
+
 // 答题卡点击事件
 const examListRef = ref() //通过ref 获取每个元素的高度
 const examListFn = (index: number) => {
@@ -193,9 +195,9 @@ const getTopic = async () => {
     if (data.type === '填空题') {
       data.title = data.title.replaceAll("[]", `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`)
     }
+    data.title = htmlEncodeByRegExp(data.title)
     return data
   })
-  console.log(res.data);
   topic.topicList = res.data
   nextTick(() => {
     let inps: any = document.querySelectorAll('.inps')

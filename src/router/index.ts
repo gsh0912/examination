@@ -28,6 +28,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/test/test.vue'),
         meta: {
           title: '考试管理',
+          keepAlive: true,
+          url: 'test'
         },
       },
       {
@@ -35,6 +37,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/test/Analyse/Analyse.vue'),
         meta: {
           title: '数据分析',
+          url: 'test'
         },
       },
       {
@@ -42,6 +45,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/test/testAdd/testAdd.vue'),
         meta: {
           title: '创建考试',
+          url: 'test'
         },
       },
       {

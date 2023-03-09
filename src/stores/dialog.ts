@@ -36,6 +36,7 @@ export const useMainStore = defineStore<any>('dialog', {
       testpaperTitle: '',
       // 从题库导入试题里面的弹框 显示题库试题列表
       showTestpaperList: false,
+      leftMenuIndex: 0
     };
   },
   getters: {},

@@ -19,11 +19,11 @@
 
         </div>
       </div>
-       <!-- 添加教资 -->
+      <!-- 添加教资 -->
       <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
         status-icon>
         <el-form-item class="add">
-         
+
           <el-dialog v-model="dialogFormVisible" width="33%" :title="title + '老师'" v-if="dialogFormVisible == true">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="addteacher.name" style="width:400px" />
@@ -110,7 +110,7 @@
 
           </el-form-item>
           <el-form-item label="密码" style="margin-top:20px" prop="pass">
-            <el-input v-model="ruleForm.pass" type="password" autocomplete="off"/>
+            <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPass">
             <el-input v-model="ruleForm.confirmPass" type="password" autocomplete="off" />
@@ -135,17 +135,12 @@ import { roleList } from '../../api/role'
 import { ref, reactive, toRefs } from "vue";
 import type { FormInstance, FormRules, UploadProps, UploadUserFile } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ru } from 'element-plus/es/locale';
-const input = ref("");
 const isshow = ref(false);
-// const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
-const formLabelWidth = "140px";
 const ruleFormRefAdd = ref();
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const small = ref(false);
-// const background = ref(false);
 const disabled = ref(false);
 const centerDialogVisible = ref(false);
 const title = ref()
@@ -171,11 +166,11 @@ const addteacher = reactive({
   depid: 0,
   roleid: "请选择账号",
   depids: '',
-  checkPass:'',
-  pass:'',
-  confirmPass:'',
-  oldpass:'',
-  centerDialogVisible:false
+  checkPass: '',
+  pass: '',
+  confirmPass: '',
+  oldpass: '',
+  centerDialogVisible: false
 });
 
 const ruleForm = reactive<any>({
@@ -186,30 +181,15 @@ const ruleForm = reactive<any>({
   key: "",
   pass: "",
   checkPass: "",
-  username:'',
-  name:'',
-  confirmPass:''
-});  
+  username: '',
+  name: '',
+  confirmPass: ''
+});
 
-// const password= reactive<any>({
-//   id: 0,
-//   username: "",
-//   pwd: "",
-//   name: "",
-//   tel: "",
-//   depid: 0,
-//   roleid: "",
-//   depids: '',
-//   checkPass:'',
-//   pass:'',
-//   confirmPass:'',
-//   oldpass:'',
-// })
 const data = reactive<any>({
   options: [],
 });
 const { options } = toRefs(data);
-
 const selectCasc = (val: any) => {
   if (val.length > 0) addteacher.depid = val[val.length - 1];
 };
@@ -217,8 +197,6 @@ const selectCascs = (val: any) => {
   if (val.length > 0) addteacher.depids = val[val.length - 1];
 };
 const ruleFormRef = ref();
-
-
 const tableData = reactive({
   arr: [],
 });
@@ -237,12 +215,7 @@ const list = async () => {
   loading.value = false
 };
 list();
-// 调用删除接口
-// const delet = async(id:any)=>{
-//   let res = await del({id:id})
-//   console.log(res);
-//   list()
-// }
+
 // 删除弹框
 const delet = (id: any) => {
   ElMessageBox.confirm("确定要删除该账号吗?", "提示", {
@@ -320,7 +293,7 @@ const revamp = async (val: any) => {
   addteacher.roleid = val.roleid;
   addteacher.pass = val.pass;
   addteacher.depid = val.depid;
-  
+
   // console.log(val.pwd);
   dialogFormVisible.value = true;
   isshow.value = false;
@@ -362,15 +335,15 @@ const close = () => {
 };
 
 const validatePass = (rule: any, value: any, callback: any) => {
-      if (value === '') {
-        callback(new Error("请输入密码"));
-      } else if (value.toString().length < 6 || value.toString().length > 18) {
-        callback(new Error("密码长度为6-18位"));
-      } else {
-        callback();
-      }
-    };
-const validatePass2 = (rule:any,value:any,callback:any) => {
+  if (value === '') {
+    callback(new Error("请输入密码"));
+  } else if (value.toString().length < 6 || value.toString().length > 18) {
+    callback(new Error("密码长度为6-18位"));
+  } else {
+    callback();
+  }
+};
+const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("请再次输入密码"));
   } else if (value !== ruleForm.pass) {
@@ -389,10 +362,10 @@ const rules = reactive<FormRules>({
   confirmPass: [{ validator: validatePass2, trigger: "blur" }],
 });
 //点击重置密码
-const rest = (data:any) => {
-  addteacher.centerDialogVisible=true
+const rest = (data: any) => {
+  addteacher.centerDialogVisible = true
   ruleForm.username = data.username
-  ruleForm.id=data.id
+  ruleForm.id = data.id
   ruleForm.name = data.name
   // ruleForm.pass = data.pass
   ruleForm.checkPass = data.checkPass
@@ -400,31 +373,31 @@ const rest = (data:any) => {
   ruleForm.oldpass = data.oldpass
 }
 // 点击确定修改按钮
-const open2 =async()=>{
-  ruleFormRef.value.validate(async (valid:boolean) => {
+const open2 = async () => {
+  ruleFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       console.log('submit!')
-          let arr={
-    id:ruleForm.id,
-    username: ruleForm.username,
-    pass:ruleForm.pass,
-    checkPass:ruleForm.checkPass,
-    name:ruleForm.name,
-    confirmPass:ruleForm.confirmPass,
-    oldpass:ruleForm.confirmPass
-  }
-  console.log(1111111,arr.id)
-  // 调用列表
-  let res :any = await addList(arr)
-  console.log(res)
-  if(res.errCode===10000){
-    addteacher.centerDialogVisible=false
-    ElMessage({
-      type:'success',
-      message:'重置成功',
-    })
-    list()
-  }
+      let arr = {
+        id: ruleForm.id,
+        username: ruleForm.username,
+        pass: ruleForm.pass,
+        checkPass: ruleForm.checkPass,
+        name: ruleForm.name,
+        confirmPass: ruleForm.confirmPass,
+        oldpass: ruleForm.confirmPass
+      }
+      console.log(1111111, arr.id)
+      // 调用列表
+      let res: any = await addList(arr)
+      console.log(res)
+      if (res.errCode === 10000) {
+        addteacher.centerDialogVisible = false
+        ElMessage({
+          type: 'success',
+          message: '重置成功',
+        })
+        list()
+      }
     } else {
 
       console.log('error submit!')
@@ -433,10 +406,10 @@ const open2 =async()=>{
 
 }
 
-const cancel = ()=>{
-  addteacher.centerDialogVisible=false
-  ruleForm.pass='',
-  ruleForm.confirmPass=''
+const cancel = () => {
+  addteacher.centerDialogVisible = false
+  ruleForm.pass = '',
+    ruleForm.confirmPass = ''
 }
 
 const amend = () => { };
