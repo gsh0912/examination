@@ -203,7 +203,7 @@ import {
   FormRules,
   FormInstance,
 } from 'element-plus';
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, provide } from 'vue';
 import {
   studentlist,
   studentdelete,
@@ -268,6 +268,11 @@ const list = async () => {
   student.tableData = res.data.list;
   student.total = res.data.counts;
 };
+const Mylist = {
+  list,
+};
+const myListRef = ref(Mylist)
+provide('myListRef', myListRef);
 // 表格
 
 // 分页
@@ -468,7 +473,7 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'));
   } else if (value !== password.value.pass) {
-    callback(new Error("两次密码不一致"));
+    callback(new Error('两次密码不一致'));
   } else {
     callback();
   }
