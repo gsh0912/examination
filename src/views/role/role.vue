@@ -8,8 +8,9 @@
   <el-table
     :data="tableData"
     style="width: 100%"
-    :header-cell-style="{ 'text-align': 'center' }"
     :cell-style="{ 'text-align': 'center' }"
+    :header-cell-style="{'background':'#f8f8f8','text-align': 'center'}"
+    :row-style="{'height':'50px'}"
   >
     <el-table-column prop="name" label="名称" />
     <el-table-column prop="date" label="操作">
@@ -137,6 +138,9 @@ const handleCurrentChange = (val: number) => {
 };
 </script>
 <style scoped lang="less">
+.el-table{
+  margin-top: 10px;
+}
 header {
   height: 50px;
   font-size: 20px;

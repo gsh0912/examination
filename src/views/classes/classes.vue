@@ -30,9 +30,7 @@
           <el-button type="primary" @click="searchfn">查询</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="danger" v-show="ids.length > 0" @click="open"
-        >批量删除</el-button
-      >
+      <el-button type="danger" v-show="ids.length > 0" @click="open">批量删除</el-button>
     </div>
     <!-- 搜索 -->
 
@@ -43,24 +41,18 @@
         :data="from.tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        :header-cell-style="{ background: '#f8f8f8' }"
+        :row-style="{ height: '50px' }"
       >
         <el-table-column type="selection" align="center" width="55" />
         <el-table-column property="name" align="center" label="班级名称" />
         <el-table-column property="depname" align="center" label="部门" />
         <el-table-column property="address" align="center" label="操作">
           <template #default="scope">
-            <el-button
-              link
-              type="primary"
-              size="small"
-              @click="classFnup(scope.row)"
+            <el-button link type="primary" size="small" @click="classFnup(scope.row)"
               >修改</el-button
             >
-            <el-button
-              link
-              type="primary"
-              size="small"
-              @click="deleclasses(scope.row.id)"
+            <el-button link type="primary" size="small" @click="deleclasses(scope.row.id)"
               >删除</el-button
             >
           </template>
@@ -117,19 +109,19 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable } from 'element-plus';
-import { reactive, ref, onMounted, nextTick } from 'vue';
+import { ElTable } from "element-plus";
+import { reactive, ref, onMounted, nextTick } from "vue";
 import {
   classeslist,
   classesdelete,
   classesdepartment,
   addClasses,
   classesides,
-} from '../../api/classes';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import cascader from '../../components/common/cascader.vue';
-import type { FormInstance, FormRules } from 'element-plus';
-import classadd from './classadd.vue';
+} from "../../api/classes";
+import { ElMessage, ElMessageBox } from "element-plus";
+import cascader from "../../components/common/cascader.vue";
+// import type { FormInstance, FormRules } from 'element-plus';
+import classadd from "./classadd.vue";
 // 添加
 let dialogshow = ref<any>();
 const classFn = () => {
@@ -163,8 +155,8 @@ const updateStudent = async (val: any) => {
   if (res.errCode === 10000) {
     from.dialogFormVisible = false;
     ElMessage({
-      type: 'success',
-      message: '修改成功',
+      type: "success",
+      message: "修改成功",
     });
     list();
   }
@@ -172,7 +164,7 @@ const updateStudent = async (val: any) => {
 // 修改
 
 const ruleForm = reactive({
-  name: '',
+  name: "",
   depid: 0,
   id: 0,
 });
@@ -180,13 +172,13 @@ const ruleForm = reactive({
 // 搜索
 const from = reactive({
   isshow: false,
-  name: '',
-  depid: '',
+  name: "",
+  depid: "",
   tableData: [],
   total: 0,
   config: {
     depid: 0,
-    key: '',
+    key: "",
     page: 1,
     psize: 10,
   },
@@ -238,9 +230,9 @@ interface IcascaderProps {
   emitPath: boolean;
 }
 const cascaderProps = ref<IcascaderProps>({
-  label: 'name',
-  value: 'id',
-  expandTrigger: 'hover' as const,
+  label: "name",
+  value: "id",
+  expandTrigger: "hover" as const,
   emitPath: false,
   checkStrictly: true,
 });
@@ -286,10 +278,10 @@ const handleSelectionChange = (val: []) => {
   });
 };
 const open = () => {
-  ElMessageBox.confirm('确定要删除选定的班级？', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  ElMessageBox.confirm("确定要删除选定的班级？", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
     center: false,
   })
     .then(async () => {
@@ -298,16 +290,16 @@ const open = () => {
       let res: any = await classesides(ids.value);
       if (res.errCode === 10000) {
         ElMessage({
-          type: 'success',
-          message: '删除成功',
+          type: "success",
+          message: "删除成功",
         });
         list();
       }
     })
     .catch(() => {
       ElMessage({
-        type: 'error',
-        message: '已取消删除',
+        type: "error",
+        message: "已取消删除",
       });
     });
 };
@@ -315,26 +307,26 @@ const open = () => {
 
 // 单个删除
 const deleclasses = (index: any) => {
-  ElMessageBox.confirm('确定要删除选定的班级？', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  ElMessageBox.confirm("确定要删除选定的班级？", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
     center: false,
   })
     .then(async () => {
       let res: any = await classesdelete({ id: index });
       if (res.errCode === 10000) {
         ElMessage({
-          type: 'success',
-          message: '删除成功',
+          type: "success",
+          message: "删除成功",
         });
         list();
       }
     })
     .catch(() => {
       ElMessage({
-        type: 'error',
-        message: '已取消删除',
+        type: "error",
+        message: "已取消删除",
       });
     });
 };
@@ -347,5 +339,5 @@ onMounted(() => {
 // 表格
 </script>
 <style scoped>
-@import url('./classes.css');
+@import url("./classes.css");
 </style>

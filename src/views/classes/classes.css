@@ -8,6 +8,9 @@ header {
 .classes_search {
   margin-top: 20px;
 }
+.el-table {
+  margin-top: 10px;
+}
 .classes_pagsing {
   width: 100%;
   display: flex;
