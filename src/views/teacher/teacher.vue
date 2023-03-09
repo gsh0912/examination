@@ -26,6 +26,7 @@
         </div>
       </div>
       <!-- 添加教资 -->
+<<<<<<< HEAD
       <el-form
         ref="ruleFormRefAdd"
         :model="addteacher"
@@ -41,6 +42,13 @@
             :title="title + '老师'"
             v-if="dialogFormVisible == true"
           >
+=======
+      <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
+        status-icon>
+        <el-form-item class="add">
+
+          <el-dialog v-model="dialogFormVisible" width="33%" :title="title + '老师'" v-if="dialogFormVisible == true">
+>>>>>>> master
             <el-form-item label="姓名" prop="name">
               <el-input v-model="addteacher.name" style="width: 400px" />
             </el-form-item>
@@ -195,7 +203,11 @@
           <el-form-item label="姓名" prop="name">
             {{ ruleForm.name }}
           </el-form-item>
+<<<<<<< HEAD
           <el-form-item label="密码" style="margin-top: 20px" prop="pass">
+=======
+          <el-form-item label="密码" style="margin-top:20px" prop="pass">
+>>>>>>> master
             <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPass">
@@ -220,17 +232,18 @@ import { roleList } from "../../api/role";
 import { ref, reactive, toRefs } from "vue";
 import type { FormInstance, FormRules, UploadProps, UploadUserFile } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
+<<<<<<< HEAD
 import { ru } from "element-plus/es/locale";
+=======
+>>>>>>> master
 const input = ref("");
 const isshow = ref(false);
-// const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const ruleFormRefAdd = ref();
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const small = ref(false);
-// const background = ref(false);
 const disabled = ref(false);
 const centerDialogVisible = ref(false);
 const title = ref();
@@ -255,12 +268,21 @@ const addteacher = reactive({
   tel: "",
   depid: 0,
   roleid: "请选择账号",
+<<<<<<< HEAD
   depids: "",
   checkPass: "",
   pass: "",
   confirmPass: "",
   oldpass: "",
   centerDialogVisible: false,
+=======
+  depids: '',
+  checkPass: '',
+  pass: '',
+  confirmPass: '',
+  oldpass: '',
+  centerDialogVisible: false
+>>>>>>> master
 });
 
 const ruleForm = reactive<any>({
@@ -271,25 +293,17 @@ const ruleForm = reactive<any>({
   key: "",
   pass: "",
   checkPass: "",
+<<<<<<< HEAD
   username: "",
   name: "",
   confirmPass: "",
+=======
+  username: '',
+  name: '',
+  confirmPass: ''
+>>>>>>> master
 });
 
-// const password= reactive<any>({
-//   id: 0,
-//   username: "",
-//   pwd: "",
-//   name: "",
-//   tel: "",
-//   depid: 0,
-//   roleid: "",
-//   depids: '',
-//   checkPass:'',
-//   pass:'',
-//   confirmPass:'',
-//   oldpass:'',
-// })
 const data = reactive<any>({
   options: [],
 });
@@ -321,12 +335,6 @@ const list = async () => {
   loading.value = false;
 };
 list();
-// 调用删除接口
-// const delet = async(id:any)=>{
-//   let res = await del({id:id})
-//   console.log(res);
-//   list()
-// }
 // 删除弹框
 const delet = (id: any) => {
   ElMessageBox.confirm("确定要删除该账号吗?", "提示", {
@@ -404,11 +412,13 @@ const revamp = async (val: any) => {
   addteacher.roleid = val.roleid;
   addteacher.pass = val.pass;
   addteacher.depid = val.depid;
+<<<<<<< HEAD
 
   // console.log(val.pwd);
+=======
+>>>>>>> master
   dialogFormVisible.value = true;
   isshow.value = false;
-
   list();
 };
 // 三级联动
@@ -436,7 +446,6 @@ const onShow = () => {
 //取消按钮
 const close = () => {
   dialogFormVisible.value = false;
-  // ruleFormRefAdd.value.resetFields()
   addteacher.name = "";
   addteacher.tel = "";
   addteacher.username = "";
@@ -444,9 +453,12 @@ const close = () => {
   addteacher.depid = 0;
   addteacher.roleid = "";
 };
-
 const validatePass = (rule: any, value: any, callback: any) => {
+<<<<<<< HEAD
   if (value === "") {
+=======
+  if (value === '') {
+>>>>>>> master
     callback(new Error("请输入密码"));
   } else if (value.toString().length < 6 || value.toString().length > 18) {
     callback(new Error("密码长度为6-18位"));
@@ -474,6 +486,7 @@ const rules = reactive<FormRules>({
 });
 //点击重置密码
 const rest = (data: any) => {
+<<<<<<< HEAD
   addteacher.centerDialogVisible = true;
   ruleForm.username = data.username;
   ruleForm.id = data.id;
@@ -483,11 +496,25 @@ const rest = (data: any) => {
   ruleForm.confirmPass = data.confirmPass;
   ruleForm.oldpass = data.oldpass;
 };
+=======
+  addteacher.centerDialogVisible = true
+  ruleForm.username = data.username
+  ruleForm.id = data.id
+  ruleForm.name = data.name
+  ruleForm.checkPass = data.checkPass
+  ruleForm.confirmPass = data.confirmPass
+  ruleForm.oldpass = data.oldpass
+}
+>>>>>>> master
 // 点击确定修改按钮
 const open2 = async () => {
   ruleFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
+<<<<<<< HEAD
       console.log("submit!");
+=======
+      console.log('submit!')
+>>>>>>> master
       let arr = {
         id: ruleForm.id,
         username: ruleForm.username,
@@ -495,6 +522,7 @@ const open2 = async () => {
         checkPass: ruleForm.checkPass,
         name: ruleForm.name,
         confirmPass: ruleForm.confirmPass,
+<<<<<<< HEAD
         oldpass: ruleForm.confirmPass,
       };
       console.log(1111111, arr.id);
@@ -521,6 +549,36 @@ const cancel = () => {
 };
 
 const amend = () => {};
+=======
+        oldpass: ruleForm.confirmPass
+      }
+      console.log(1111111, arr.id)
+      // 调用列表
+      let res: any = await addList(arr)
+      console.log(res)
+      if (res.errCode === 10000) {
+        addteacher.centerDialogVisible = false
+        ElMessage({
+          type: 'success',
+          message: '重置成功',
+        })
+        list()
+      }
+    } else {
+      ElMessage({
+        type: 'success',
+        message: '重置失败'
+      })
+    }
+  })
+}
+const cancel = () => {
+  addteacher.centerDialogVisible = false
+  ruleForm.pass = '',
+    ruleForm.confirmPass = ''
+}
+const amend = () => { };
+>>>>>>> master
 // 批量上传
 const fileList = ref<UploadUserFile[]>([
   {
@@ -531,6 +589,7 @@ const fileList = ref<UploadUserFile[]>([
     name: "element-plus-logo2.svg",
     url: "https://element-plus.org/images/element-plus-logo.svg",
   },
+<<<<<<< HEAD
 ]);
 
 const handleRemove: UploadProps["onRemove"] = (file, uploadFiles) => {
@@ -542,15 +601,34 @@ const handlePreview: UploadProps["onPreview"] = (uploadFile) => {
 };
 
 const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
+=======
+])
+const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
+  console.log(file, uploadFiles)
+}
+const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
+  console.log(uploadFile)
+}
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
+>>>>>>> master
   ElMessage.warning(
     `The limit is 3, you selected ${files.length} files this time, add up to ${
       files.length + uploadFiles.length
     } totally`
+<<<<<<< HEAD
   );
 };
 
 const beforeRemove: UploadProps["beforeRemove"] = (uploadFile, uploadFiles) => {
   return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
+=======
+  )
+}
+const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
+  return ElMessageBox.confirm(
+    `Cancel the transfert of ${uploadFile.name} ?`
+  ).then(
+>>>>>>> master
     () => true,
     () => false
   );
