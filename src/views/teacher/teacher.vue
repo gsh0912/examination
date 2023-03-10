@@ -39,7 +39,7 @@
             v-model="dialogFormVisible"
             width="33%"
             :title="title + '老师'"
-            v-if="dialogFormVisible == true"
+            v-if="dialogFormVisible === true"
           >
             <el-form-item label="姓名" prop="name">
               <el-input v-model="addteacher.name" style="width: 400px" />
@@ -61,7 +61,11 @@
               />
             </el-form-item>
             <el-form-item label="角色" style="margin-top: 15px">
-              <el-select v-model="addteacher.roleid" clearable placeholder="请选择">
+              <el-select
+                v-model="addteacher.roleid"
+                clearable
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in options"
                   :key="item.id"
@@ -78,7 +82,12 @@
             >
               <el-input v-model="addteacher.username" style="width: 400px" />
             </el-form-item>
-            <el-form-item label="密码" prop="pass" v-if="isshow" style="margin-top: 15px">
+            <el-form-item
+              label="密码"
+              prop="pass"
+              v-if="isshow"
+              style="margin-top: 15px"
+            >
               <el-input
                 v-model="addteacher.pass"
                 type="password"
@@ -89,7 +98,9 @@
             <template #footer>
               <span class="dialog-footer">
                 <el-button @click="close">取消</el-button>
-                <el-button type="primary" @click="adds(ruleFormRefAdd)">确定</el-button>
+                <el-button type="primary" @click="adds(ruleFormRefAdd)"
+                  >确定</el-button
+                >
               </span>
             </template>
           </el-dialog>
@@ -107,7 +118,11 @@
       status-icon
     >
       <el-form-item label="关键字">
-        <el-input placeholder="请输入关键字" v-model="ruleForm.key" @keyup.enter="keys" />
+        <el-input
+          placeholder="请输入关键字"
+          v-model="ruleForm.key"
+          @keyup.enter="keys"
+        />
       </el-form-item>
       <el-form-item label="部门">
         <div class="example-block">
@@ -131,8 +146,7 @@
         </el-select>
       </el-form-item>
       <!-- <el-form-item> -->
-        <el-button type="primary" @click="keys"
-        class="btn_teacher"
+      <el-button type="primary" @click="keys" class="btn_teacher"
         >搜索</el-button
       >
       <!-- </el-form-item> -->
@@ -159,7 +173,11 @@
           <el-button link type="primary" size="small" @click="revamp(scope.row)"
             >修改</el-button
           >
-          <el-button link type="primary" size="small" @click="delet(scope.row.id)"
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="delet(scope.row.id)"
             >删除</el-button
           >
         </template>
@@ -191,16 +209,28 @@
       class="demo-ruleForm"
       :hide-required-asterisk="false"
     >
-      <el-dialog v-model="addteacher.centerDialogVisible" title="重置密码" width="30%">
+      <el-dialog
+        v-model="addteacher.centerDialogVisible"
+        title="重置密码"
+        width="30%"
+      >
         <span style="margin-left: 80px">
           <el-form-item label="姓名" prop="name">
             {{ ruleForm.name }}
           </el-form-item>
           <el-form-item label="密码" style="margin-top: 20px" prop="pass">
-            <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
+            <el-input
+              v-model="ruleForm.pass"
+              type="password"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPass">
-            <el-input v-model="ruleForm.confirmPass" type="password" autocomplete="off" />
+            <el-input
+              v-model="ruleForm.confirmPass"
+              type="password"
+              autocomplete="off"
+            />
           </el-form-item>
         </span>
         <template #footer>
@@ -216,17 +246,27 @@
 
 <script lang="ts" setup>
 // 调用接口 先引入
-import { teacherList, deleteList, addList, classesdepartment } from "../../api/teacher";
-import { roleList } from "../../api/role";
-import { ref, reactive, toRefs } from "vue";
-import type { FormInstance, FormRules, UploadProps, UploadUserFile } from "element-plus";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { ru } from "element-plus/es/locale";
-const input = ref("");
+import {
+  teacherList,
+  deleteList,
+  addList,
+  classesdepartment,
+} from '../../api/teacher';
+import { roleList } from '../../api/role';
+import { ref, reactive, toRefs } from 'vue';
+import type {
+  FormInstance,
+  FormRules,
+  UploadProps,
+  UploadUserFile,
+} from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { ru } from 'element-plus/es/locale';
+const input = ref('');
 const isshow = ref(false);
 // const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
-const formLabelWidth = "140px";
+const formLabelWidth = '140px';
 const ruleFormRefAdd = ref();
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
@@ -241,26 +281,26 @@ const tertiary = reactive({
 });
 // 三级联动
 const props1 = {
-  label: "name",
-  children: "children",
-  value: "id",
+  label: 'name',
+  children: 'children',
+  value: 'id',
   checkStrictly: true,
 };
-const roless = ref("");
+const roless = ref('');
 
 const addteacher = reactive({
   id: 0,
-  username: "",
-  pwd: "",
-  name: "",
-  tel: "",
+  username: '',
+  pwd: '',
+  name: '',
+  tel: '',
   depid: 0,
-  roleid: "请选择账号",
-  depids: "",
-  checkPass: "",
-  pass: "",
-  confirmPass: "",
-  oldpass: "",
+  roleid: '请选择账号',
+  depids: '',
+  checkPass: '',
+  pass: '',
+  confirmPass: '',
+  oldpass: '',
   centerDialogVisible: false,
 });
 
@@ -269,12 +309,12 @@ const ruleForm = reactive<any>({
   page: 1,
   counts: 0,
   depid: 0,
-  key: "",
-  pass: "",
-  checkPass: "",
-  username: "",
-  name: "",
-  confirmPass: "",
+  key: '',
+  pass: '',
+  checkPass: '',
+  username: '',
+  name: '',
+  confirmPass: '',
 });
 
 // const password= reactive<any>({
@@ -330,15 +370,15 @@ list();
 // }
 // 删除弹框
 const delet = (id: any) => {
-  ElMessageBox.confirm("确定要删除该账号吗?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除该账号吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
   })
     .then(async () => {
       ElMessage({
-        type: "success",
-        message: "删除成功",
+        type: 'success',
+        message: '删除成功',
       });
       let res = await deleteList({ id: id });
       console.log(res);
@@ -346,8 +386,8 @@ const delet = (id: any) => {
     })
     .catch(() => {
       ElMessage({
-        type: "info",
-        message: "已取消删除",
+        type: 'info',
+        message: '已取消删除',
       });
     });
 };
@@ -373,23 +413,25 @@ const adds = async (formEl: FormInstance | undefined) => {
       let res = await addList(addteacher);
       console.log(res);
       dialogFormVisible.value = false;
-      addteacher.name = "";
-      addteacher.tel = "";
-      addteacher.roleid = "";
-      addteacher.username = "";
-      addteacher.pass = "";
+      addteacher.name = '';
+      addteacher.tel = '';
+      addteacher.roleid = '';
+      addteacher.username = '';
+      addteacher.pass = '';
+      addteacher.depid = 0;
+
       list();
       if (addteacher.id == 0) {
         ElMessage({
           showClose: true,
-          message: "添加成功",
-          type: "success",
+          message: '添加成功',
+          type: 'success',
         });
       } else {
         ElMessage({
           showClose: true,
-          message: "修改成功",
-          type: "success",
+          message: '修改成功',
+          type: 'success',
         });
       }
     }
@@ -397,7 +439,7 @@ const adds = async (formEl: FormInstance | undefined) => {
 };
 // 修改
 const revamp = async (val: any) => {
-  title.value = "修改";
+  title.value = '修改';
   addteacher.id = val.id;
   addteacher.username = val.username;
   addteacher.name = val.name;
@@ -432,46 +474,46 @@ roles();
 const onShow = () => {
   dialogFormVisible.value = true;
   isshow.value = true;
-  title.value = "添加";
+  title.value = '添加';
 };
 //取消按钮
 const close = () => {
   dialogFormVisible.value = false;
   // ruleFormRefAdd.value.resetFields()
-  addteacher.name = "";
-  addteacher.tel = "";
-  addteacher.username = "";
-  addteacher.pass = "";
+  addteacher.name = '';
+  addteacher.tel = '';
+  addteacher.username = '';
+  addteacher.pass = '';
   addteacher.depid = 0;
-  addteacher.roleid = "";
+  addteacher.roleid = '';
 };
 
 const validatePass = (rule: any, value: any, callback: any) => {
-  if (value === "") {
-    callback(new Error("请输入密码"));
+  if (value === '') {
+    callback(new Error('请输入密码'));
   } else if (value.toString().length < 6 || value.toString().length > 18) {
-    callback(new Error("密码长度为6-18位"));
+    callback(new Error('密码长度为6-18位'));
   } else {
     callback();
   }
 };
 const validatePass2 = (rule: any, value: any, callback: any) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
+  if (value === '') {
+    callback(new Error('请再次输入密码'));
   } else if (value !== ruleForm.pass) {
-    callback(new Error("输入密码两次不一致"));
+    callback(new Error('输入密码两次不一致'));
   } else {
     callback();
   }
 };
 // 添加布局验证
 const rules = reactive<FormRules>({
-  name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-  username: [{ required: true, message: "请输入账号", trigger: "blur" }],
-  tel: [{ required: true, message: "请输入手机号", trigger: "blur" }],
+  name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+  tel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
   // pwd:[{required:true,message:'请输入密码',trigger:'blur'}],
-  pass: [{ validator: validatePass, trigger: "blur" }],
-  confirmPass: [{ validator: validatePass2, trigger: "blur" }],
+  pass: [{ validator: validatePass, trigger: 'blur' }],
+  confirmPass: [{ validator: validatePass2, trigger: 'blur' }],
 });
 //点击重置密码
 const rest = (data: any) => {
@@ -488,7 +530,7 @@ const rest = (data: any) => {
 const open2 = async () => {
   ruleFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      console.log("submit!");
+      console.log('submit!');
       let arr = {
         id: ruleForm.id,
         username: ruleForm.username,
@@ -505,44 +547,44 @@ const open2 = async () => {
       if (res.errCode === 10000) {
         addteacher.centerDialogVisible = false;
         ElMessage({
-          type: "success",
-          message: "重置成功",
+          type: 'success',
+          message: '重置成功',
         });
         list();
       }
     } else {
-      console.log("error submit!");
+      console.log('error submit!');
     }
   });
 };
 
 const cancel = () => {
   addteacher.centerDialogVisible = false;
-  (ruleForm.pass = ""), (ruleForm.confirmPass = "");
+  (ruleForm.pass = ''), (ruleForm.confirmPass = '');
 };
 
 const amend = () => {};
 // 批量上传
 const fileList = ref<UploadUserFile[]>([
   {
-    name: "element-plus-logo.svg",
-    url: "https://element-plus.org/images/element-plus-logo.svg",
+    name: 'element-plus-logo.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
   },
   {
-    name: "element-plus-logo2.svg",
-    url: "https://element-plus.org/images/element-plus-logo.svg",
+    name: 'element-plus-logo2.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
   },
 ]);
 
-const handleRemove: UploadProps["onRemove"] = (file, uploadFiles) => {
+const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
   console.log(file, uploadFiles);
 };
 
-const handlePreview: UploadProps["onPreview"] = (uploadFile) => {
+const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
   console.log(uploadFile);
 };
 
-const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
   ElMessage.warning(
     `The limit is 3, you selected ${files.length} files this time, add up to ${
       files.length + uploadFiles.length
@@ -550,13 +592,15 @@ const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
   );
 };
 
-const beforeRemove: UploadProps["beforeRemove"] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
+const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
+  return ElMessageBox.confirm(
+    `Cancel the transfert of ${uploadFile.name} ?`
+  ).then(
     () => true,
     () => false
   );
 };
 </script>
 <style scoped lang="less">
-@import url("./teacher.less");
+@import url('./teacher.less');
 </style>
