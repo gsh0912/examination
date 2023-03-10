@@ -57,8 +57,8 @@
       :data="student.tableData"
       style="width: 100%"
       @selection-change="handleSelectionChange"
-      :header-cell-style="{'background':'#f8f8f8'}"
-      :row-style="{'height':'50px'}"
+      :header-cell-style="{ background: '#f8f8f8' }"
+      :row-style="{ height: '50px' }"
     >
       <el-table-column align="center" type="selection" width="55" />
       <el-table-column align="center" property="name" label="学生姓名" />
@@ -66,7 +66,11 @@
       <el-table-column align="center" property="depname" label="所属部门" />
       <el-table-column align="center" property="classname" label="所在班级" />
       <el-table-column align="center" property="username" label="账号" />
-      <el-table-column align="center" property="addtime" label="添加时间" />
+      <el-table-column align="center" label="添加时间">
+        <template #default="scope">
+          {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         property="address"
@@ -217,7 +221,7 @@ import add from './studentss/add.vue';
 import pass from './studentss/pass.vue';
 import { reqList } from '../../api/department';
 import cascader from '../../components/common/cascader.vue';
-
+import moment from 'moment'
 const form = ref<any>({
   //修改数据
   id: 1,
@@ -273,7 +277,7 @@ const list = async () => {
 const Mylist = {
   list,
 };
-const myListRef = ref(Mylist)
+const myListRef = ref(Mylist);
 provide('myListRef', myListRef);
 // 表格
 
@@ -320,9 +324,9 @@ const stu_delete = (id: string) => {
 // 批量删除
 let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
-  if(val.length===0){
-      student.disabled = true;
-    }
+  if (val.length === 0) {
+    student.disabled = true;
+  }
   const arr: any = val.map((item: { id: any }) => {
     student.disabled = false;
     return item.id;
@@ -478,7 +482,7 @@ const rules = reactive<FormRules>({
   pass: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 18, message: '学员密码为6-18个字符', trigger: 'blur' },
-    { validator: validatePass, trigger: 'blur'},
+    { validator: validatePass, trigger: 'blur' },
   ],
   oldpass: [
     { required: true, message: '请确认密码', trigger: 'blur' },
