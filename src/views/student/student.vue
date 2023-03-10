@@ -209,7 +209,7 @@ import {
   FormRules,
   FormInstance,
 } from 'element-plus';
-import { reactive, ref, onMounted, provide } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import {
   studentlist,
   studentdelete,
@@ -274,14 +274,6 @@ const list = async () => {
   student.tableData = res.data.list;
   student.total = res.data.counts;
 };
-const Mylist = {
-  list,
-};
-const myListRef = ref(Mylist);
-provide('myListRef', myListRef);
-// 表格
-
-// 分页
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const background = ref(true);
@@ -324,7 +316,7 @@ const stu_delete = (id: string) => {
 // 批量删除
 let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
-  if (val.length === 0) {
+  if(val.length<=0){
     student.disabled = true;
   }
   const arr: any = val.map((item: { id: any }) => {
@@ -345,7 +337,8 @@ const arrall_del = () => {
       if (res.errCode === 10000) {
         ElMessage({
           type: 'success',
-          message: '删除成功',
+           
+             message: '删除成功',
         });
         list();
         student.disabled = true;
@@ -471,7 +464,7 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'));
   } else if (value !== password.value.pass) {
-    callback(new Error('两次密码不一致'));
+    callback(new Error("两次密码不一致"));
   } else {
     callback();
   }
@@ -524,9 +517,7 @@ const adduppass = async (formEl: FormInstance | undefined) => {
 
 // 修改班级
 const changeGateway = async (val: any) => {
-  // console.log(1111111,val.id);
   let res: any = await classeslist({ depid: val.id });
-  console.log(22222, res);
   if (res.errCode === 10000) {
     student.class = res.data.list;
   }
