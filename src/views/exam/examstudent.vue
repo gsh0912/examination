@@ -118,10 +118,15 @@
               >分值:{{ item.scores }}</span
             >
           </div>
-          <div>
+          <div v-show="item.type !== '填空题'">
             <div style="margin-top: 10px">{{ item.explains }}</div>
             <div style="margin-top: 10px">回答：</div>
             <div style="margin-top: 10px">{{ item.studentanswer }}</div>
+          </div>
+          <div v-show="item.type === '填空题'">
+            <div style="margin-top: 10px">
+              <span v-html="item.title"></span>
+            </div>
           </div>
           <div class="mark">
             <el-form-item
@@ -243,7 +248,8 @@ const formSize = ref('default');
 const examDatas = ref<any>({
   examData: [],
 });
-const examList = ref('');
+const examList = ref<string>('');
+const type = ref<string>('');
 const exam = async (data: any) => {
   console.log(data);
   drawer.value = true;
@@ -257,7 +263,16 @@ const exam = async (data: any) => {
   let res = await question({ testid: route.query.testid, studentid: data.id });
   console.log(res);
   examList.value = data.name;
-  examDatas.value.examData = res.data.list;
+  examDatas.value.examData = res.data.list.map((item: any) => {
+    if (item.type === '填空题') {
+      console.log(item.title);
+      item.title = item.title.replaceAll(
+        '[]',
+        `<input type="text" value="${item.explains}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
+      );
+    }
+    return item;
+  });
 };
 //提交
 const ruleFormRef = ref();
@@ -266,13 +281,17 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   let max = parseInt(rule.maxScores);
   console.log(value);
   let _value = parseInt(value);
+  // let _value = Math.ceil(value);
   // console.log(isNaN(value));
   // console.log(isNaN(value));
   if (isNaN(value) || value === null) {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
-  } else {
+  }else if( parseInt(value)){
+    callback(new Error(`请输入整数`));
+  }
+   else {
     callback();
   }
 };
