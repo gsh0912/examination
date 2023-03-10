@@ -221,7 +221,7 @@ import add from './studentss/add.vue';
 import pass from './studentss/pass.vue';
 import { reqList } from '../../api/department';
 import cascader from '../../components/common/cascader.vue';
-import moment from 'moment'
+import moment from 'moment';
 const form = ref<any>({
   //修改数据
   id: 1,

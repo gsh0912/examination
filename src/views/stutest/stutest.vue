@@ -54,10 +54,8 @@
         </div>
         <div class="bottom_data">
           <span v-if="item.begintime && item.endtime"
-            >{{
-              item.begintime.substring(0, item.begintime.indexOf('.') - 3)
-            }}至{{
-              item.endtime.substring(0, item.begintime.indexOf('.') - 3)
+            >{{ moment(item.begintime).format('YYYY-MM-DD HH:mm') }}至{{
+              moment(item.endtime).format('YYYY-MM-DD HH:mm')
             }}</span
           >
           <span v-else>不限</span>
@@ -87,6 +85,7 @@
 import { ref, reactive } from 'vue';
 import { stutesList } from '../../api/stutest';
 import { useRouter } from 'vue-router';
+import moment from 'moment';
 // 路由
 let router = useRouter();
 // 分页数据

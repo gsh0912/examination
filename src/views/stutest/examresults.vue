@@ -55,11 +55,19 @@
         <span></span>
         <span></span>
         <span></span>
-        <p :class="resultData.list.studentScores >= resultData.list.scores ? 'pass' : 'fail'">
+        <p
+          :class="
+            resultData.list.studentScores >= resultData.list.scores
+              ? 'pass'
+              : 'fail'
+          "
+        >
           {{ resultData.list.studentScores }}
         </p>
         <p>
-          <span v-if="resultData.list.studentScores >= resultData.list.scores">恭喜，通过考试</span>
+          <span v-if="resultData.list.studentScores >= resultData.list.scores"
+            >恭喜，通过考试</span
+          >
           <span v-else>很可惜，未通过</span>
         </p>
         <span></span>
@@ -244,10 +252,10 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, toRefs } from 'vue';
 import { getForResult } from '../../api/stutest';
-import { useRoute,useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import moment from 'moment';
 let route = useRoute();
-let router=useRouter()
+let router = useRouter();
 let radioCounts = ref(0); //单选题
 let radioscussCounts = ref(0); //单选题正确数
 let multipleCounts = ref(0); //多选题
@@ -267,7 +275,7 @@ onMounted(() => {
   getResult();
 });
 const goBack = () => {
-  router.push("/index/stutest")
+  router.push('/index/stutest');
 };
 // 列表
 const getResult = async () => {
@@ -309,10 +317,10 @@ const getResult = async () => {
   });
 };
 // 查看考卷
-const examine=(id:any)=>{
+const examine = (id: any) => {
   // console.log(id);
-  router.push({path:"/stuexamwrong",query:{id:id}})
-}
+  router.push({ path: '/stuexamwrong', query: { id: id } });
+};
 </script>
 <style scoped lang="less">
 .examresults {
