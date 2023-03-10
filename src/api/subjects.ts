@@ -11,3 +11,7 @@ export const subjectsDel = (params: any) => {
 export const subjectsAdd = (data: any) => {
   return post('/api/subjects/add', data);
 };
+// 获取单条试卷信息 
+export const subjectsGet = (params: any) => {
+  return get('/api/subjects/get', params);
+};
