@@ -143,7 +143,7 @@
               v-for="item in student.list"
               :label="item.name"
               :key="item.id"
-              @change="changeGateway(item)"
+              @click.native="changeGateway(item)"
               :value="item.id"
             />
           </el-select>
