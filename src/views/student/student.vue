@@ -516,9 +516,7 @@ const adduppass = async (formEl: FormInstance | undefined) => {
 
 // 修改班级
 const changeGateway = async (val: any) => {
-  // console.log(1111111,val.id);
   let res: any = await classeslist({ depid: val.id });
-  console.log(22222, res);
   if (res.errCode === 10000) {
     student.class = res.data.list;
   }
