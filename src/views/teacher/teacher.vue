@@ -221,17 +221,14 @@ import { roleList } from "../../api/role";
 import { ref, reactive, toRefs } from "vue";
 import type { FormInstance, FormRules, UploadProps, UploadUserFile } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ru } from "element-plus/es/locale";
 const input = ref("");
 const isshow = ref(false);
-// const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const ruleFormRefAdd = ref();
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const small = ref(false);
-// const background = ref(false);
 const disabled = ref(false);
 const centerDialogVisible = ref(false);
 const title = ref();
@@ -277,20 +274,7 @@ const ruleForm = reactive<any>({
   confirmPass: "",
 });
 
-// const password= reactive<any>({
-//   id: 0,
-//   username: "",
-//   pwd: "",
-//   name: "",
-//   tel: "",
-//   depid: 0,
-//   roleid: "",
-//   depids: '',
-//   checkPass:'',
-//   pass:'',
-//   confirmPass:'',
-//   oldpass:'',
-// })
+
 const data = reactive<any>({
   options: [],
 });
@@ -322,12 +306,7 @@ const list = async () => {
   loading.value = false;
 };
 list();
-// 调用删除接口
-// const delet = async(id:any)=>{
-//   let res = await del({id:id})
-//   console.log(res);
-//   list()
-// }
+
 // 删除弹框
 const delet = (id: any) => {
   ElMessageBox.confirm("确定要删除该账号吗?", "提示", {
@@ -476,13 +455,18 @@ const rules = reactive<FormRules>({
 //点击重置密码
 const rest = (data: any) => {
   addteacher.centerDialogVisible = true;
+  console.log(data)
   ruleForm.username = data.username;
   ruleForm.id = data.id;
   ruleForm.name = data.name;
-  // ruleForm.pass = data.pass
+  // // ruleForm.pass = data.pass
   ruleForm.checkPass = data.checkPass;
   ruleForm.confirmPass = data.confirmPass;
   ruleForm.oldpass = data.oldpass;
+
+  ruleForm.depid = data.depid;
+  ruleForm.tel = data.tel;
+  ruleForm.roleid = data.roleid;
 };
 // 点击确定修改按钮
 const open2 = async () => {
@@ -492,11 +476,14 @@ const open2 = async () => {
       let arr = {
         id: ruleForm.id,
         username: ruleForm.username,
-        pass: ruleForm.pass,
+        // pass: ruleForm.pass,
         checkPass: ruleForm.checkPass,
         name: ruleForm.name,
         confirmPass: ruleForm.confirmPass,
         oldpass: ruleForm.confirmPass,
+        roleid:ruleForm.roleid,
+        depid:ruleForm.depid,
+        tel:ruleForm.tel,
       };
       console.log(1111111, arr.id);
       // 调用列表
