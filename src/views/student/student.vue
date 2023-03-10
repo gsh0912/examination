@@ -66,7 +66,11 @@
       <el-table-column align="center" property="depname" label="所属部门" />
       <el-table-column align="center" property="classname" label="所在班级" />
       <el-table-column align="center" property="username" label="账号" />
-      <el-table-column align="center" property="addtime" label="添加时间" />
+      <el-table-column align="center" label="添加时间">
+        <template #default="scope">
+          {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         property="address"
@@ -217,7 +221,7 @@ import add from './studentss/add.vue';
 import pass from './studentss/pass.vue';
 import { reqList } from '../../api/department';
 import cascader from '../../components/common/cascader.vue';
-
+import moment from 'moment'
 const form = ref<any>({
   //修改数据
   id: 1,
@@ -270,9 +274,6 @@ const list = async () => {
   student.tableData = res.data.list;
   student.total = res.data.counts;
 };
-// 表格
-
-// 分页
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const background = ref(true);

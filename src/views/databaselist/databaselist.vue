@@ -9,27 +9,59 @@
   <div class="search">
     <el-form inline>
       <el-form-item label="题库名称:">
-        <el-input v-model="Data.listConfig.key" placeholder="请输入题库名称" clearable />
+        <el-input
+          v-model="Data.listConfig.key"
+          placeholder="请输入题库名称"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="创建人:">
-        <el-input v-model="Data.listConfig.admin" placeholder="请输入创建人" clearable />
+        <el-input
+          v-model="Data.listConfig.admin"
+          placeholder="请输入创建人"
+          clearable
+        />
       </el-form-item>
     </el-form>
-    <el-checkbox v-model="Data.lookChecked" label="只看我创建的" size="large" @change="isMyFn" />
-    <el-button type="primary" style="margin: 0 8px" @click="serachFn">查询</el-button>
-    <el-button type="danger" :disabled="tableChecked.length === 0" @click="delAllFn">批量删除</el-button>
+    <el-checkbox
+      v-model="Data.lookChecked"
+      label="只看我创建的"
+      size="large"
+      @change="isMyFn"
+    />
+    <el-button type="primary" style="margin: 0 8px" @click="serachFn"
+      >查询</el-button
+    >
+    <el-button
+      type="danger"
+      :disabled="tableChecked.length === 0"
+      @click="delAllFn"
+      >批量删除</el-button
+    >
   </div>
   <!-- 表格 -->
-  <el-table ref="multipleTableRef" 
-  :data="Data.tableData" style="width: 100%" @selection-change="handleSelectionChange"
-  :header-cell-style="{'background':'#f8f8f8','text-align': 'center' }"
-      :row-style="{'height':'50px'}" :cell-style="{ 'text-align': 'center' }">
+  <el-table
+    ref="multipleTableRef"
+    :data="Data.tableData"
+    style="width: 100%"
+    @selection-change="handleSelectionChange"
+    :header-cell-style="{ background: '#f8f8f8', 'text-align': 'center' }"
+    :row-style="{ height: '50px' }"
+    :cell-style="{ 'text-align': 'center' }"
+  >
     <el-table-column type="selection" width="55" />
     <el-table-column label="题库" width="120">
       <template #default="scope">{{ scope.row.title }}</template>
     </el-table-column>
     <el-table-column property="counts" label="题目数量" width="120" />
-    <el-table-column property="addtime" label="创建时间" show-overflow-tooltip />
+    <el-table-column
+      label="创建时间"
+      show-overflow-tooltip
+   >
+<template #default="scope">
+  {{moment(scope.row.addtime).format("YYYY-MM-DD HH:mm")}}
+</template>
+   </el-table-column>
     <el-table-column property="admin" label="创建人" show-overflow-tooltip />
     <el-table-column label="操作">
       <template #default="scope">
@@ -38,16 +70,24 @@
         <span class="isActive" @click="delFn(scope.row.id)">删除</span>
       </template>
     </el-table-column>
-
   </el-table>
   <!-- 分页 -->
   <div class="pagination">
-    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
-      :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
-      :total="Data.counts" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[5, 10, 15, 20]"
+      :small="small"
+      :disabled="disabled"
+      :background="background"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="Data.counts"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
   <!-- 创建题库的弹出框 -->
-  <databaseListDialog ref="databaseListDialogRef" :getList="getList"/>
+  <databaseListDialog ref="databaseListDialogRef" :getList="getList" />
 </template>
 
 <script setup lang="ts">
@@ -57,27 +97,27 @@ import { ElTable, ElMessageBox, ElMessage } from 'element-plus';
 import { reqList } from '../../api/databaselist';
 import { deleteAllList, deleteList } from '../../api/databaselist';
 import { useRouter } from 'vue-router';
-import databaseListDialog from './databastListDialog.vue'
+import databaseListDialog from './databastListDialog.vue';
+import moment from 'moment'
 let router = useRouter();
 // 编辑
 const updateFn = (data: any) => {
-  databaseListDialogRef.value.dialogVisible = true
-  databaseListDialogRef.value.ruleForm.isshow = data.isshow
-  databaseListDialogRef.value.ruleForm.title = data.title
-  databaseListDialogRef.value.ruleForm.id = data.id
-}
+  databaseListDialogRef.value.dialogVisible = true;
+  databaseListDialogRef.value.ruleForm.isshow = data.isshow;
+  databaseListDialogRef.value.ruleForm.title = data.title;
+  databaseListDialogRef.value.ruleForm.id = data.id;
+};
 
 // 创建题库
-const databaseListDialogRef = ref()
+const databaseListDialogRef = ref();
 const createQuestion = () => {
-  databaseListDialogRef.value.ruleForm.id = 0
-  databaseListDialogRef.value.ruleForm.isshow = 1
-  databaseListDialogRef.value.ruleForm.title = ''
-  databaseListDialogRef.value.dialogVisible = true
-}
+  databaseListDialogRef.value.ruleForm.id = 0;
+  databaseListDialogRef.value.ruleForm.isshow = 1;
+  databaseListDialogRef.value.ruleForm.title = '';
+  databaseListDialogRef.value.dialogVisible = true;
+};
 // 批量删除
 const delFn = (id: number) => {
-
   ElMessageBox.confirm('确定要删除吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -202,7 +242,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.el-table{
+.el-table {
   margin-top: 20px;
 }
 .top {
