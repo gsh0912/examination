@@ -47,12 +47,25 @@
                 />
               </el-form-item>
               <el-form-item label="部门">
-                <el-cascader
+                <el-select
+                  @change="getClasses"
+                  v-model="student.depid"
+                  placeholder="请选择"
+                  clearable
+                >
+                  <el-option
+                    v-for="(item, index) in department"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+                <!-- <el-cascader
                   :options="department"
                   :props="{ emitPath: false, value: 'id', label: 'name' }"
                   v-model="student.depid"
                   @change="getClasses"
-                />
+                /> -->
               </el-form-item>
               <el-form-item label="班级">
                 <el-select
@@ -159,7 +172,9 @@
               <div class="typeTitle">{{ item.type }}</div>
             </div>
             <span class="score">分值：{{ item.scores }}</span>
-            <div :class="item.studentscores===0?'zero':'have'">得分:{{ item.studentscores }}</div>
+            <div :class="item.studentscores === 0 ? 'zero' : 'have'">
+              得分:{{ item.studentscores }}
+            </div>
           </div>
           <!-- <span class="typeItem">{{ index + 1 }}.{{ item.type }}</span>
           <span class="scoresItem"
@@ -352,7 +367,7 @@ interface Istudent {
   psize: number;
   testid: number;
   key: string;
-  depid: number;
+  depid: string;
   classid: string;
   state: string;
   pass: number;
@@ -363,7 +378,7 @@ const student = reactive<Istudent>({
   psize: 10,
   testid: Number(route.query.id),
   key: '',
-  depid: 0,
+  depid: '',
   classid: '',
   state: '',
   pass: 0,
@@ -479,7 +494,7 @@ header {
   .topic {
     padding: 15px 10px;
 
-   :deep(.el-checkbox__input)  {
+    :deep(.el-checkbox__input) {
       margin: 0 5px 0 15px;
     }
 
@@ -491,7 +506,7 @@ header {
       padding: 8px;
     }
 
-   :deep(.checkboxNative ){
+    :deep(.checkboxNative) {
       background-color: #eefaf6;
 
       .el-checkbox__label {
@@ -543,14 +558,14 @@ header {
         margin: 0 10px;
       }
 
-    :deep(.el-radio__label ){
+      :deep(.el-radio__label) {
         width: 740px;
         display: flex;
         color: #606266;
         justify-content: space-between;
       }
 
-     :deep(.el-radio__input) {
+      :deep(.el-radio__input) {
         margin: 0 5px 0 15px;
       }
     }
@@ -627,7 +642,7 @@ header {
     padding: 0 5px;
     height: 16px;
   }
-  .zero{
+  .zero {
     height: 16px;
     font-size: 12px;
     border: #ee0000 solid 1px;
