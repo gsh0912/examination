@@ -98,50 +98,58 @@
     :with-header="false"
     size="50%"
   >
-    <span>{{ examList }}的试卷</span>
-    <el-form
-      ref="ruleFormRef"
-      :model="examDatas"
-      class="demo-ruleForm"
-      :size="formSize"
-      status-icon
-    >
-      <div
-        style="margin-top: 50px"
-        v-for="(item, index) in examDatas.examData"
-        :key="index"
+    <div v-if="examDatas.examData.length > 0">
+      <span>{{ examList }}的试卷</span>
+      <el-form
+        ref="ruleFormRef"
+        :model="examDatas"
+        class="demo-ruleForm"
+        :size="formSize"
+        status-icon
       >
-        <div class="questions">
-          <span>{{ index + 1 }}、{{ item.type }}</span>
-          <span style="margin-left: 10px; color: rgb(202, 198, 182)"
-            >分值:{{ item.scores }}</span
-          >
+        <div
+          style="margin-top: 50px"
+          v-for="(item, index) in examDatas.examData"
+          :key="index"
+        >
+          <div class="questions">
+            <span>{{ index + 1 }}、{{ item.type }}</span>
+            <span style="margin-left: 10px; color: rgb(202, 198, 182)"
+              >分值:{{ item.scores }}</span
+            >
+          </div>
+          <div>
+            <div style="margin-top: 10px">{{ item.explains }}</div>
+            <div style="margin-top: 10px">回答：</div>
+            <div style="margin-top: 10px">{{ item.studentanswer }}</div>
+          </div>
+          <div class="mark">
+            <el-form-item
+              label="打分"
+              :rules="studentscores(item.scores)"
+              :prop="'examData.' + index + '.studentscores'"
+            >
+              <el-input style="width: 80px" v-model="item.studentscores" />
+            </el-form-item>
+            <el-form-item label="批注">
+              <el-input
+                style="width: 345px"
+                v-model="item.comments"
+                type="textarea"
+              />
+            </el-form-item>
+          </div>
         </div>
-        <div style="margin-top: 10px">{{ item.explains }}</div>
-        <div style="margin-top: 10px">回答：</div>
-        <div style="margin-top: 10px">{{ item.studentanswer }}</div>
-        <div class="mark">
-          <el-form-item
-            label="打分"
-            :rules="studentscores(item.scores)"
-            :prop="'examData.' + index + '.studentscores'"
-          >
-            <el-input style="width: 80px" v-model="item.studentscores" />
-          </el-form-item>
-          <el-form-item label="批注">
-            <el-input
-              style="width: 345px"
-              v-model="item.comments"
-              type="textarea"
-            />
-          </el-form-item>
-        </div>
-      </div>
-      <div class="accomplish">
+      </el-form>
+    </div>
+    <div class="notAvailable" v-else>暂无数据</div>
+    <div class="accomplish">
+      <div v-if="examDatas.examData.length > 0">
         <el-button type="primary" @click="submitForm()">阅卷完毕</el-button>
-        <el-button @click="drawer = false">取消</el-button>
+        <el-button type="primary" @click="drawer = false">取消</el-button>
       </div>
-    </el-form>
+      <el-button class="close" v-else @click="drawer = false">关闭</el-button>
+    </div>
   </el-drawer>
 </template>
 
@@ -202,7 +210,7 @@ const myList = async () => {
   console.log(list.value);
   total.value = res.data.counts;
 };
-myList()
+myList();
 // 分页
 const handleSizeChange = (val: number) => {
   // console.log(val);
@@ -258,9 +266,9 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   let max = parseInt(rule.maxScores);
   console.log(value);
   let _value = parseInt(value);
-  console.log(isNaN(value));
-  console.log(isNaN(value));
-  if (isNaN(value)) {
+  // console.log(isNaN(value));
+  // console.log(isNaN(value));
+  if (isNaN(value) || value === null) {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
@@ -283,6 +291,7 @@ const submitForm = async () => {
           comments: item.comments,
         };
       });
+      console.log(1);
       let res: any = await questionUpd(data);
       console.log(res);
       if (res.errCode === 10000) {
@@ -291,7 +300,7 @@ const submitForm = async () => {
           type: 'success',
         });
         drawer.value = false;
-        myList()
+        myList();
       }
     } else {
       console.log('error submit!');
@@ -337,6 +346,15 @@ const goBack = () => {
   background-color: rgb(250, 250, 250);
 }
 .accomplish {
-  margin-top: 20px;
+  margin: 30px 0px 20px 0px;
+}
+.notAvailable {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.close {
+  position: fixed;
+  bottom: 30px;
 }
 </style>

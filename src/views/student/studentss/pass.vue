@@ -60,12 +60,7 @@ defineExpose({
 });
 
 // 文件上传
-const fileList: any = ref<UploadUserFile[]>([
-  {
-    name: '',
-    url: '',
-  },
-]);
+const fileList: any = ref<UploadUserFile[]>([]);
 const updloadFile = ref<any>({});
 const handleChange: UploadProps['onChange'] = (
   uploadFile: any,

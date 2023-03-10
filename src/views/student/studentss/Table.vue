@@ -54,15 +54,24 @@ defineExpose({
 const myListRef: any = inject('myListRef');
 
 // 完成按钮
-const complete = async () => {
+const complete = () => {
+  // let arr: any = [];
+  // tableData.value.forEach(async (item: any) => {
+  //   arr.push(studentupdata(item));
+  // });
+  // console.log(arr);
+
+  // let res = Promise.all(arr).then(() => {
+  //   dialog.value = false;
+  //   myListRef.value.list();
+  // });
   Promise.all([
     tableData.value.forEach(async (item: any) => {
       let res: any = await studentupdata(item);
     }),
   ]).then(() => {
-    console.log('完成');
     dialog.value = false;
-    myListRef.list();
+    myListRef.value.list();
   });
 };
 </script>
