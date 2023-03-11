@@ -288,10 +288,7 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
-  }else if( parseInt(value)){
-    callback(new Error(`请输入整数`));
-  }
-   else {
+  }  else {
     callback();
   }
 };
