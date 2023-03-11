@@ -12,12 +12,7 @@
     <div>
       <el-form class="form" :model="tableData" label-width="68px">
         <el-form-item label="考生姓名">
-          <el-input
-            v-model="tableData.key"
-            placeholder="请输入考生姓名"
-            @change="clearableSearch"
-            :clearable="clearableFlag"
-          />
+          <el-input v-model="tableData.key" placeholder="请输入考生姓名" @change="clearableSearch" :clearable="clearableFlag" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select @change="select" v-model="tableData.state" placeholder="全部">
@@ -247,7 +242,7 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   // let _value = Math.ceil(value);
   // console.log(isNaN(value));
   // console.log(isNaN(value));
-  if (isNaN(value) || value === null) {
+  if (value === null || value === "") {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
