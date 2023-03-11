@@ -21,11 +21,11 @@
         :header-cell-style="{ background: '#f8f8f8' }"
         :row-style="{ height: '50px' }"
       >
-        <el-table-column align="center" prop="title" label="考试名称" />
-        <el-table-column align="center" prop="info" label="考试说明" />
-        <el-table-column align="center" prop="subjectnum" label="题量" />
-        <el-table-column align="center" prop="studentcounts" label="考试人数" />
-        <el-table-column align="center" label="未判人数">
+        <el-table-column prop="title" label="考试名称" />
+        <el-table-column prop="info" label="考试说明" />
+        <el-table-column align="center"  prop="subjectnum" label="题量" />
+        <el-table-column  align="center"  prop="studentcounts" label="考试人数" />
+        <el-table-column  align="center"  label="未判人数">
           <template #default="scoped">
             <span style="color: red">{{ scoped.row.incomplete }}</span>
           </template>

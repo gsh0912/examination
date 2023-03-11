@@ -77,9 +77,9 @@
   <el-table
     ref="multipleTableRef"
     :data="tableData.tableArr"
-    :cell-style="{ 'text-align': 'center' }"
+
     @selection-change="handleSelectionChange"
-    :header-cell-style="{'background':'#f8f8f8','text-align': 'center'}"
+    :header-cell-style="{'background':'#f8f8f8'}"
     :row-style="{'height':'50px'}"
   >
     <el-table-column type="selection" width="55" />
@@ -129,7 +129,7 @@
         moment(scope.row.addtime).format('YYYY-MM-DD HH:mm')
       }}</template>
     </el-table-column>
-    <el-table-column label="操作" width="160">
+    <el-table-column align="center" label="操作" width="160">
       <template #default="scope">
         <div class="operate">
           <span

@@ -5,102 +5,47 @@
         <div style="font-size: 20px; font-weight: 400">师资管理</div>
         <div class="header_box">
           <!-- 批量添加 -->
-          <el-upload
-            class="upload-demo"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            multiple
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-          >
+          <el-upload class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple
+            :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" :limit="3"
+            :on-exceed="handleExceed">
             <el-button style="margin-right: 15px" plain>批量添加</el-button>
             <template #tip>
               <div class="el-upload__tip"></div>
             </template>
           </el-upload>
-          <el-button type="primary" @click="onShow" style="float: right"
-            >添加教资</el-button
-          >
+          <el-button type="primary" @click="onShow" style="float: right">添加教资</el-button>
         </div>
       </div>
       <!-- 添加教资 -->
-      <el-form
-        ref="ruleFormRefAdd"
-        :model="addteacher"
-        :rules="rules"
-        class="demo-ruleForm"
-        label-width="110px"
-        status-icon
-      >
+      <el-form ref="ruleFormRefAdd" :model="addteacher" :rules="rules" class="demo-ruleForm" label-width="110px"
+        status-icon>
         <el-form-item class="add">
-          <el-dialog
-            v-model="dialogFormVisible"
-            width="33%"
-            :title="title + '老师'"
-            v-if="dialogFormVisible === true"
-          >
+          <el-dialog v-model="dialogFormVisible" width="33%" :title="title + '老师'" v-if="dialogFormVisible === true">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="addteacher.name" style="width: 400px" />
             </el-form-item>
             <el-form-item label="电话" prop="tel">
-              <el-input
-                max="11"
-                v-model="addteacher.tel"
-                style="width: 400px; margin-top: 20px"
-              />
+              <el-input max="11" v-model="addteacher.tel" style="width: 400px; margin-top: 20px" />
             </el-form-item>
             <el-form-item label="部门" style="margin-top: 15px">
-              <el-cascader
-                :options="tertiary.arr"
-                v-model="addteacher.depid"
-                :props="props1"
-                @change="selectCasc"
-                clearable
-              />
+              <el-cascader :options="tertiary.arr" v-model="addteacher.depid" :props="props1" @change="selectCasc"
+                clearable />
             </el-form-item>
             <el-form-item label="角色" style="margin-top: 15px">
-              <el-select
-                v-model="addteacher.roleid"
-                clearable
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select v-model="addteacher.roleid" clearable placeholder="请选择">
+                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="账号"
-              v-if="isshow"
-              prop="username"
-              style="margin-top: 15px"
-            >
+            <el-form-item label="账号" v-if="isshow" prop="username" style="margin-top: 15px">
               <el-input v-model="addteacher.username" style="width: 400px" />
             </el-form-item>
-            <el-form-item
-              label="密码"
-              prop="pass"
-              v-if="isshow"
-              style="margin-top: 15px"
-            >
-              <el-input
-                v-model="addteacher.pass"
-                type="password"
-                placeholder=""
-                style="width: 400px"
-              />
+            <el-form-item label="密码" prop="pass" v-if="isshow" style="margin-top: 15px">
+              <el-input v-model="addteacher.pass" type="password" placeholder="" style="width: 400px" />
             </el-form-item>
             <template #footer>
               <span class="dialog-footer">
                 <el-button @click="close">取消</el-button>
-                <el-button type="primary" @click="adds(ruleFormRefAdd)"
-                  >确定</el-button
-                >
+                <el-button type="primary" @click="adds(ruleFormRefAdd)">确定</el-button>
               </span>
             </template>
           </el-dialog>
@@ -109,128 +54,63 @@
       </el-form>
     </div>
     <!-- 搜索框 -->
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      label-width="60px"
-      class="demo-ruleForm searchs"
-      status-icon
-    >
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="60px" class="demo-ruleForm searchs"
+      status-icon>
       <el-form-item label="关键字">
-        <el-input
-          placeholder="请输入关键字"
-          v-model="ruleForm.key"
-          @keyup.enter="keys"
-        />
+        <el-input placeholder="请输入关键字" v-model="ruleForm.key"  clearable @keyup.enter="keys" />
       </el-form-item>
       <el-form-item label="部门">
         <div class="example-block">
           <span class="example-demonstration"></span>
-          <el-cascader
-            :options="tertiary.arr"
-            :props="props1"
-            @change="selectCascs"
-            clearable
-          />
+          <el-cascader :options="tertiary.arr" :props="props1"  clearable @change="selectCascs" />
         </div>
       </el-form-item>
       <el-form-item label="角色" prop="region">
         <el-select v-model="roless" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.name"
-            :value="item.name"
-          />
+          <el-option v-for="item in options" :key="item.id" clearable :label="item.name" :value="item.name" />
         </el-select>
       </el-form-item>
       <!-- <el-form-item> -->
-      <el-button type="primary" @click="keys" class="btn_teacher"
-        >搜索</el-button
-      >
+      <el-button type="primary" @click="keys" class="btn_teacher">搜索</el-button>
       <!-- </el-form-item> -->
     </el-form>
     <!-- 表格 -->
-    <el-table
-      v-loading="loading"
-      :data="tableData.arr"
-      style="width: 100%"
-      :header-cell-style="{ background: '#f8f8f8' }"
-      :row-style="{ height: '50px' }"
-    >
+    <el-table v-loading="loading" :data="tableData.arr" style="width: 100%" :header-cell-style="{ background: '#f8f8f8' }"
+      :row-style="{ height: '50px' }">
       <el-table-column fixed prop="name" label="姓名" />
-      <el-table-column prop="depname" label="部门" align="center" />
-      <el-table-column prop="tel" label="电话" align="center" />
-      <el-table-column prop="rolename" label="角色" align="center" />
-      <el-table-column prop="username" label="账号" align="center" />
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column prop="depname" label="部门"  />
+      <el-table-column prop="tel" label="电话"  />
+      <el-table-column prop="rolename" label="角色"  />
+      <el-table-column prop="username" label="账号"  />
+      <el-table-column fixed="right" label="操作"  align="center"  >
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="rest(scope.row)"
-            >重置密码</el-button
-          >
+          <el-button link type="primary" size="small" @click="rest(scope.row)">重置密码</el-button>
 
-          <el-button link type="primary" size="small" @click="revamp(scope.row)"
-            >修改</el-button
-          >
-          <el-button
-            link
-            type="primary"
-            size="small"
-            @click="delet(scope.row.id)"
-            >删除</el-button
-          >
+          <el-button link type="primary" size="small" @click="revamp(scope.row)">修改</el-button>
+          <el-button link type="primary" size="small" @click="delet(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
     <div class="demo-pagination-block">
-      <el-pagination
-        v-model:currentPage="currentPage4"
-        v-model:page-size="pageSize4"
-        background
-        :page-sizes="[10, 20, 30, 40]"
-        :small="small"
-        :disabled="disabled"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="ruleForm.counts"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        class="paging"
-      />
+      <el-pagination v-model:currentPage="currentPage4" v-model:page-size="pageSize4" background
+        :page-sizes="[10, 20, 30, 40]" :small="small" :disabled="disabled"
+        layout="total, sizes, prev, pager, next, jumper" :total="ruleForm.counts" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange" class="paging" />
     </div>
     <!-- 重置密码 -->
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      status-icon
-      :rules="rules"
-      label-width="120px"
-      class="demo-ruleForm"
-      :hide-required-asterisk="false"
-    >
-      <el-dialog
-        v-model="addteacher.centerDialogVisible"
-        title="重置密码"
-        width="30%"
-      >
+    <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm"
+      :hide-required-asterisk="false">
+      <el-dialog v-model="addteacher.centerDialogVisible" title="重置密码" width="30%">
         <span style="margin-left: 80px">
           <el-form-item label="姓名" prop="name">
             {{ ruleForm.name }}
           </el-form-item>
           <el-form-item label="密码" style="margin-top: 20px" prop="pass">
-            <el-input
-              v-model="ruleForm.pass"
-              type="password"
-              autocomplete="off"
-            />
+            <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPass">
-            <el-input
-              v-model="ruleForm.confirmPass"
-              type="password"
-              autocomplete="off"
-            />
+            <el-input v-model="ruleForm.confirmPass" type="password" autocomplete="off" />
           </el-form-item>
         </span>
         <template #footer>
@@ -499,6 +379,9 @@ const rest = (data: any) => {
   ruleForm.depid = data.depid;
   ruleForm.tel = data.tel;
   ruleForm.roleid = data.roleid;
+  ruleForm.pass='';
+  ruleForm.qq='';
+  ruleForm.searchDepa=[]
 };
 // 点击确定修改按钮
 const open2 = async () => {
@@ -511,11 +394,14 @@ const open2 = async () => {
         // pass: ruleForm.pass,
         checkPass: ruleForm.checkPass,
         name: ruleForm.name,
-        confirmPass: ruleForm.confirmPass,
+        confirmPass:ruleForm.confirmPass,
         oldpass: ruleForm.confirmPass,
-        roleid:ruleForm.roleid,
-        depid:ruleForm.depid,
-        tel:ruleForm.tel,
+        roleid: ruleForm.roleid,
+        depid: ruleForm.depid,
+        tel: ruleForm.tel,
+        pass:ruleForm.pass,
+        qq:'',
+        searchDepa:[],
       };
       console.log(1111111, arr.id);
       // 调用列表
@@ -540,7 +426,7 @@ const cancel = () => {
   (ruleForm.pass = ''), (ruleForm.confirmPass = '');
 };
 
-const amend = () => {};
+const amend = () => { };
 // 批量上传
 const fileList = ref<UploadUserFile[]>([
   {
@@ -563,8 +449,7 @@ const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
 
 const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
   ElMessage.warning(
-    `The limit is 3, you selected ${files.length} files this time, add up to ${
-      files.length + uploadFiles.length
+    `The limit is 3, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
     } totally`
   );
 };

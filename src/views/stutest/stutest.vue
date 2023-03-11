@@ -5,13 +5,14 @@
       <div class="search">
         <el-form :model="myData">
           <el-form-item label="关键字">
-            <el-input v-model="myData.key" placeholder="考试名称" />
+            <el-input v-model="myData.key"   clearable placeholder="考试名称" />
           </el-form-item>
           <el-form-item label="状态" style="width: 150px; margin-left: 10px">
             <el-select
               @change="select"
               v-model="myData.result"
               placeholder="所有"
+              clearable
             >
               <el-option label="所有" value="" />
               <el-option label="未考试" value="未考试" />

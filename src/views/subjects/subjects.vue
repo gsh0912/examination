@@ -34,22 +34,22 @@
       :header-cell-style="{ background: '#f8f8f8' }"
       :row-style="{ height: '50px' }"
     >
-      <el-table-column align="center" label="试卷名称">
+      <el-table-column label="试卷名称">
         <template #default="scope">
           <span class="spanTitle" @click="titleFn(scope.row.id)">
             {{ scope.row.title }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="counts" label="题量" />
-      <el-table-column align="center" prop="singles" label="单选" />
-      <el-table-column align="center" prop="multiples" label="多选" />
-      <el-table-column align="center" prop="judges" label="判断" />
-      <el-table-column align="center" prop="blanks" label="填空" />
-      <el-table-column align="center" prop="qas" label="问答" />
-      <el-table-column align="center" prop="scores" label="总分" />
-      <el-table-column align="center" prop="admin" label="创建人" />
-      <el-table-column align="center" label="更新时间">
+      <el-table-column prop="counts" label="题量" />
+      <el-table-column align="center"  prop="singles" label="单选" />
+      <el-table-column align="center"  prop="multiples" label="多选" />
+      <el-table-column align="center"  prop="judges" label="判断" />
+      <el-table-column align="center"  prop="blanks" label="填空" />
+      <el-table-column align="center"  prop="qas" label="问答" />
+      <el-table-column align="center"  prop="scores" label="总分" />
+      <el-table-column align="center"  prop="admin" label="创建人" />
+      <el-table-column align="center"  label="更新时间">
         <template #default="scope">
           {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
         </template>
