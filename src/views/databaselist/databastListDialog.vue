@@ -125,7 +125,7 @@ defineExpose({
 
   .teachersNum {
     position: absolute;
-    right: 260px;
+    right: 645px;
     bottom: 25px;
     width: 15px;
     height: 15px;

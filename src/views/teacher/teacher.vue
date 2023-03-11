@@ -45,9 +45,7 @@
             <template #footer>
               <span class="dialog-footer">
                 <el-button @click="close">取消</el-button>
-                <el-button type="primary" @click="adds(ruleFormRefAdd)"
-                  >确定</el-button
-                >
+                <el-button type="primary" @click="adds(ruleFormRefAdd)">确定</el-button>
               </span>
             </template>
           </el-dialog>
@@ -61,7 +59,10 @@
       <el-form-item label="关键字">
         <el-input
           placeholder="请输入关键字"
+          style="width: 200px;"
           v-model="ruleForm.key"
+          @change="clearableKey"
+          clearable
           @keyup.enter="keys"
         />
       </el-form-item>
@@ -84,11 +85,11 @@
     <el-table v-loading="loading" :data="tableData.arr" style="width: 100%" :header-cell-style="{ background: '#f8f8f8' }"
       :row-style="{ height: '50px' }">
       <el-table-column fixed prop="name" label="姓名" />
-      <el-table-column prop="depname" label="部门" align="center" />
-      <el-table-column prop="tel" label="电话" align="center" />
-      <el-table-column prop="rolename" label="角色" align="center" />
-      <el-table-column prop="username" label="账号" align="center" />
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column prop="depname" label="部门"  />
+      <el-table-column prop="tel" label="电话"  />
+      <el-table-column prop="rolename" label="角色"  />
+      <el-table-column prop="username" label="账号"  />
+      <el-table-column fixed="right" label="操作"  align="center"  >
         <template #default="scope">
           <el-button link type="primary" size="small" @click="rest(scope.row)">重置密码</el-button>
 
@@ -113,18 +114,10 @@
             {{ ruleForm.name }}
           </el-form-item>
           <el-form-item label="密码" style="margin-top: 20px" prop="pass">
-            <el-input
-              v-model="ruleForm.pass"
-              type="password"
-              autocomplete="off"
-            />
+            <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPass">
-            <el-input
-              v-model="ruleForm.confirmPass"
-              type="password"
-              autocomplete="off"
-            />
+            <el-input v-model="ruleForm.confirmPass" type="password" autocomplete="off" />
           </el-form-item>
         </span>
         <template #footer>
@@ -387,6 +380,9 @@ const rest = (data: any) => {
   ruleForm.depid = data.depid;
   ruleForm.tel = data.tel;
   ruleForm.roleid = data.roleid;
+  ruleForm.pass='';
+  ruleForm.qq='';
+  ruleForm.searchDepa=[]
 };
 // 点击确定修改按钮
 const open2 = async () => {
@@ -399,11 +395,14 @@ const open2 = async () => {
         // pass: ruleForm.pass,
         checkPass: ruleForm.checkPass,
         name: ruleForm.name,
-        confirmPass: ruleForm.confirmPass,
+        confirmPass:ruleForm.confirmPass,
         oldpass: ruleForm.confirmPass,
-        roleid:ruleForm.roleid,
-        depid:ruleForm.depid,
-        tel:ruleForm.tel,
+        roleid: ruleForm.roleid,
+        depid: ruleForm.depid,
+        tel: ruleForm.tel,
+        pass:ruleForm.pass,
+        qq:'',
+        searchDepa:[],
       };
       console.log(1111111, arr.id);
       // 调用列表
@@ -463,6 +462,11 @@ const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
     () => true,
     () => false
   );
+};
+const clearableKey = () => {
+  if (!ruleForm.key) {
+    list();
+  }
 };
 </script>
 <style scoped lang="less">

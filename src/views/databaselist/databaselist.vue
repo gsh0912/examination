@@ -12,13 +12,17 @@
         <el-input
           v-model="Data.listConfig.key"
           placeholder="请输入题库名称"
+          @change="clearableKey"
+          style="width: 200px;"
           clearable
         />
       </el-form-item>
       <el-form-item label="创建人:">
         <el-input
           v-model="Data.listConfig.admin"
+          @change="clearableAdmin"
           placeholder="请输入创建人"
+          style="width: 200px;"
           clearable
         />
       </el-form-item>
@@ -45,16 +49,17 @@
     :data="Data.tableData"
     style="width: 100%"
     @selection-change="handleSelectionChange"
-    :header-cell-style="{ background: '#f8f8f8', 'text-align': 'center' }"
+    :header-cell-style="{ background: '#f8f8f8' }"
     :row-style="{ height: '50px' }"
-    :cell-style="{ 'text-align': 'center' }"
+  
   >
     <el-table-column type="selection" width="55" />
-    <el-table-column label="题库" width="120">
+    <el-table-column  label="题库" width="200">
       <template #default="scope">{{ scope.row.title }}</template>
     </el-table-column>
-    <el-table-column property="counts" label="题目数量" width="120" />
+    <el-table-column align="center"  property="counts" label="题目数量" width="120" />
     <el-table-column
+    align="center" 
       label="创建时间"
       show-overflow-tooltip
    >
@@ -62,8 +67,8 @@
   {{moment(scope.row.addtime).format("YYYY-MM-DD HH:mm")}}
 </template>
    </el-table-column>
-    <el-table-column property="admin" label="创建人" show-overflow-tooltip />
-    <el-table-column label="操作">
+    <el-table-column property="admin" align="center"  label="创建人" show-overflow-tooltip />
+    <el-table-column label="操作" align="center" >
       <template #default="scope">
         <span class="isActive" @click="questions(scope.row.id)">试题</span>
         <span class="isActive" @click="updateFn(scope.row)">编辑</span>
@@ -98,7 +103,7 @@ import { reqList } from '../../api/databaselist';
 import { deleteAllList, deleteList } from '../../api/databaselist';
 import { useRouter } from 'vue-router';
 import databaseListDialog from './databastListDialog.vue';
-import moment from 'moment'
+import moment from 'moment';
 let router = useRouter();
 // 编辑
 const updateFn = (data: any) => {
@@ -180,7 +185,7 @@ const serachFn = () => {
 const currentPage = ref(1);
 const pageSize = ref(5);
 const small = ref(false);
-const background = ref(false);
+const background = ref(true);
 const disabled = ref(false);
 // 每页多少条
 const handleSizeChange = (val: number) => {
@@ -239,6 +244,16 @@ const questions = (id: number) => {
 onMounted(() => {
   getList();
 });
+const clearableKey = () => {
+  if (!Data.listConfig.key) {
+    getList();
+  }
+};
+const clearableAdmin = () => {
+  if (!Data.listConfig.admin) {
+    getList();
+  }
+};
 </script>
 
 <style scoped>
@@ -277,5 +292,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin: 20px 0px;
+}
+
+.spanTitle {
+  color: #409eff;
+  cursor: pointer;
 }
 </style>

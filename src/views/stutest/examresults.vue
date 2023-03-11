@@ -1,11 +1,7 @@
 <template>
   <div class="examresults">
     <div class="exam">
-      <div
-        class="stampBox"
-        style="border: 2px solid #14bd83"
-        v-show="resultData.list.result === '已通过'"
-      >
+      <div class="stampBox" style="border: 2px solid #14bd83" v-show="resultData.list.result === '已通过'">
         <div class="stamp" style="color: #14bd83; border: #14bd8229 solid 4px">
           已通过
         </div>
@@ -29,14 +25,12 @@
         </el-page-header>
         <div class="info">
           <!-- minute用于从当前时间获取的分钟或设置分钟 -->
-          <span
-            >用时:{{
-              moment(resultData.list.stuEndTime).diff(
-                resultData.list.studentStartTime,
-                'minute'
-              )
-            }}分钟</span
-          >
+          <span>用时:{{
+            moment(resultData.list.stuEndTime).diff(
+              resultData.list.studentStartTime,
+              'minute'
+            )
+          }}分钟</span>
           <span>|</span>
           <span>交卷时间:{{ resultData.list.stuEndTime }}</span>
           <span>|</span>
@@ -55,20 +49,18 @@
         <span></span>
         <span></span>
         <span></span>
-        <p
-          :class="
-            resultData.list.studentScores >= resultData.list.scores
-              ? 'pass'
-              : 'fail'
-          "
-        >
+        <p :class="
+          resultData.list.studentScores >= resultData.list.scores
+            ? 'pass'
+            : 'fail'
+        ">
           {{ resultData.list.studentScores }}
         </p>
         <p>
-          <span v-if="resultData.list.studentScores >= resultData.list.scores"
-            >恭喜，通过考试</span
-          >
-          <span v-else>很可惜，未通过</span>
+          <span v-if="resultData.list.studentScores >= resultData.list.scores">恭喜，通过考试
+          </span>
+          <span v-else>很可惜，未通过
+          </span>
         </p>
         <span></span>
         <span></span>
@@ -103,83 +95,63 @@
             <td align="center">
               {{ judgescusCounts ? `${judgescusCounts}` : '--' }}
             </td>
-            <td
-              align="center"
-              v-if="resultData.list.result === '待阅卷'"
-              rowspan="2"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '待阅卷'" rowspan="2"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : gapfillingScuss
+                ? '等待阅卷'
+                : gapfillingScuss
                   ? `${gapfillingScuss}`
                   : '--'
               }}
             </td>
-            <td
-              align="center"
-              v-if="resultData.list.result === '待阅卷'"
-              rowspan="2"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '待阅卷'" rowspan="2"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : questionScuss
+                ? '等待阅卷'
+                : questionScuss
                   ? `${questionScuss}`
                   : '--'
               }}
             </td>
             <!--  -->
-            <td
-              align="center"
-              v-if="resultData.list.result === '已通过'"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '已通过'"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : gapfillingScuss
+                ? '等待阅卷'
+                : gapfillingScuss
                   ? `${gapfillingScuss}`
                   : '--'
               }}
             </td>
-            <td
-              align="center"
-              v-if="resultData.list.result === '已通过'"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '已通过'"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : questionScuss
+                ? '等待阅卷'
+                : questionScuss
                   ? `${questionScuss}`
                   : '--'
               }}
             </td>
-            <td
-              align="center"
-              v-if="resultData.list.result === '未通过'"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '未通过'"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : gapfillingScuss
+                ? '等待阅卷'
+                : gapfillingScuss
                   ? `${gapfillingScuss}`
                   : '--'
               }}
             </td>
-            <td
-              align="center"
-              v-if="resultData.list.result === '未通过'"
-              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''"
-            >
+            <td align="center" v-if="resultData.list.result === '未通过'"
+              :style="resultData.list.result === '待阅卷' ? 'color:red' : ''">
               {{
                 resultData.list.result === '待阅卷'
-                  ? '等待阅卷'
-                  : questionScuss
+                ? '等待阅卷'
+                : questionScuss
                   ? `${questionScuss}`
                   : '--'
               }}
@@ -190,61 +162,45 @@
             <td align="center">
               {{
                 radioCounts - radioscussCounts
-                  ? `${radioCounts - radioscussCounts}题`
-                  : '--'
+                ? `${radioCounts - radioscussCounts}题`
+                : '--'
               }}
             </td>
             <td align="center">
               {{
                 multipleCounts - studentscores
-                  ? `${multipleCounts - studentscores}题`
-                  : '--'
+                ? `${multipleCounts - studentscores}题`
+                : '--'
               }}
             </td>
             <td align="center">
               {{
                 judgeCounts - judgescusCounts
-                  ? `${judgeCounts - judgescusCounts}题`
-                  : '--'
+                ? `${judgeCounts - judgescusCounts}题`
+                : '--'
               }}
             </td>
-            <td
-              align="center"
-              :style="resultData.list.result === '待阅卷' ? 'display:none' : ''"
-            >
+            <td align="center" :style="resultData.list.result === '待阅卷' ? 'display:none' : ''">
               {{
                 gapfilling - gapfillingScuss
-                  ? `${gapfilling - gapfillingScuss}题`
-                  : '--'
+                ? `${gapfilling - gapfillingScuss}题`
+                : '--'
               }}
             </td>
-            <td
-              align="center"
-              :style="resultData.list.result === '待阅卷' ? 'display:none' : ''"
-            >
+            <td align="center" :style="resultData.list.result === '待阅卷' ? 'display:none' : ''">
               {{
                 question - questionScuss
-                  ? `${question - questionScuss}题`
-                  : '--'
+                ? `${question - questionScuss}题`
+                : '--'
               }}
             </td>
           </tr>
         </table>
       </div>
-      <el-button
-        style="background-color: rgb(20, 189, 131)"
-        v-show="resultData.list.result === '已通过'"
-        type="success"
-        @click="examine(resultData.list.id)"
-        >查看考卷</el-button
-      >
-      <el-button
-        style="background-color: rgb(255, 0, 0)"
-        v-show="resultData.list.result === '未通过'"
-        type="danger"
-        @click="examine(resultData.list.id)"
-        >查看考卷</el-button
-      >
+      <el-button style="background-color: rgb(20, 189, 131)" v-show="resultData.list.result === '已通过'" type="success"
+        @click="examine(resultData.list.id)">查看考卷</el-button>
+      <el-button style="background-color: rgb(255, 0, 0)" v-show="resultData.list.result === '未通过'" type="danger"
+        @click="examine(resultData.list.id)">查看考卷</el-button>
     </div>
   </div>
 </template>
@@ -353,6 +309,7 @@ const examine = (id: any) => {
       justify-content: center;
       align-items: center;
       transform: rotate(340deg);
+
       .stamp {
         width: 86px;
         height: 86px;
@@ -373,8 +330,10 @@ const examine = (id: any) => {
       flex-direction: column;
       justify-content: space-around;
       border-bottom: 1px solid rgb(241, 241, 241);
+
       .info {
         display: flex;
+
         span {
           display: block;
           margin-left: 10px;
@@ -383,6 +342,7 @@ const examine = (id: any) => {
         }
       }
     }
+
     .examination {
       font-size: 70px;
       font-weight: 700;
@@ -390,6 +350,7 @@ const examine = (id: any) => {
       margin-top: 20px;
       margin-bottom: 30px;
     }
+
     .center_data {
       width: 100%;
       height: 170px;
@@ -397,21 +358,26 @@ const examine = (id: any) => {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
+
       .fail {
         font-size: 65px;
         color: rgb(255, 0, 0);
       }
+
       .pass {
         font-size: 65px;
         color: rgb(20, 189, 131);
       }
+
       p:last-of-type {
         font-size: 22px;
       }
     }
+
     .bottom_data {
       width: 100%;
       height: 155px;
+
       table {
         width: 80%;
         height: 100%;
@@ -421,6 +387,7 @@ const examine = (id: any) => {
         border: 1px solid rgb(241, 241, 241);
       }
     }
+
     .el-button {
       width: 240px;
       height: 45px;

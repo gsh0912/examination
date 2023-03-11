@@ -8,12 +8,11 @@
   <el-table
     :data="tableData"
     style="width: 100%"
-    :cell-style="{ 'text-align': 'center' }"
-    :header-cell-style="{'background':'#f8f8f8','text-align': 'center'}"
+    :header-cell-style="{'background':'#f8f8f8'}"
     :row-style="{'height':'50px'}"
   >
     <el-table-column prop="name" label="名称" />
-    <el-table-column prop="date" label="操作">
+    <el-table-column prop="date" align="center"  label="操作">
       <template #default="scope">
         <div class="operate">
           <span @click="update(scope.row)">编辑</span>

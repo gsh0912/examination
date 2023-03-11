@@ -28,11 +28,14 @@ export const databasequestionDelall = (data: any) => {
 export const exportExcel = (params: any = {}, responseType?: Object) => {
   return get('/api/databasequestion/exportExcel', params, { responseType: 'blob' });
 };
+
+
+
 // 添加试题 
-export const questionAdd =(data:any)=>{
-  return post('/api/databasequestion/add',data)
+export const questionAdd = (data: any) => {
+  return post('/api/databasequestion/add', data)
 }
 // 添加题库
-export const databaseAdd =(data:any)=>{
-  return post('/api/database/add',data)
+export const databaseAdd = (data: any) => {
+  return post('/api/database/add', data)
 }

@@ -6,10 +6,20 @@
     <div class="fromData">
       <el-form :model="subjects">
         <el-form-item label="关键字">
-          <el-input v-model="subjects.key" clearable placeholder="考试名称" />
+          <el-input
+            v-model="subjects.key"
+            placeholder="考试名称"
+            @change="clearableSearch"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="创建人" style="margin-left: 20px">
-          <el-input v-model="subjects.admin" clearable placeholder="创建人" />
+          <el-input
+            v-model="subjects.admin"
+            clearable
+            placeholder="创建人"
+            @change="clearableAdmin"
+          />
         </el-form-item>
         <el-form-item label="" style="margin-left: 20px">
           <el-checkbox
@@ -34,22 +44,22 @@
       :header-cell-style="{ background: '#f8f8f8' }"
       :row-style="{ height: '50px' }"
     >
-      <el-table-column align="center" label="试卷名称">
+      <el-table-column label="试卷名称">
         <template #default="scope">
           <span class="spanTitle" @click="titleFn(scope.row.id)">
             {{ scope.row.title }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="counts" label="题量" />
-      <el-table-column align="center" prop="singles" label="单选" />
-      <el-table-column align="center" prop="multiples" label="多选" />
-      <el-table-column align="center" prop="judges" label="判断" />
-      <el-table-column align="center" prop="blanks" label="填空" />
-      <el-table-column align="center" prop="qas" label="问答" />
-      <el-table-column align="center" prop="scores" label="总分" />
-      <el-table-column align="center" prop="admin" label="创建人" />
-      <el-table-column align="center" label="更新时间">
+      <el-table-column prop="counts" label="题量" />
+      <el-table-column align="center"  prop="singles" label="单选" />
+      <el-table-column align="center"  prop="multiples" label="多选" />
+      <el-table-column align="center"  prop="judges" label="判断" />
+      <el-table-column align="center"  prop="blanks" label="填空" />
+      <el-table-column align="center"  prop="qas" label="问答" />
+      <el-table-column align="center"  prop="scores" label="总分" />
+      <el-table-column align="center"  prop="admin" label="创建人" />
+      <el-table-column align="center"  label="更新时间">
         <template #default="scope">
           {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
         </template>
@@ -87,7 +97,7 @@
 <script setup lang="ts">
 import moment from 'moment';
 import { ref, reactive, onMounted } from 'vue';
-import { subjectsList, subjectsDel,subjectsGet } from '../../api/subjects';
+import { subjectsList, subjectsDel, subjectsGet } from '../../api/subjects';
 import { useRouter } from 'vue-router';
 import titleDialog from './titleDialog/titleDialog.vue';
 const router = useRouter();
@@ -162,11 +172,24 @@ const titleData = ref({});
 let testNameId = ref<number>(0);
 const titleFn = async (testid: number) => {
   testNameId.value = testid;
-  let res = await subjectsGet({ id:testid });
+  let res = await subjectsGet({ id: testid });
   console.log(res);
-  console.log(res.data);  
+  console.log(res.data);
   titleData.value = res.data;
   dialogTitle.value.dialogVisible = true;
+};
+// 清除搜索
+let clearableFlag = ref(false);
+const clearableSearch = () => {
+  if (!subjects.key) {
+    console.log(clearableFlag.value);
+    getList();
+  }
+};
+const clearableAdmin = () => {
+  if (!subjects.admin) {
+    getList();
+  }
 };
 </script>
 

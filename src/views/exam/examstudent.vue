@@ -12,7 +12,12 @@
     <div>
       <el-form class="form" :model="tableData" label-width="68px">
         <el-form-item label="考生姓名">
-          <el-input v-model="tableData.key" placeholder="请输入考生姓名" clearable />
+          <el-input
+            v-model="tableData.key"
+            placeholder="请输入考生姓名"
+            @change="clearableSearch"
+            clearable="clearableFlag"
+          />
         </el-form-item>
         <el-form-item label="状态">
           <el-select @change="select" v-model="tableData.state" placeholder="全部">
@@ -285,7 +290,14 @@ const submitForm = async () => {
     }
   });
 };
-
+// 清除搜索
+let clearableFlag = ref(false);
+const clearableSearch = () => {
+  if (!tableData.key) {
+    console.log(clearableFlag.value);
+    myList();
+  }
+};
 //返回上一个页面
 const goBack = () => {
   router.push('/index/exam');

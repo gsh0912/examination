@@ -10,9 +10,7 @@
       </el-page-header>
       <div>
         <el-button @click="addDatabasequestion">添加试题</el-button>
-        <el-button type="primary" @click="addDatabasequestions"
-          >批量添加试题</el-button
-        >
+        <el-button type="primary" @click="addDatabasequestions">批量添加试题</el-button>
       </div>
     </div>
     <div>
@@ -24,12 +22,7 @@
           <el-input v-model="Data.admin" placeholder="请输入创建人" clearable />
         </el-form-item>
         <el-form-item label="题目类型：">
-          <el-select
-            @change="select"
-            v-model="Data.type"
-            placeholder="请选择"
-            clearable
-          >
+          <el-select @change="select" v-model="Data.type" placeholder="请选择" clearable>
             <el-option label="单选题" value="单选题" />
             <el-option label="多选题" value="多选题" />
             <el-option label="判断题" value="判断题" />
@@ -38,19 +31,10 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" @click="search">查询</el-button>
-        <el-button
-          type="danger"
-          @click="delAll"
-          :disabled="multipleSelection.length === 0"
-          >批量删除</el-button
-        >
+        <el-button type="danger" @click="delAll" :disabled="multipleSelection.length === 0">批量删除</el-button>
         <el-button @click="importExcel">导出excel</el-button>
       </el-form>
-      <el-table
-        :data="tableData.list"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table :data="tableData.list" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="题目名称">
           <template #default="scope">
@@ -66,29 +50,15 @@
         <el-table-column align="center" prop="admin" label="创建人" />
         <el-table-column align="center" label="操作">
           <template #default="scope">
-            <el-link
-              style="margin-right: 10px"
-              type="primary"
-              @click="compileFn(scope.row)"
-              >编辑</el-link
-            >
+            <el-link style="margin-right: 10px" type="primary" @click="compileFn(scope.row)">编辑</el-link>
             <el-link type="primary" @click="del(scope.row.id)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
       <div class="paging">
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[5, 10, 15, 20]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
+          :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </div>
   </div>
@@ -189,6 +159,7 @@ const importExcel = async () => {
   const res: any = await exportExcel({
     id: route.query.id,
   }); //请求接口返回文件流
+  
   console.log(res);
   let blob = new Blob([res], { type: 'application/vnd.ms-excel' });
   let url = URL.createObjectURL(blob);
