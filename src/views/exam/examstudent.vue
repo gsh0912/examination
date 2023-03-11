@@ -12,23 +12,37 @@
     <div>
       <el-form class="form" :model="tableData" label-width="68px">
         <el-form-item label="考生姓名">
-          <el-input v-model="tableData.key" placeholder="请输入考生姓名" @change="clearableSearch" :clearable="clearableFlag" />
+          <el-input
+            v-model="tableData.key"
+            placeholder="请输入考生姓名"
+            @change="clearableSearch"
+            clearable="clearableFlag"
+          />
         </el-form-item>
         <el-form-item label="状态">
-          <el-select @change="select" v-model="tableData.state" placeholder="全部">
+          <el-select
+            @change="select"
+            v-model="tableData.state"
+            placeholder="全部"
+          >
             <el-option label="未阅卷" value="未阅卷" />
             <el-option label="已阅卷" value="已阅卷" />
           </el-select>
         </el-form-item>
         <el-form-item label="部门">
-          <el-cascader :options="departments" :props="{ emitPath: false, value: 'id', label: 'name' }"
-            placeholder="请选择" />
+          <el-cascader
+            :options="departments"
+            :props="{ emitPath: false, value: 'id', label: 'name' }"
+            placeholder="请选择"
+          />
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="tableData.key" placeholder="请选择" disabled>
           </el-select>
         </el-form-item>
-        <el-button type="primary" style="margin-left: 25px" @click="search">查询</el-button>
+        <el-button type="primary" style="margin-left: 25px" @click="search"
+          >查询</el-button
+        >
       </el-form>
     </div>
     <!-- 表格 -->
@@ -65,25 +79,48 @@
     </div>
     <!-- 分页 -->
     <div class="demo-pagination-block">
-      <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 10, 15, 20]"
-        :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
-        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15, 20]"
+        :small="small"
+        :disabled="disabled"
+        :background="background"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
-  <el-drawer v-model="drawer" title="I am the title" :with-header="false" size="50%">
+  <el-drawer
+    v-model="drawer"
+    title="I am the title"
+    :with-header="false"
+    size="50%"
+  >
     <div v-if="examDatas.examData.length > 0">
       <span>{{ examList }}的试卷</span>
-      <el-form ref="ruleFormRef" :model="examDatas" class="demo-ruleForm" :size="formSize" status-icon>
-        <div style="margin-top: 50px" v-for="(item, index) in examDatas.examData" :key="index">
+      <el-form
+        ref="ruleFormRef"
+        :model="examDatas"
+        class="demo-ruleForm"
+        :size="formSize"
+        status-icon
+      >
+        <div
+          style="margin-top: 50px"
+          v-for="(item, index) in examDatas.examData"
+          :key="index"
+        >
           <div class="questions">
             <span>{{ index + 1 }}、{{ item.type }}</span>
-            <span style="margin-left: 10px; color: rgb(202, 198, 182)">分值:{{ item.scores }}</span>
+            <span style="margin-left: 10px; color: rgb(202, 198, 182)"
+              >分值:{{ item.scores }}</span
+            >
           </div>
           <div v-show="item.type !== '填空题'">
             <div style="margin-top: 10px">{{ item.explains }}</div>
-            <div style="margin-top: 10px">
-              <span v-html="item.title"></span>
-            </div>
             <div style="margin-top: 10px">回答：</div>
             <div style="margin-top: 10px">{{ item.studentanswer }}</div>
           </div>
@@ -93,11 +130,19 @@
             </div>
           </div>
           <div class="mark">
-            <el-form-item label="打分" :rules="studentscores(item.scores)" :prop="'examData.' + index + '.studentscores'">
+            <el-form-item
+              label="打分"
+              :rules="studentscores(item.scores)"
+              :prop="'examData.' + index + '.studentscores'"
+            >
               <el-input style="width: 80px" v-model="item.studentscores" />
             </el-form-item>
             <el-form-item label="批注">
-              <el-input style="width: 345px" v-model="item.comments" type="textarea" />
+              <el-input
+                style="width: 345px"
+                v-model="item.comments"
+                type="textarea"
+              />
             </el-form-item>
           </div>
         </div>
@@ -118,7 +163,7 @@
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { studentList, department, question, questionUpd } from '../../api/exam';
-import { ref, reactive, onMounted, nextTick } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import router from '../../router';
 let route = useRoute();
@@ -221,13 +266,11 @@ const exam = async (data: any) => {
   examList.value = data.name;
   examDatas.value.examData = res.data.list.map((item: any) => {
     if (item.type === '填空题') {
-      let arr = item.answer.split(',')
-      arr.forEach((data: string) => {
-        item.title = item.title.replace(
-          /\[\]/,
-          `<input type="text" value="${data}" disabled style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
-        );
-      })
+      console.log(item.title);
+      item.title = item.title.replaceAll(
+        '[]',
+        `<input type="text" value="${item.studentanswer}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
+      );
     }
     return item;
   });
@@ -242,14 +285,13 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   // let _value = Math.ceil(value);
   // console.log(isNaN(value));
   // console.log(isNaN(value));
-  if (value === null || value === "") {
+  if (value===''|| value === null) {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
-  } else if (parseInt(value)) {
-    callback(new Error(`请输入整数`));
-  }
-  else {
+  }else if(isNaN(value) ){
+    callback(new Error(`请输入数字`));
+  } else {
     callback();
   }
 };
@@ -304,15 +346,12 @@ const goBack = () => {
   font-size: 16px;
   margin-bottom: 15px;
 }
-
 .form {
   display: flex;
-
   .el-input {
     width: 200px;
   }
 }
-
 .demo-pagination-block {
   width: 100%;
   height: 75px;
@@ -320,11 +359,9 @@ const goBack = () => {
   justify-content: center;
   align-items: center;
 }
-
 .questions {
   margin-top: 20px;
 }
-
 .mark {
   width: 100%;
   height: 180px;
@@ -334,17 +371,14 @@ const goBack = () => {
   margin-top: 20px;
   background-color: rgb(250, 250, 250);
 }
-
 .accomplish {
   margin: 30px 0px 20px 0px;
 }
-
 .notAvailable {
   position: absolute;
   top: 50%;
   left: 50%;
 }
-
 .close {
   position: fixed;
   bottom: 30px;
