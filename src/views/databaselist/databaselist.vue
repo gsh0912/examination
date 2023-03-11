@@ -12,12 +12,14 @@
         <el-input
           v-model="Data.listConfig.key"
           placeholder="请输入题库名称"
+          @change="clearableKey"
           clearable
         />
       </el-form-item>
       <el-form-item label="创建人:">
         <el-input
           v-model="Data.listConfig.admin"
+          @change="clearableAdmin"
           placeholder="请输入创建人"
           clearable
         />
@@ -99,7 +101,7 @@ import { reqList } from '../../api/databaselist';
 import { deleteAllList, deleteList } from '../../api/databaselist';
 import { useRouter } from 'vue-router';
 import databaseListDialog from './databastListDialog.vue';
-import moment from 'moment'
+import moment from 'moment';
 let router = useRouter();
 // 编辑
 const updateFn = (data: any) => {
@@ -240,6 +242,16 @@ const questions = (id: number) => {
 onMounted(() => {
   getList();
 });
+const clearableKey = () => {
+  if (!Data.listConfig.key) {
+    getList();
+  }
+};
+const clearableAdmin = () => {
+  if (!Data.listConfig.admin) {
+    getList();
+  }
+};
 </script>
 
 <style scoped>
@@ -278,5 +290,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin: 20px 0px;
+}
+
+.spanTitle {
+  color: #409eff;
+  cursor: pointer;
 }
 </style>

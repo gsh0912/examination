@@ -57,7 +57,13 @@
     <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="60px" class="demo-ruleForm searchs"
       status-icon>
       <el-form-item label="关键字">
-        <el-input placeholder="请输入关键字" v-model="ruleForm.key"  clearable @keyup.enter="keys" />
+        <el-input
+          placeholder="请输入关键字"
+          v-model="ruleForm.key"
+          @change="clearableKey"
+          clearable
+          @keyup.enter="keys"
+        />
       </el-form-item>
       <el-form-item label="部门">
         <div class="example-block">
@@ -461,6 +467,11 @@ const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
     () => true,
     () => false
   );
+};
+const clearableKey = () => {
+  if (!ruleForm.key) {
+    list();
+  }
 };
 </script>
 <style scoped lang="less">

@@ -6,10 +6,20 @@
     <div class="fromData">
       <el-form :model="subjects">
         <el-form-item label="关键字">
-          <el-input v-model="subjects.key" clearable placeholder="考试名称" />
+          <el-input
+            v-model="subjects.key"
+            placeholder="考试名称"
+            @change="clearableSearch"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="创建人" style="margin-left: 20px">
-          <el-input v-model="subjects.admin" clearable placeholder="创建人" />
+          <el-input
+            v-model="subjects.admin"
+            clearable
+            placeholder="创建人"
+            @change="clearableAdmin"
+          />
         </el-form-item>
         <el-form-item label="" style="margin-left: 20px">
           <el-checkbox
@@ -87,7 +97,7 @@
 <script setup lang="ts">
 import moment from 'moment';
 import { ref, reactive, onMounted } from 'vue';
-import { subjectsList, subjectsDel,subjectsGet } from '../../api/subjects';
+import { subjectsList, subjectsDel, subjectsGet } from '../../api/subjects';
 import { useRouter } from 'vue-router';
 import titleDialog from './titleDialog/titleDialog.vue';
 const router = useRouter();
@@ -162,11 +172,24 @@ const titleData = ref({});
 let testNameId = ref<number>(0);
 const titleFn = async (testid: number) => {
   testNameId.value = testid;
-  let res = await subjectsGet({ id:testid });
+  let res = await subjectsGet({ id: testid });
   console.log(res);
-  console.log(res.data);  
+  console.log(res.data);
   titleData.value = res.data;
   dialogTitle.value.dialogVisible = true;
+};
+// 清除搜索
+let clearableFlag = ref(false);
+const clearableSearch = () => {
+  if (!subjects.key) {
+    console.log(clearableFlag.value);
+    getList();
+  }
+};
+const clearableAdmin = () => {
+  if (!subjects.admin) {
+    getList();
+  }
 };
 </script>
 
