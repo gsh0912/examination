@@ -16,7 +16,7 @@
             v-model="tableData.key"
             placeholder="请输入考生姓名"
             @change="clearableSearch"
-            clearable="clearableFlag"
+            :clearable="clearableFlag"
           />
         </el-form-item>
         <el-form-item label="状态">
@@ -227,7 +227,6 @@ const exam = async (data: any) => {
   examDatas.value.examData = res.data.list.map((item: any) => {
     if (item.type === '填空题') {
       let arr = item.answer.split(',')
-      console.log(arr);
       arr.forEach((data: string) => {
         item.title = item.title.replace(
           /\[\]/,

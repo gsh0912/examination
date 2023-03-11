@@ -1,15 +1,12 @@
 <template>
   <div>
-    <el-drawer
-      v-model="drawer"
-      title="试题详情"
-      size="50%"
-      :with-header="false"
-    >
+    <el-drawer v-model="drawer" title="试题详情" size="50%" :with-header="false">
       <div class="top">
         <span>试题详情</span>
         <span></span>
-        <el-icon @click="drawer = false"><CloseBold /></el-icon>
+        <el-icon @click="drawer = false">
+          <CloseBold />
+        </el-icon>
       </div>
       <div class="type">
         <span class="scores">{{ prop.ids.type }}</span>
@@ -18,15 +15,10 @@
 
       <div class="title" v-html="prop.ids.title"></div>
       <div class="chooses" v-if="prop.ids.type === '单选题'">
-        <div
-          class="choose"
-          v-for="data in prop.ids.answers"
-          :key="data.id"
-          :class="data.answerno === prop.ids.answer ? 'chooseed' : ''"
-        >
+        <div class="choose" v-for="data in prop.ids.answers" :key="data.id"
+          :class="data.answerno === prop.ids.answer ? 'chooseed' : ''">
           <el-radio-group v-model="prop.ids.answer">
-            <el-radio disabled :label="data.answerno" size="large"
-              >{{ data.answerno }} :
+            <el-radio disabled :label="data.answerno" size="large">{{ data.answerno }} :
               <span class="radioContent">{{ data.content }}</span>
             </el-radio>
           </el-radio-group>
@@ -53,14 +45,9 @@
       </div>
       <div v-if="prop.ids.type === '多选题'">
         <el-checkbox-group class="chooses" v-model="prop.ids.answer">
-          <div
-            v-for="data in prop.ids.answers"
-            :key="data.id"
-            class="choose"
-            :class="
-              prop.ids.answer.indexOf(data.answerno) !== -1 ? 'chooseed' : ''
-            "
-          >
+          <div v-for="data in prop.ids.answers" :key="data.id" class="choose" :class="
+            prop.ids.answer.indexOf(data.answerno) !== -1 ? 'chooseed' : ''
+          ">
             <el-checkbox :label="data.answerno" disabled>
               {{ data.answerno }} :
               <span class="radioContent">{{ data.content }}</span>
@@ -78,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, nextTick,onMounted } from 'vue';
+import { ref, defineProps } from 'vue';
 import { CloseBold } from '@element-plus/icons-vue';
 
 const drawer = ref(false);
@@ -90,13 +77,8 @@ let prop = defineProps({
   ids: {
     type: Object,
     required: true,
-  },
-  detailsType: {
-    detailsType: String,
-    required: true,
-  },
+  }
 })
-console.log(prop.detailsType);
 
 </script>
 <style scoped lang="less">
@@ -107,26 +89,32 @@ console.log(prop.detailsType);
   align-items: center;
   padding: 0 10px;
 }
+
 .type {
   padding: 10px 15px 0;
+
   span:first-of-type {
     margin-right: 20px;
     color: #666;
   }
+
   span:last-of-type {
     font-size: 14px;
     color: #999;
   }
 }
+
 .title {
   padding: 0 25px;
   font-size: 14px;
   margin-top: 10px;
   margin-bottom: 15px;
 }
+
 .chooses {
   padding: 0 15px;
 }
+
 .choose {
   padding: 0 15px;
   height: 40px;
@@ -135,20 +123,25 @@ console.log(prop.detailsType);
   border-radius: 3px;
   margin-top: 10px;
 }
-.el-radio__input.is-disabled + span.el-radio__label {
+
+.el-radio__input.is-disabled+span.el-radio__label {
   color: #000;
 }
-.el-checkbox__input.is-disabled + span.el-checkbox__label {
+
+.el-checkbox__input.is-disabled+span.el-checkbox__label {
   color: #000;
 }
+
 .chooseed {
   background-color: #f0faf6;
 }
+
 .isBox {
   padding: 0 15px;
   color: #84d5b1;
   font-size: 14px;
   border-radius: 3px;
+
   .is {
     padding: 0 15px;
     height: 40px;
@@ -157,9 +150,11 @@ console.log(prop.detailsType);
     background-color: #f0faf6;
   }
 }
+
 .parseBox {
   padding: 0 15px;
   margin-top: 20px;
+
   .parse {
     padding: 0 15px;
     height: 40px;

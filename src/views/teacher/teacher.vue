@@ -297,7 +297,6 @@ const revamp = async (val: any) => {
   addteacher.roleid = val.roleid;
   addteacher.pass = val.pass;
   addteacher.depid = val.depid;
-
   // console.log(val.pwd);
   dialogFormVisible.value = true;
   isshow.value = false;
@@ -325,6 +324,12 @@ const onShow = () => {
   dialogFormVisible.value = true;
   isshow.value = true;
   title.value = '添加';
+  addteacher.name = '';
+  addteacher.tel = '';
+  addteacher.username = '';
+  addteacher.pass = '';
+  addteacher.depid = 0;
+  addteacher.roleid = '';
 };
 //取消按钮
 const close = () => {
@@ -361,7 +366,6 @@ const rules = reactive<FormRules>({
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
   username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
   tel: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-  // pwd:[{required:true,message:'请输入密码',trigger:'blur'}],
   pass: [{ validator: validatePass, trigger: 'blur' }],
   confirmPass: [{ validator: validatePass2, trigger: 'blur' }],
 });
@@ -372,11 +376,9 @@ const rest = (data: any) => {
   ruleForm.username = data.username;
   ruleForm.id = data.id;
   ruleForm.name = data.name;
-  // // ruleForm.pass = data.pass
   ruleForm.checkPass = data.checkPass;
   ruleForm.confirmPass = data.confirmPass;
   ruleForm.oldpass = data.oldpass;
-
   ruleForm.depid = data.depid;
   ruleForm.tel = data.tel;
   ruleForm.roleid = data.roleid;

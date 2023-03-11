@@ -69,7 +69,7 @@
   <!-- 添加批量考试试题 -->
   <addDialog ref="addDialogRef" />
   <!-- 单条数据详情 -->
-  <detailsDrawer ref="details" :ids="ids" :detailsType="detailsType" />
+  <detailsDrawer ref="details" :ids="ids.data" />
 </template>
 
 <script setup lang="ts">
@@ -166,7 +166,7 @@ const importExcel = async () => {
   const res: any = await exportExcel({
     id: route.query.id,
   }); //请求接口返回文件流
-  
+
   console.log(res);
   let blob = new Blob([res], { type: 'application/vnd.ms-excel' });
   let url = URL.createObjectURL(blob);
@@ -293,21 +293,23 @@ const submit = async (val: any) => {
   flag.value = false;
 };
 //单条页面详情
-let ids = ref({});
-let detailsType = ref('');
+const ids: any = reactive({
+  data: {
+
+  }
+});
 const details = ref();
 const detailsDrawers = (val: any) => {
   details.value.drawer = true;
-  console.log(val);
-  ids.value = val;
-  detailsType.value = val.type;
-  if (val.type === '填空题') {
-    val.title = val.title.replaceAll(
-      '[]',
-      `<input type="text" value="${val.answer}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
-    );
-    console.log(val.title);
-    return val;
+  Object.assign(ids.data, val)
+  if (ids.data.type === '填空题') {
+    let arr = ids.data.answer.split('|')
+    arr.forEach((data: string) => {
+      ids.data.title = ids.data.title.replace(
+        /\[\]/,
+        `<input type="text" value="${data}" disabled style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
+      );
+    })
   }
 };
 onMounted(() => {
@@ -353,6 +355,7 @@ onMounted(() => {
   justify-content: center;
   margin-top: 30px;
 }
+
 .spanTitle {
   color: #409eff;
   cursor: pointer;
