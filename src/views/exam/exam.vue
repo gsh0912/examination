@@ -6,7 +6,12 @@
     <div>
       <el-form :model="tableData">
         <el-form-item label="关键字:">
-          <el-input v-model="tableData.key" placeholder="请输入题库名称" clearable />
+          <el-input
+            v-model="tableData.key"
+            placeholder="请输入题库名称"
+            @change="clearableSearch"
+            clearable="clearableFlag"
+          />
           <el-button type="primary" style="margin-left: 20px" @click="search"
             >搜索</el-button
           >
@@ -40,9 +45,11 @@
         </el-table-column>
         <el-table-column align="center" prop="address" label="操作">
           <template #default="scoped">
-            <el-link type="primary" @click="exam(scoped.row.id, scoped.row.title)">{{
-              scoped.row.incomplete === 0 ? "查看" : "阅卷"
-            }}</el-link>
+            <el-link
+              type="primary"
+              @click="exam(scoped.row.id, scoped.row.title)"
+              >{{ scoped.row.incomplete === 0 ? '查看' : '阅卷' }}</el-link
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -66,9 +73,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { testList } from "../../api/exam";
-import { useRouter } from "vue-router";
+import { ref, reactive } from 'vue';
+import { testList } from '../../api/exam';
+import { useRouter } from 'vue-router';
 // 路由
 let router = useRouter();
 // 列表数据
@@ -92,15 +99,15 @@ interface ItableData {
 let tableData: ItableData = reactive({
   page: 1,
   psize: 5,
-  key: "",
-  admin: "",
+  key: '',
+  admin: '',
   ismy: 0,
   opentime: 1,
-  begindate: "",
-  enddate: "",
+  begindate: '',
+  enddate: '',
   state: 0,
   isread: 0,
-  result: "",
+  result: '',
 });
 const myList = async () => {
   let res = await testList(tableData);
@@ -131,14 +138,21 @@ const handleCurrentChange = (val: number) => {
 // 阅卷
 const exam = (val: number, data: string) => {
   router.push({
-    path: "/index/examstudent",
+    path: '/index/examstudent',
     query: { testid: val, title: data },
   });
+};
+// 清除搜索
+let clearableFlag = ref<boolean>(true);
+const clearableSearch = () => {
+  if (!tableData.key) {
+    myList();
+  }
 };
 </script>
 
 <style scoped lang="less">
-.el-table{
+.el-table {
   margin-top: 10px;
 }
 .title {

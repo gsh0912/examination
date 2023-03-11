@@ -12,12 +12,14 @@
         <el-input
           v-model="Data.listConfig.key"
           placeholder="请输入题库名称"
+          @change="clearableKey"
           clearable
         />
       </el-form-item>
       <el-form-item label="创建人:">
         <el-input
           v-model="Data.listConfig.admin"
+          @change="clearableAdmin"
           placeholder="请输入创建人"
           clearable
         />
@@ -51,17 +53,18 @@
   >
     <el-table-column type="selection" width="55" />
     <el-table-column label="题库" width="120">
-      <template #default="scope">{{ scope.row.title }}</template>
+      <template #default="scope">
+        <span class="spanTitle" @click="questions(scope.row.id)">
+          {{ scope.row.title }}
+        </span></template
+      >
     </el-table-column>
     <el-table-column property="counts" label="题目数量" width="120" />
-    <el-table-column
-      label="创建时间"
-      show-overflow-tooltip
-   >
-<template #default="scope">
-  {{moment(scope.row.addtime).format("YYYY-MM-DD HH:mm")}}
-</template>
-   </el-table-column>
+    <el-table-column label="创建时间" show-overflow-tooltip>
+      <template #default="scope">
+        {{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}
+      </template>
+    </el-table-column>
     <el-table-column property="admin" label="创建人" show-overflow-tooltip />
     <el-table-column label="操作">
       <template #default="scope">
@@ -98,7 +101,7 @@ import { reqList } from '../../api/databaselist';
 import { deleteAllList, deleteList } from '../../api/databaselist';
 import { useRouter } from 'vue-router';
 import databaseListDialog from './databastListDialog.vue';
-import moment from 'moment'
+import moment from 'moment';
 let router = useRouter();
 // 编辑
 const updateFn = (data: any) => {
@@ -239,6 +242,16 @@ const questions = (id: number) => {
 onMounted(() => {
   getList();
 });
+const clearableKey = () => {
+  if (!Data.listConfig.key) {
+    getList();
+  }
+};
+const clearableAdmin = () => {
+  if (!Data.listConfig.admin) {
+    getList();
+  }
+};
 </script>
 
 <style scoped>
@@ -277,5 +290,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin: 20px 0px;
+}
+
+.spanTitle {
+  color: #409eff;
+  cursor: pointer;
 }
 </style>

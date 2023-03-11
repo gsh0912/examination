@@ -18,6 +18,7 @@
             v-model="student.key"
             @keyup.enter.native="searchfn"
             @submit.native.prevent
+            @change="clearableKey"
             clearable
             placeholder="请输入关键字"
           />
@@ -316,7 +317,7 @@ const stu_delete = (id: string) => {
 // 批量删除
 let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
-  if(val.length<=0){
+  if (val.length <= 0) {
     student.disabled = true;
   }
   const arr: any = val.map((item: { id: any }) => {
@@ -337,8 +338,8 @@ const arrall_del = () => {
       if (res.errCode === 10000) {
         ElMessage({
           type: 'success',
-           
-             message: '删除成功',
+
+          message: '删除成功',
         });
         list();
         student.disabled = true;
@@ -464,7 +465,7 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'));
   } else if (value !== password.value.pass) {
-    callback(new Error("两次密码不一致"));
+    callback(new Error('两次密码不一致'));
   } else {
     callback();
   }
@@ -520,6 +521,11 @@ const changeGateway = async (val: any) => {
   let res: any = await classeslist({ depid: val.id });
   if (res.errCode === 10000) {
     student.class = res.data.list;
+  }
+};
+const clearableKey = () => {
+  if (!student.key) {
+    list();
   }
 };
 
