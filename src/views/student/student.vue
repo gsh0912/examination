@@ -66,7 +66,7 @@
       <el-table-column property="depname" label="所属部门" />
       <el-table-column property="classname" label="所在班级" />
       <el-table-column property="username" label="账号" />
-      <el-table-column label="添加时间">
+      <el-table-column align="center" label="添加时间">
         <template #default="scope">
           {{ moment(scope.row.addtime).format("YYYY-MM-DD HH:mm") }}
         </template>

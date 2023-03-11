@@ -92,7 +92,7 @@
         }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="状态" width="120">
+    <el-table-column label="状态"  align="center" width="120">
       <template #default="scope">
         <span class="spanActive" v-if="scope.row.state === 1">已发布</span>
         <span class="spanRed" @click="openState(1, scope.row.id)" v-else
@@ -100,23 +100,26 @@
         >
       </template>
     </el-table-column>
-    <el-table-column property="scores" label="总分" show-overflow-tooltip />
+    <el-table-column property="scores"  align="center" label="总分" show-overflow-tooltip />
     <el-table-column
       property="pastscores"
       label="通过分数"
       show-overflow-tooltip
+      align="center"
     />
     <el-table-column
       property="studentcounts"
       label="考试人数"
       show-overflow-tooltip
+      align="center"
     />
     <el-table-column
       property="passCounts"
       label="通过人数"
       show-overflow-tooltip
+      align="center"
     />
-    <el-table-column label="开放时间" width="120">
+    <el-table-column label="开放时间"  align="center"  width="120">
       <template #default="scope">
         {{
           scope.row.begintime & scope.row.endtime
@@ -125,8 +128,8 @@
         }}</template
       >
     </el-table-column>
-    <el-table-column property="admin" label="创建人" show-overflow-tooltip />
-    <el-table-column label="更新时间">
+    <el-table-column property="admin"  align="center" label="创建人" show-overflow-tooltip />
+    <el-table-column label="更新时间"  align="center">
       <template #default="scope">{{
         moment(scope.row.addtime).format('YYYY-MM-DD HH:mm')
       }}</template>
