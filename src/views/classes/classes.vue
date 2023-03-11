@@ -99,11 +99,13 @@
             @getDepid="getDepid"
           />
         </el-form-item>
+      </el-form>
+      <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeClass">取消</el-button>
           <el-button type="primary" @click="updateStudent"> 确定 </el-button>
         </span>
-      </el-form>
+      </template>
     </el-dialog>
     <!-- 修改弹窗 -->
   </div>
