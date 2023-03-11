@@ -124,9 +124,9 @@ defineExpose({
   position: relative;
 
   .teachersNum {
-    position: absolute;
-    right: 645px;
-    bottom: 25px;
+    // position: absolute;
+    // right: 645px;
+    // bottom: 25px;
     width: 15px;
     height: 15px;
     font-size: 12px;
@@ -135,6 +135,8 @@ defineExpose({
     line-height: 15px;
     color: white;
     border-radius: 50%;
+    margin-left: -352px;
+    margin-top: 58px;
   }
 }
 .el-input {
