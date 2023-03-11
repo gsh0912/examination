@@ -35,7 +35,6 @@
             </div>
           </div>
           <div class="" v-if="item.type === '填空题'">
-
           </div>
           <div class="" v-if="item.type === '问答题'">
             <el-input v-model="item.studentanswer" :rows="4" type="textarea" />
@@ -193,9 +192,9 @@ const getTopic = async () => {
   })
   res.data.questions = res.data.questions.map((data: any) => {
     if (data.type === '填空题') {
-      data.title = data.title.replaceAll("[]", `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`)
+      data.title = data.title.replaceAll("[]", `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>,`)
     }
-    data.title = htmlEncodeByRegExp(data.title)
+    htmlEncodeByRegExp(data.title)
     return data
   })
   topic.topicList = res.data

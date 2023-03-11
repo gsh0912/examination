@@ -40,5 +40,6 @@ export const useMainStore = defineStore<any>('dialog', {
     };
   },
   getters: {},
-  actions: {}
+  actions: {},
+  persist:true  
 });

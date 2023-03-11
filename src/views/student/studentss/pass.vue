@@ -16,14 +16,9 @@
           </p>
           <p class="p_first">上传填写好的学生信息</p>
           <p>
-            <el-upload
-              v-model:file-list="fileList"
-              class="upload-demo"
-              action="http://estate.eshareedu.cn/exam/api/student/upload"
-              :headers="{ Authorization: token }"
-              :on-change="handleChange"
-              :on-success="uploadings"
-            >
+            <el-upload v-model:file-list="fileList" class="upload-demo"
+              action="http://estate.eshareedu.cn/exam/api/student/upload" :headers="{ Authorization: token }"
+              :on-change="handleChange" :on-success="uploadings">
               <el-button type="primary">点击上传文件</el-button>
             </el-upload>
           </p>
@@ -45,47 +40,40 @@ import { Ref, ref, defineExpose, nextTick } from 'vue';
 import { UploadProps, UploadUserFile, ElMessage } from 'element-plus';
 import { downLoad } from '../../../utils/downLoad';
 import Table from './Table.vue';
-import { fa } from 'element-plus/es/locale';
 const token = sessionStorage.getItem('token');
-console.log(token);
 
 // 子传父
 let dialogformshow: any = (dialogVisible: Ref<boolean>) => {
   dialogVisible;
 };
 let dialogVisible = ref(false);
-defineExpose({
-  dialogformshow,
-  dialogVisible,
-});
+
 
 // 文件上传
 const fileList: any = ref<UploadUserFile[]>([
-  {
-    name: '',
-    url: '',
-  },
+
 ]);
 const updloadFile = ref<any>({});
+// 文件上传中
 const handleChange: UploadProps['onChange'] = (
   uploadFile: any,
   uploadFiles: any
 ) => {
   status.value = uploadFile.status;
-  if(uploadFile.status==='success'){
+  if (uploadFile.status === 'success') {
     ElMessage({
-    message: '上传成功',
-    type: 'success',
-  })
+      message: '上传成功',
+      type: 'success',
+    })
   }
 };
 const status = ref<string>('');
 const tableDatas = ref();
+// 文件上传成功后
 const uploadings = (uploadFile: any) => {
-  // console.log(uploadFile);
   if (uploadFile.errCode === 10000) {
     nextTick(() => {
-      tableDatas.value.tableData =[...tableDatas.value.tableData,...uploadFile.data];
+      tableDatas.value.tableData = [...tableDatas.value.tableData, ...uploadFile.data];
     });
   }
 };
@@ -98,7 +86,7 @@ const confirm = () => {
   if (status.value === 'ready') {
     ElMessage({
       message: '文件上传中',
-      type:'warning'
+      type: 'warning'
     });
   }
   if (status.value === 'success') {
@@ -106,31 +94,44 @@ const confirm = () => {
     tableDatas.value.dialog = true;
   }
 };
+defineExpose({
+  dialogformshow,
+  dialogVisible,
+  tableDatas,
+  fileList
+});
 </script>
 
 <style scoped lang="less">
 .pass_student {
   display: flex;
+
   .el-steps {
     width: 5%;
     height: 140px;
   }
+
   .el_box {
     width: 95%;
+
     span {
       color: rgb(19, 79, 253);
     }
+
     p {
       margin-bottom: 26px;
       font-size: 18px;
     }
+
     .p_first {
       color: #c0c4cc;
     }
+
     .p_text {
       font-size: 15px;
       color: #f9492d;
     }
+
     .el-upload {
       margin-bottom: 30px;
     }

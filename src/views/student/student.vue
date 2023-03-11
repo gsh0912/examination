@@ -127,7 +127,7 @@ import {
   FormRules,
   FormInstance,
 } from 'element-plus';
-import { reactive, ref, onMounted, provide } from 'vue';
+import { reactive, ref, onMounted, provide, watch, nextTick } from 'vue';
 import {
   studentlist,
   studentdelete,
@@ -191,7 +191,7 @@ const list = async () => {
   student.total = res.data.counts;
 };
 const Mylist = {
-  list,
+  list
 };
 const myListRef = ref(Mylist)
 provide('myListRef', myListRef);
@@ -297,7 +297,16 @@ const addstudent = () => {
 const dialogformshow = ref<any>();
 const addALL = () => {
   dialogformshow.value.dialogVisible = true;
+  dialogformshow.value.fileList = []
 };
+
+nextTick(() => {
+  watch(() => dialogformshow.value.tableDatas.flag, (nweVal) => {
+    if (nweVal) {
+      list()
+    }
+  })
+})
 
 // 修改
 const dialog = () => {

@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // 添加loding效果
-import { ElLoading } from 'element-plus'
+import { ElLoading,ElMessage } from 'element-plus'
 interface McAxiosRequestConfig extends AxiosRequestConfig {
   extraConfig?: {
     tokenRetryCount: number; // 标记当前请求的csrf token重试次数
@@ -48,8 +48,8 @@ instance.interceptors.response.use(
     }
 
     if (err.message === "Network Error") {
-      console.log("Network Error");
-
+      ElMessage.error('网络错误')
+      loadingInstance.close()
       return;
     }
     if (err.message.includes("timeout")) {

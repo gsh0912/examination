@@ -13,9 +13,10 @@
           <div class="form" v-if="loginFlag">
             <img class="tabImage" src="../../assets/images/login/qrcode.png" alt="" @click="tabFn">
             <div class="title">账号登录</div>
-            <el-input v-model="username" class="w-50 m-2" size="large" placeholder="请输入账号" :prefix-icon="User" @keyup.enter="loginFn"/>
-            <el-input v-model="pass" class="w-50 m-2" size="large" type="password" placeholder="请输入密码"
-              :prefix-icon="Lock" @keyup.enter="loginFn"/>
+            <el-input v-model="username" class="w-50 m-2" size="large" placeholder="请输入账号" :prefix-icon="User"
+              @keyup.enter="loginFn" />
+            <el-input v-model="pass" class="w-50 m-2" size="large" type="password" placeholder="请输入密码" :prefix-icon="Lock"
+              @keyup.enter="loginFn" />
             <div class="hint">忘记密码？</div>
             <div class="sub" @click="loginFn">
               登录
@@ -45,6 +46,10 @@ import { debounce } from '../../utils/debounce'
 import { login } from '../../api/login'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useMainStore } from '../../stores/dialog'
+const store:any = useMainStore()
+console.log(store.leftMenuIndex);
+
 const router = useRouter()
 // 账号密码文本框
 const username = ref<string>('')
@@ -62,22 +67,22 @@ const loginFn = debounce(async () => {
   let res: any = await login({ username: username.value, pass: pass.value })
   console.log(res);
   if (res.errCode === 10000) {
-    if(res.data.type==='student'){
+    if (res.data.type === 'student') {
       router.push('/index/stutest')
-    }else{
-    router.push('/index')
+    } else {
+      router.push('/index')
     }
+    store.leftMenuIndex = 0
     ElMessage.success(res.errMsg)
     sessionStorage.setItem('token', res.data.token)
     sessionStorage.setItem('menus', JSON.stringify(res.data.menu))
-    sessionStorage.setItem("model",JSON.stringify(res.data.model))
-    
+    sessionStorage.setItem("model", JSON.stringify(res.data.model))
   } else {
-    ElMessage.error(res.errMsg+'密码错误')
+    ElMessage.error(res.errMsg + '密码错误')
   }
 }, 300)
 </script>
 
 <style scoped lang="less">
-   @import url('./login.css');
+@import url('./login.css');
 </style>
