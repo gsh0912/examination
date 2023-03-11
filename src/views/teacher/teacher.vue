@@ -59,6 +59,7 @@
       <el-form-item label="关键字">
         <el-input
           placeholder="请输入关键字"
+          style="width: 200px;"
           v-model="ruleForm.key"
           @change="clearableKey"
           clearable
