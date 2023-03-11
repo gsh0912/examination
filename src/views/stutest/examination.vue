@@ -1,55 +1,96 @@
-
-
 <template>
   <div id="root">
     <div class="left">
       <div class="content">
         <div class="title">{{ topicList.title }}</div>
         <!-- 每一道题 -->
-        <div class="topicbox" v-for="(item, index) in topicList.questions" :key="item.id" ref="examListRef">
+        <div
+          class="topicbox"
+          v-for="(item, index) in topicList.questions"
+          :key="item.id"
+          ref="examListRef"
+        >
           <div class="topictitle">
             <div class="topicindex">
               <div class="num">{{ index + 1 }}</div>
-              <div class="typetitle"> {{ item.type }}</div>
+              <div class="typetitle">{{ item.type }}</div>
             </div>
             <div class="topicscore">分值:{{ item.scores }}</div>
           </div>
           <div class="topiccontent" v-html="item.title"></div>
           <div class="radiobox" v-if="item.type === '单选题'">
             <!-- 判断当前选项是否选中 -->
-            <div class="radioitembox" :class="item.studentanswer === data.answerno ? 'checkActive' : ''"
-              v-for="data in item.answers" @click="radioFn(item, data)">
+            <div
+              class="radioitembox"
+              :class="item.studentanswer === data.answerno ? 'checkActive' : ''"
+              v-for="data in item.answers"
+              @click="radioFn(item, data)"
+            >
               <div class="radioitem">
-                <div class="itemleft"> {{ data.answerno }}</div>
-                <div class="itemright"> {{ data.content }}</div>
+                <div class="itemleft">{{ data.answerno }}</div>
+                <div class="itemright">{{ data.content }}</div>
               </div>
             </div>
           </div>
           <div class="checkbox" v-if="item.type === '多选题'">
-            <div class="checkboxItem" v-for="data in item.answers" :key="data.id" @click="checkboxFn(item, data)"
-              :class="item.studentanswer ? (item.studentanswer.includes(data.answerno) ? 'checkboxchecked' : '') : ''">
-              <div class="checkboxleft"
-                :class="item.studentanswer ? (item.studentanswer.includes(data.answerno) ? 'checkboxleftActive' : '') : ''">
-                {{ data.answerno }}</div>
+            <div
+              class="checkboxItem"
+              v-for="data in item.answers"
+              :key="data.id"
+              @click="checkboxFn(item, data)"
+              :class="
+                item.studentanswer
+                  ? item.studentanswer.includes(data.answerno)
+                    ? 'checkboxchecked'
+                    : ''
+                  : ''
+              "
+            >
+              <div
+                class="checkboxleft"
+                :class="
+                  item.studentanswer
+                    ? item.studentanswer.includes(data.answerno)
+                      ? 'checkboxleftActive'
+                      : ''
+                    : ''
+                "
+              >
+                {{ data.answerno }}
+              </div>
               <div class="checkboxright">{{ data.content }}</div>
             </div>
           </div>
-          <div class="" v-if="item.type === '填空题'">
-
-          </div>
+          <div class="" v-if="item.type === '填空题'"></div>
           <div class="" v-if="item.type === '问答题'">
             <el-input v-model="item.studentanswer" :rows="4" type="textarea" />
           </div>
           <div class="estimatebox" v-if="item.type === '判断题'">
-            <div class="estimateitem" :class="item.studentanswer === '正确' ? 'ok' : ''" @click="estimateFn(item, '正确')">
-              <span class="dot" :class="item.studentanswer === '正确' ? 'dotActive' : ''"
-                v-if="item.studentanswer === '正确'">√</span>
+            <div
+              class="estimateitem"
+              :class="item.studentanswer === '正确' ? 'ok' : ''"
+              @click="estimateFn(item, '正确')"
+            >
+              <span
+                class="dot"
+                :class="item.studentanswer === '正确' ? 'dotActive' : ''"
+                v-if="item.studentanswer === '正确'"
+                >√</span
+              >
               <span class="dot" v-else></span>
               正确
             </div>
-            <div class="estimateitem" :class="item.studentanswer === '错误' ? 'ok' : ''" @click="estimateFn(item, '错误')">
-              <span class="dot" :class="item.studentanswer === '错误' ? 'dotActive' : ''"
-                v-if="item.studentanswer === '错误'">√</span>
+            <div
+              class="estimateitem"
+              :class="item.studentanswer === '错误' ? 'ok' : ''"
+              @click="estimateFn(item, '错误')"
+            >
+              <span
+                class="dot"
+                :class="item.studentanswer === '错误' ? 'dotActive' : ''"
+                v-if="item.studentanswer === '错误'"
+                >√</span
+              >
               <span class="dot" v-else></span>
               错误
             </div>
@@ -60,17 +101,39 @@
     <div class="right">
       <h2>答题卡</h2>
       <div class="isthat">
-        <div class="correct"></div>已答
-        <div class="mistake"></div>未答
+        <div class="correct"></div>
+        已答
+        <div class="mistake"></div>
+        未答
       </div>
       <div class="answerCard">
-        <div @click="examListFn(index)" :class="item.studentanswer ? 'correctCard' : 'mistakeCard'"
-          v-for="(item, index) in topic.topicList.questions" :key="item.id">
-          {{ index + 1 }}</div>
+        <div
+          @click="examListFn(index)"
+          :class="item.studentanswer ? 'correctCard' : 'mistakeCard'"
+          v-for="(item, index) in topic.topicList.questions"
+          :key="item.id"
+        >
+          {{ index + 1 }}
+        </div>
       </div>
       <div class="bottom">
-        <p> 共 <span>{{ okDone }}</span>题,剩余<span>{{ okDone - done }}</span>题未完成</p>
-        <el-button type="primary" @click="testPaper">交卷</el-button>
+        <p>
+          共 <span>{{ okDone }}</span
+          >题,剩余<span>{{ okDone - done }}</span
+          >题未完成
+        </p>
+        <el-popconfirm
+          width="260px"
+          @confirm="testPaper"
+          :title="
+            (unfinished ? `你还有${unfinished}题未完成` : '还未到交卷时间') +
+            '，确定提交吗？'
+          "
+        >
+          <template #reference>
+            <el-button class="but" type="primary">交卷</el-button>
+          </template>
+        </el-popconfirm>
       </div>
     </div>
   </div>
@@ -78,154 +141,197 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { testStart } from '../../api/test'
-import { onMounted, ref, reactive, toRefs, watch, nextTick } from 'vue';
-import { studentanswerAdd } from '../../api/stutest'
+import { testStart } from '../../api/test';
+import {
+  onMounted,
+  ref,
+  reactive,
+  toRefs,
+  watch,
+  nextTick,
+  watchEffect,
+} from 'vue';
+import { studentanswerAdd } from '../../api/stutest';
 import router from '../../router';
-const route = useRoute()
+import { ElMessage } from 'element-plus'
+const route = useRoute();
 onMounted(() => {
-  getTopic()
-})
-const radioFlag = ref<boolean>(false)
-const nums = ref<number>(0)
-const datas = ref<any>([])
-const studentid = sessionStorage.getItem('model')
-// 点击提交试卷 
+  getTopic();
+});
+const radioFlag = ref<boolean>(false);
+const nums = ref<number>(0);
+const datas = ref<any>([]);
+const studentid = sessionStorage.getItem('model');
+const dialogVisible = ref(false);
+// 点击提交试卷
 const testPaper = async () => {
-
   topic.topicList.questions.forEach((item: any) => {
     if (item.type === '多选题' && item.studentanswer) {
-      item.studentanswer = item.studentanswer.substring(0, item.studentanswer.length - 1)
+      item.studentanswer = item.studentanswer.substring(
+        0,
+        item.studentanswer.length - 1
+      );
     }
-    let data = {}
-    if (item.type === '问答题' || item.type === '判断题' || item.type === '填空题') {
+    let data = {};
+    if (
+      item.type === '问答题' ||
+      item.type === '判断题' ||
+      item.type === '填空题'
+    ) {
       data = {
-        "testid": item.testid,
-        "studentid": JSON.parse(studentid!).id,
-        "questionid": item.id,
-        "answer": item.studentanswer ? item.studentanswer : "",
-        "scores": item.type === '问答题' || item.type === '填空题'
-          ? null
-          : item.type === '单选题' || item.type === '判断题' || item.type === '多选题'
+        testid: item.testid,
+        studentid: JSON.parse(studentid!).id,
+        questionid: item.id,
+        answer: item.studentanswer ? item.studentanswer : '',
+        scores:
+          item.type === '问答题' || item.type === '填空题'
+            ? null
+            : item.type === '单选题' ||
+              item.type === '判断题' ||
+              item.type === '多选题'
             ? item.studentanswer === item.answer
               ? item.scores
               : 0
             : !item.studentanswer
-              ? 0
-              : nums.value === item.answer.split('|').length
-                ? item.scores
-                : 0,
-      }
+            ? 0
+            : nums.value === item.answer.split('|').length
+            ? item.scores
+            : 0,
+      };
     } else {
       data = {
-        "testid": item.testid,
-        "studentid": JSON.parse(studentid!).id,
-        "questionid": item.answers[0].questionid,
-        "answer": item.studentanswer ? item.studentanswer : "",
-        "scores": item.type === '问答题' || item.type === '填空题'
-          ? null
-          : item.type === '单选题' || item.type === '判断题' || item.type === '多选题'
+        testid: item.testid,
+        studentid: JSON.parse(studentid!).id,
+        questionid: item.answers[0].questionid,
+        answer: item.studentanswer ? item.studentanswer : '',
+        scores:
+          item.type === '问答题' || item.type === '填空题'
+            ? null
+            : item.type === '单选题' ||
+              item.type === '判断题' ||
+              item.type === '多选题'
             ? item.studentanswer === item.answer
               ? item.scores
               : 0
             : !item.studentanswer
-              ? 0
-              : nums.value === item.answer.split('|').length
-                ? item.scores
-                : 0,
-      }
+            ? 0
+            : nums.value === item.answer.split('|').length
+            ? item.scores
+            : 0,
+      };
     }
 
-
-    datas.value.push(data)
+    datas.value.push(data);
     console.log(datas.value);
-
-  })
-  let res: any = await studentanswerAdd(datas.value)
+    if (!item.studentanswer) {
+      dialogVisible.value = true;
+    }
+  });
+  let res: any = await studentanswerAdd(datas.value);
   console.log(res);
   if (res.errCode === 10000) {
-    router.push(`/examresults?id=${topic.topicList.id}`)
+    ElMessage({
+    message: '交卷成功',
+    type: 'success',
+  })
+    router.push(`/examresults?id=${topic.topicList.id}`);
   }
-}
+};
 //判断题点击事件
 const estimateFn = (val: any, text: string) => {
   console.log(val);
-  val.studentanswer = text
-}
+  val.studentanswer = text;
+};
 // 答题卡点击事件
-const examListRef = ref() //通过ref 获取每个元素的高度
+const examListRef = ref(); //通过ref 获取每个元素的高度
 const examListFn = (index: number) => {
   window.scrollTo({
     top: examListRef.value[index].offsetTop - 100,
     left: 0,
-    behavior: "smooth"
+    behavior: 'smooth',
   });
-}
+};
 // 多选框事件
 const checkboxFn = (item: any, data: any) => {
   if (!item.studentanswer) {
-    item.studentanswer = ''
+    item.studentanswer = '';
   }
-  item.studentanswer += data.answerno + '|'
-}
+  item.studentanswer += data.answerno + '|';
+};
 
 // 单选框点击事件
 const radioFn = (item: any, data: any) => {
   console.log(data);
-  item.studentanswer = data.answerno
-  radioFlag.value = !radioFlag.value
-}
+  item.studentanswer = data.answerno;
+  radioFlag.value = !radioFlag.value;
+};
 
 interface Item {
-  topicList: any
+  topicList: any;
 }
 const topic = reactive<Item>({
-  topicList: []
-})
-const { topicList } = toRefs(topic)
+  topicList: [],
+});
+const { topicList } = toRefs(topic);
 
 // 获取考试题目
 const getTopic = async () => {
   let res = await testStart({
-    testid: route.query.id
-  })
+    testid: route.query.id,
+  });
   res.data.questions = res.data.questions.map((data: any) => {
     if (data.type === '填空题') {
-      data.title = data.title.replaceAll("[]", `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`)
+      data.title = data.title.replaceAll(
+        '[]',
+        `<input class="inps" data="${data.id}" type="text"  style="width:100px;border:none;border-bottom:1px solid #000;outline: none;"/>`
+      );
     }
-    return data
-  })
+    return data;
+  });
   console.log(res.data);
-  topic.topicList = res.data
+  topic.topicList = res.data;
   nextTick(() => {
-    let inps: any = document.querySelectorAll('.inps')
+    let inps: any = document.querySelectorAll('.inps');
     inps.forEach((item: any) => {
       item.oninput = (event: any) => {
         topic.topicList.questions.forEach((data: any) => {
           if (data.id === Number(event?.target.getAttribute('data'))) {
-            data.studentanswer ? data.studentanswer : data.studentanswer = ''
-            data.studentanswer = ''
+            data.studentanswer ? data.studentanswer : (data.studentanswer = '');
+            data.studentanswer = '';
             for (let i = 0; i < inps.length; i++) {
-              data.studentanswer += (inps[i].value + '|')
+              data.studentanswer += inps[i].value + '|';
             }
           }
-        })
+        });
         console.log(topic.topicList);
-      }
-    })
-  })
-
-}
+      };
+    });
+  });
+};
 // 已完成的数量
-const done = ref<number>(0)
-const okDone = ref<number>(0)
-watch(() => topic.topicList, (newVal) => {
-  done.value = newVal.questions.filter((item: any) => item.studentanswer).length
-  okDone.value = newVal.questions.length
-}, { deep: true })
+const done = ref<number>(0);
+const okDone = ref<number>(0);
+watch(
+  () => topic.topicList,
+  (newVal) => {
+    done.value = newVal.questions.filter(
+      (item: any) => item.studentanswer
+    ).length;
+    okDone.value = newVal.questions.length;
+  },
+  { deep: true }
+);
 
+const testAll = ref(0); // 题目总数量
+const unfinished = ref(0); // 未完成的题目
+watchEffect(() => {
+  if (!topic.topicList.questions) return;
+  testAll.value = topic.topicList.questions.length;
+  unfinished.value = topic.topicList.questions.filter(
+    (item: any) => !item.studentanswer
+  ).length;
+});
 </script>
-
 
 <style scoped lang="less">
 #root {
@@ -285,10 +391,8 @@ watch(() => topic.topicList, (newVal) => {
             background-color: #0089ff;
           }
 
-
-
           .checkboxright {
-            font-size: 13px
+            font-size: 13px;
           }
         }
       }
@@ -379,8 +483,6 @@ watch(() => topic.topicList, (newVal) => {
         border-top: 1px #f0f0f0 solid;
         padding-top: 20px;
 
-
-
         .topictitle {
           display: flex;
           align-items: center;
@@ -447,7 +549,6 @@ watch(() => topic.topicList, (newVal) => {
       }
 
       .el-button {
-
         width: 90%;
       }
     }
@@ -480,7 +581,6 @@ watch(() => topic.topicList, (newVal) => {
         margin: 0 10px;
       }
     }
-
 
     .answerCard {
       display: flex;
@@ -517,7 +617,6 @@ watch(() => topic.topicList, (newVal) => {
         font-size: 14px;
       }
     }
-
   }
 }
 </style>
