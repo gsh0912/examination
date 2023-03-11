@@ -8,7 +8,7 @@
         <el-input v-model="form.mobile" />
       </el-form-item>
       <el-form-item label="部门" prop="depid">
-        <el-select value-key="id" placeholder="请选择部门"  v-model="form.depid">
+        <el-select value-key="id" placeholder="请选择部门" v-model="form.depid">
           <el-option
             v-for="item in deparlist.list"
             :label="item.name"
@@ -37,11 +37,13 @@
       <el-form-item label="密码" prop="pass">
         <el-input v-model="form.pass" />
       </el-form-item>
+    </el-form>
+    <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="addstudent(ruleFormRef)"> 确定 </el-button>
       </span>
-    </el-form>
+    </template>
   </el-dialog>
 </template>
 

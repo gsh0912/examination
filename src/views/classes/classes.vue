@@ -142,7 +142,6 @@ const classFnup = (data: any) => {
   });
   ruleForm.name = res.name;
   ruleForm.depid = res.depid;
-  // console.log(1111, ruleForm.depid);
 };
 
 const updateStudent = async (val: any) => {
