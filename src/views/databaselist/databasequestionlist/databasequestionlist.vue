@@ -38,7 +38,9 @@
         <el-table-column type="selection" width="55" />
         <el-table-column align="center" label="题目名称">
           <template #default="scope">
-            <p v-html="scope.row.title"></p>
+            <div class="spanTitle" @click="detailsDrawers(scope.row)">
+              <p v-html="scope.row.title"></p>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="type" label="题目类型" />
@@ -66,6 +68,8 @@
   <drawer ref="leftDrawer" @getChildren="submit" v-if="flag" />
   <!-- 添加批量考试试题 -->
   <addDialog ref="addDialogRef" />
+  <!-- 单条数据详情 -->
+  <detailsDrawer ref="details" :ids="ids" :detailsType="detailsType" />
 </template>
 
 <script setup lang="ts">
@@ -83,6 +87,7 @@ import router from '../../../router';
 import drawer from './drawer.vue';
 import addDialog from './addDialog.vue';
 import { questionAdd } from '../../../api/databaselist';
+import detailsDrawer from './detailsDrawer .vue';
 let flag = ref<boolean>(false);
 let route = useRoute();
 //分页数据
@@ -102,7 +107,7 @@ const compileFn = (data: any) => {
   nextTick(() => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.radio = data.type;
-    leftDrawer.value.info.id = data.id
+    leftDrawer.value.info.id = data.id;
     nextTick(() => {
       leftDrawer.value.EditorRef.valueHtml = data.title;
     });
@@ -140,12 +145,14 @@ const addDatabasequestion = () => {
     leftDrawer.value.drawer = true;
     leftDrawer.value.title = '试题添加';
     leftDrawer.value.radio = '单选题';
-    leftDrawer.value.rightAnswers = ''
-    leftDrawer.value.scores = 1
-    leftDrawer.value.EditorRef.valueHtml ? leftDrawer.value.EditorRef.valueHtml = '' : ''
+    leftDrawer.value.rightAnswers = '';
+    leftDrawer.value.scores = 1;
+    leftDrawer.value.EditorRef.valueHtml
+      ? (leftDrawer.value.EditorRef.valueHtml = '')
+      : '';
     leftDrawer.value.state.answers.forEach((item: any) => {
-      item.content = ''
-    })
+      item.content = '';
+    });
   });
 };
 // 添加批量试题
@@ -285,7 +292,24 @@ const submit = async (val: any) => {
   }
   flag.value = false;
 };
-//
+//单条页面详情
+let ids = ref({});
+let detailsType = ref('');
+const details = ref();
+const detailsDrawers = (val: any) => {
+  details.value.drawer = true;
+  console.log(val);
+  ids.value = val;
+  detailsType.value = val.type;
+  if (val.type === '填空题') {
+    val.title = val.title.replaceAll(
+      '[]',
+      `<input type="text" value="${val.answer}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
+    );
+    console.log(val.title);
+    return val;
+  }
+};
 onMounted(() => {
   getList();
 });
@@ -328,5 +352,9 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin-top: 30px;
+}
+.spanTitle {
+  color: #409eff;
+  cursor: pointer;
 }
 </style>

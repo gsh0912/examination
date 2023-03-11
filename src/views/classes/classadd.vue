@@ -14,12 +14,13 @@
         <el-cascader :options="tertiary.arr" v-model="form.depid" :props="props1" @change="selectCasc"
          clearable />
       </el-form-item>
-      <el-form-item>
+    </el-form>
+    <template #footer>
+        <span class="dialog-footer">
           <el-button  @click="resetForm(ruleFormRef)" class="text">取消</el-button>
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 确定 </el-button>
-  
-      </el-form-item>
-    </el-form>
+        </span>
+      </template>
   </el-dialog>
 </template>
 
