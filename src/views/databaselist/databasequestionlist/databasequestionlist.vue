@@ -36,7 +36,7 @@
       </el-form>
       <el-table :data="tableData.list" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="题目名称">
+        <el-table-column  label="题目名称">
           <template #default="scope">
             <div class="spanTitle" @click="detailsDrawers(scope.row)">
               <p v-html="scope.row.title"></p>
