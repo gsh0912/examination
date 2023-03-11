@@ -21,6 +21,8 @@
             @change="clearableKey"
             clearable
             placeholder="请输入关键字"
+          style="width: 200px;"
+
           />
         </el-form-item>
         <el-form-item label="部门">
@@ -306,15 +308,9 @@ const arrall_del = () => {
       let res: any = await classesdes(ids);
       if (res.errCode === 10000) {
         ElMessage({
-<<<<<<< HEAD
-          type: "success",
-
-          message: "删除成功",
-=======
           type: 'success',
 
           message: '删除成功',
->>>>>>> fanjianglei
         });
         list();
         student.disabled = true;

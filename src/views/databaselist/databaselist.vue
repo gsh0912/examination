@@ -13,6 +13,7 @@
           v-model="Data.listConfig.key"
           placeholder="请输入题库名称"
           @change="clearableKey"
+          style="width: 200px;"
           clearable
         />
       </el-form-item>
@@ -21,6 +22,7 @@
           v-model="Data.listConfig.admin"
           @change="clearableAdmin"
           placeholder="请输入创建人"
+          style="width: 200px;"
           clearable
         />
       </el-form-item>
