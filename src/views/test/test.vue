@@ -12,6 +12,7 @@
       v-model="tableData.listConfig.key"
       placeholder="考试名称"
       style="width: 130px; margin: 0 10px"
+      @change="clearableKey"
       clearable
       @keyup.enter="searchFn"
     />
@@ -19,6 +20,7 @@
     <el-input
       v-model="tableData.listConfig.admin"
       @input="inpAdmin"
+      @change="clearableAdmin"
       placeholder="创建人"
       style="width: 130px; margin: 0 10px"
       clearable
@@ -79,8 +81,8 @@
     :data="tableData.tableArr"
     :cell-style="{ 'text-align': 'center' }"
     @selection-change="handleSelectionChange"
-    :header-cell-style="{'background':'#f8f8f8','text-align': 'center'}"
-    :row-style="{'height':'50px'}"
+    :header-cell-style="{ background: '#f8f8f8', 'text-align': 'center' }"
+    :row-style="{ height: '50px' }"
   >
     <el-table-column type="selection" width="55" />
     <el-table-column label="考试名称" width="120">
@@ -486,10 +488,20 @@ const shortcuts = [
     },
   },
 ];
+const clearableKey = () => {
+  if (!tableData.listConfig.key) {
+    getTabList();
+  }
+};
+const clearableAdmin = () => {
+  if (!tableData.listConfig.admin) {
+    getTabList();
+  }
+};
 // 状态查询
-const getState=()=>{
+const getState = () => {
   getTabList();
-}
+};
 </script>
 
 <style scoped lang="less">
@@ -502,7 +514,7 @@ header {
   }
 }
 
-.el-table{
+.el-table {
   margin-top: 15px;
 }
 .search {

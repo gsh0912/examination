@@ -121,6 +121,8 @@
         <el-input
           placeholder="请输入关键字"
           v-model="ruleForm.key"
+          @change="clearableKey"
+          clearable
           @keyup.enter="keys"
         />
       </el-form-item>
@@ -576,6 +578,11 @@ const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
     () => true,
     () => false
   );
+};
+const clearableKey = () => {
+  if (!ruleForm.key) {
+    list();
+  }
 };
 </script>
 <style scoped lang="less">

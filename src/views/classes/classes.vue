@@ -15,6 +15,7 @@
             v-model="from.config.key"
             @keyup.enter.native="searchfn"
             @submit.native.prevent
+            @change="clearableKey"
             clearable
             placeholder="请输入关键字"
           />
@@ -330,7 +331,11 @@ const deleclasses = (index: any) => {
       });
     });
 };
-
+const clearableKey = () => {
+  if (!from.config.key) {
+    list();
+  }
+};
 onMounted(() => {
   list();
   classes();

@@ -15,7 +15,8 @@
           <el-input
             v-model="tableData.key"
             placeholder="请输入考生姓名"
-            clearable
+            @change="clearableSearch"
+            clearable="clearableFlag"
           />
         </el-form-item>
         <el-form-item label="状态">
@@ -286,7 +287,7 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   // console.log(isNaN(value));
   if (isNaN(value) || value === null) {
     callback(new Error(`请输入分数`));
-  }else if (_value < 0 || _value > max) {
+  } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
   } else {
     callback();
@@ -323,7 +324,14 @@ const submitForm = async () => {
     }
   });
 };
-
+// 清除搜索
+let clearableFlag = ref(false);
+const clearableSearch = () => {
+  if (!tableData.key) {
+    console.log(clearableFlag.value);
+    myList();
+  }
+};
 //返回上一个页面
 const goBack = () => {
   router.push('/index/exam');
