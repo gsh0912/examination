@@ -285,10 +285,12 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   // let _value = Math.ceil(value);
   // console.log(isNaN(value));
   // console.log(isNaN(value));
-  if (isNaN(value) || value === null) {
+  if (value === null ||value==="") {
     callback(new Error(`请输入分数`));
   } else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
+  }else if(isNaN(value)){
+    callback(new Error(`请输入数字`));
   } else {
     callback();
   }
