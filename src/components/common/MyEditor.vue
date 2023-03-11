@@ -1,18 +1,10 @@
 <template>
   <div style="border: 1px solid #ccc">
     <!-- 工具栏 -->
-    <Toolbar
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      style="border-bottom: 1px solid #ccc"
-    />
+    <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" style="border-bottom: 1px solid #ccc" />
     <!-- 编辑器 -->
-    <Editor
-      v-model="valueHtml"
-      :defaultConfig="editorConfig"
-      style="height: 200px; overflow-y: hidden"
-      @onCreated="handleCreated"
-    />
+    <Editor v-model="valueHtml" :defaultConfig="editorConfig" style="height: 200px; overflow-y: hidden"
+      @onCreated="handleCreated" />
   </div>
 </template>
 <script setup lang="ts">
@@ -24,7 +16,7 @@ const editorRef = shallowRef();
 const props = defineProps({
   refreshValue: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
 });
 // 内容 HTML
@@ -84,9 +76,30 @@ const editorConfig = {
   placeholder: "请输入内容...",
   MENU_CONF: {
     /* 菜单配置，下文解释 */
+    uploadImage: {
+      //上传图片配置
+      server: 'http://www.eshareedu.cn/exam/api/upload/editeradd', //上传接口地址
+      fieldName: 'file', //上传文件名
+      methods: 'post',
+      baseUrl: 'http://www.eshareedu.cn/exam/upload/',
+      headers: {
+        Authorization: sessionStorage.getItem('token')
+      },
+      metaWithUrl: true, // 参数拼接到 url 上
+      // 单个文件上传成功之后
+      onSuccess(file: any, res: any) {
+        console.log(`${file.name} 上传成功`, res);
+      },
+      // 自定义插入图片
+      customInsert(res: any, insertFn: any) {
+        console.log(res);
+        console.log(insertFn);
+        console.log(res.data[0].url);
+        insertFn('http://www.eshareedu.cn/exam/upload/' + res.data[0].url.substring(4, res.data[0].url.length));
+      },
+    },
   },
 };
-
 const handleCreated = (editor: any) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
