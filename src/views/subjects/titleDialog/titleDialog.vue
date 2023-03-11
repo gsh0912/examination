@@ -102,13 +102,13 @@
 <script setup lang="ts">
 import { ref, defineProps, defineExpose, onMounted, watch } from 'vue';
 import { ElMessageBox } from 'element-plus';
-import { exportExcel } from '../../../api/test';
+import { exportSubjectsExcel } from '../../../api/test';
 
 const dialogVisible = ref(false);
 const checkList = ref(['A', 'B', 'C', 'D']);
 // 导出excel表格
 const exportFn = async () => {
-  let res: any = await exportExcel({
+  let res: any = await exportSubjectsExcel({
     id: props.testNameId,
     responseType: 'blob',
   });

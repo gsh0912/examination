@@ -487,6 +487,8 @@ watch(() => topic.topicList, (newVal) => {
       display: flex;
       flex-wrap: wrap;
       width: 260px;
+      overflow-y: auto;
+      height: 500px;
 
       .correctCard {
         width: 35px;
@@ -520,5 +522,12 @@ watch(() => topic.topicList, (newVal) => {
     }
 
   }
+}
+
+
+/* IE 10+ */
+&::-webkit-scrollbar {
+  // chrome safari
+  display: none;
 }
 </style>

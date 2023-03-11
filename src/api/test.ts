@@ -27,6 +27,10 @@ export const testGet = (params: any = {}) => {
 export const exportExcel = (params: any = {}, responseType?: any) => {
   return get('/api/test/exportExcel', params, { responseType: 'blob' });
 };
+
+export const exportSubjectsExcel = (params: any = {}, responseType?: any) => {
+  return get('/api/subjects/exportExcel', params, { responseType: 'blob' });
+};
 // 获取考试分析统计
 export const getAnalyse = (params: any = {}) => {
   return get('/api/test/analyse', params);

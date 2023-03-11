@@ -14,20 +14,38 @@
     <div class="classes_search">
       <el-form :inline="true" :model="student" class="demo-form-inline">
         <el-form-item label="班级名称">
-          <el-input v-model="student.key" @keyup.enter.native="searchfn" @submit.native.prevent clearable
-            placeholder="请输入关键字" />
+          <el-input
+            v-model="student.key"
+            @keyup.enter.native="searchfn"
+            @submit.native.prevent
+            clearable
+            placeholder="请输入关键字"
+          />
         </el-form-item>
         <el-form-item label="部门">
-          <cascader :options="options" :cascaderProps="cascaderProps" @getDepid="getDepid" />
+          <cascader
+            :options="options"
+            :cascaderProps="cascaderProps"
+            @getDepid="getDepid"
+          />
         </el-form-item>
         <el-form-item label="班级">
           <el-select placeholder="请选择班级" v-model="student.classid">
-            <el-option v-for="item in student.classlist" :label="item.name" value="item.id" />
+            <el-option
+              v-for="item in student.classlist"
+              :label="item.name"
+              value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="searchfn">查询</el-button>
-          <el-button type="danger" :disabled="student.disabled" @click="arrall_del">批量删除</el-button>
+          <el-button
+            type="danger"
+            :disabled="student.disabled"
+            @click="arrall_del"
+            >批量删除</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -60,9 +78,23 @@
         show-overflow-tooltip
       >
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="uppass(scope.row)">重置密码</el-button>
-          <el-button link type="primary" size="small" @click="updatelist(scope.row)">修改</el-button>
-          <el-button link type="primary" size="small" @click="stu_delete(scope.row.id)">删除</el-button>
+          <el-button link type="primary" size="small" @click="uppass(scope.row)"
+            >重置密码</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="updatelist(scope.row)"
+            >修改</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="stu_delete(scope.row.id)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -70,21 +102,35 @@
 
     <!-- 分页 -->
     <div class="demo-pagination-block">
-      <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[10, 20, 30, 40]"
-        :background="background" layout="total, sizes, prev, pager, next, jumper" :total="student.total"
-        @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+      <el-pagination
+        v-model:current-page="currentPage4"
+        v-model:page-size="pageSize4"
+        :page-sizes="[10, 20, 30, 40]"
+        :background="background"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="student.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <!-- 分页 -->
 
     <!-- 添加 -->
     <add ref="dialogshow" :getlist="list"></add>
 
-    <!-- 重置密码 -->
+    <!-- 批量添加 -->
     <pass ref="dialogformshow"></pass>
 
     <!-- 修改 -->
-    <el-dialog v-model="student.dialogVisible" title="修改" width="32%">
-      <el-form :model="form" label-width="60px">
+    <el-dialog v-model="student.dialogVisible" title="修改" width="35%">
+      <el-form
+        :model="form"
+        label-width="60px"
+        ref="ruleFormRef"
+        status-icon
+        :rules="rules"
+        class="demo-ruleForm"
+      >
         <el-form-item label="姓名">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -93,14 +139,23 @@
         </el-form-item>
         <el-form-item label="部门">
           <el-select v-model="form.depid" placeholder="请选择部门">
-            <el-option v-for="item in student.list" :label="item.name" :value="item.id" />
+            <el-option
+              v-for="item in student.list"
+              :label="item.name"
+              :key="item.id"
+              @click.native="changeGateway(item)"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="form.classid" placeholder="请选择班级">
-            <el-select placeholder="请选择班级">
-              <el-option v-for="item in student.classlist" :label="item.name" :value="item.id" />
-            </el-select>
+            <el-option
+              v-for="item in student.class"
+              :label="item.name"
+              :key="item.id"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注">
@@ -114,8 +169,17 @@
     </el-dialog>
 
     <!-- 重置密码 -->
-    <el-dialog v-model="student.centerDialogVisible" title="重置密码" width="32%">
-      <el-form label-width="80px" :model="password" :rules="rules" ref="ruleFormRef">
+    <el-dialog
+      v-model="student.centerDialogVisible"
+      title="重置密码"
+      width="32%"
+    >
+      <el-form
+        label-width="80px"
+        :model="password"
+        :rules="rules"
+        ref="ruleFormRef"
+      >
         <el-form-item label="姓名">{{ password.name }}</el-form-item>
         <el-form-item label="新密码" prop="pass">
           <el-input v-model="password.pass" type="password" />
@@ -124,8 +188,12 @@
           <el-input v-model="password.oldpass" type="password" />
         </el-form-item>
         <span class="dialog-footer">
-          <el-button @click="student.centerDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="adduppass(ruleFormRef)"> 确定 </el-button>
+          <el-button @click="student.centerDialogVisible = false"
+            >取消</el-button
+          >
+          <el-button type="primary" @click="adduppass(ruleFormRef)">
+            确定
+          </el-button>
         </span>
       </el-form>
     </el-dialog>
@@ -157,14 +225,14 @@ import moment from 'moment';
 const form = ref<any>({
   //修改数据
   id: 1,
-  name: "",
-  classid: "",
-  depid: "",
-  mobile: "",
-  username: "",
-  pass: "",
-  classname: "",
-  remarks: "",
+  name: '',
+  classid: '请选择班级',
+  depid: '请选择部门',
+  mobile: '',
+  username: '',
+  pass: '',
+  classname: '',
+  remarks: '',
 });
 
 const student = reactive<any>({
@@ -176,22 +244,23 @@ const student = reactive<any>({
   total: 0,
   page: 1,
   psize: 10,
-  key: "",
-  depid: "",
-  classid: "",
+  key: '',
+  depid: '',
+  classid: '',
   tableData: [],
   disabled: true,
+  class: [],
 });
 
 const password = ref({
-  oldpass: "",
-  pass: "",
-  checkPass: "",
+  oldpass: '',
+  pass: '',
+  checkPass: '',
   id: 0,
-  name: "",
-  classid: "",
-  username: "",
-  remarks: ""
+  name: '',
+  classid: '',
+  username: '',
+  remarks: '',
 });
 
 // 表格
@@ -218,36 +287,34 @@ const handleCurrentChange = (val: number) => {
 };
 // 分页
 
-
 // 删除
 const stu_delete = (id: string) => {
-  ElMessageBox.confirm("确定要删除此条消息吗", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: " 取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除此条消息吗', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: ' 取消',
+    type: 'warning',
   })
     .then(async () => {
       let res: any = await studentdelete({ id: id });
       if (res.errCode === 10000) {
         ElMessage({
-          type: "success",
-          message: "删除成功",
+          type: 'success',
+          message: '删除成功',
         });
         list();
       }
     })
     .catch(() => {
       ElMessage({
-        type: "info",
-        message: "取消删除",
+        type: 'info',
+        message: '取消删除',
       });
     });
 };
 // 删除
 
-
 // 批量删除
-let ids = ref<any>("");
+let ids = ref<any>('');
 const handleSelectionChange = (val: []) => {
   if(val.length<=0){
     student.disabled = true;
@@ -259,10 +326,10 @@ const handleSelectionChange = (val: []) => {
   ids = arr;
 };
 const arrall_del = () => {
-  ElMessageBox.confirm("确定要删除选定的班级？", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除选定的班级？', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
     center: false,
   })
     .then(async () => {
@@ -279,8 +346,8 @@ const arrall_del = () => {
     })
     .catch(() => {
       ElMessage({
-        type: "error",
-        message: "已取消删除",
+        type: 'error',
+        message: '已取消删除',
       });
     });
 };
@@ -293,7 +360,6 @@ const getDepid = async (val: any) => {
 };
 // 批量删除
 
-
 // 添加
 let dialogshow = ref<any>();
 const addstudent = () => {
@@ -304,16 +370,7 @@ const addstudent = () => {
 const dialogformshow = ref<any>();
 const addALL = () => {
   dialogformshow.value.dialogVisible = true;
-  dialogformshow.value.fileList = []
 };
-
-nextTick(() => {
-  watch(() => dialogformshow.value.tableDatas.flag, (nweVal) => {
-    if (nweVal) {
-      list()
-    }
-  })
-})
 
 // 修改
 const dialog = () => {
@@ -344,14 +401,13 @@ const uponfirm = async () => {
   });
   if (res.errCode === 10000) {
     ElMessage({
-      type: "success",
-      message: "修改成功",
+      type: 'success',
+      message: '修改成功',
     });
     list();
     student.dialogVisible = false;
   }
 };
-
 
 // 部门级联
 const department = async () => {
@@ -380,9 +436,9 @@ interface IcascaderProps {
   emitPath: boolean;
 }
 const cascaderProps = ref<IcascaderProps>({
-  label: "name",
-  value: "id",
-  expandTrigger: "hover" as const,
+  label: 'name',
+  value: 'id',
+  expandTrigger: 'hover' as const,
   checkStrictly: true,
   emitPath: false,
 });
@@ -423,6 +479,7 @@ const rules = reactive<FormRules>({
   ],
   oldpass: [
     { required: true, message: '请确认密码', trigger: 'blur' },
+    { min: 6, max: 18, message: '学员密码为6-18个字符', trigger: 'blur' },
     { validator: validatePass2, trigger: 'blur' },
   ],
 });
@@ -449,15 +506,14 @@ const adduppass = async (formEl: FormInstance | undefined) => {
       if (res.errCode === 10000) {
         student.centerDialogVisible = false;
         ElMessage({
-          type: "success",
-          message: "重置成功",
+          type: 'success',
+          message: '重置成功',
         });
         list();
       }
     }
   });
 };
-<<<<<<< HEAD
 
 // 修改班级
 const changeGateway = async (val: any) => {
@@ -467,8 +523,6 @@ const changeGateway = async (val: any) => {
   }
 };
 
-=======
->>>>>>> gsh
 // 重置密码
 onMounted(() => {
   list();
@@ -477,5 +531,5 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-@import url("./student.css");
+@import url('./student.css');
 </style>
