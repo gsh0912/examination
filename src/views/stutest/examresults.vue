@@ -57,7 +57,7 @@
         <span></span>
         <p
           :class="
-            resultData.list.studentScores >= resultData.list.scores
+            resultData.list.result ==='已通过'
               ? 'pass'
               : 'fail'
           "
@@ -65,10 +65,8 @@
           {{ resultData.list.studentScores }}
         </p>
         <p>
-          <span v-if="resultData.list.studentScores >= resultData.list.scores"
-            >恭喜，通过考试</span
-          >
-          <span v-else>很可惜，未通过</span>
+          <span v-if="resultData.list.result === '已通过'">恭喜，通过考试</span>
+          <span v-if="resultData.list.result === '未通过'">很可惜，未通过</span>
         </p>
         <span></span>
         <span></span>
