@@ -35,12 +35,13 @@
         <el-input v-model="form.username" />
       </el-form-item>
       <el-form-item label="密码" prop="pass">
-        <el-input v-model="form.pass" />
+        <el-input v-model="form.pass" type="password" />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button  @click="resetForm(ruleFormRef)">取消</el-button>
+        <!-- <el-button @click="resetForm(ruleFormRef)">Reset</el-button> -->
         <el-button type="primary" @click="addstudent(ruleFormRef)"> 确定 </el-button>
       </span>
     </template>
@@ -169,6 +170,13 @@ const changeGateway = async (val: any) => {
     deparlist.classlist = res.data.list;
   }
 };
+
+// 重置表单
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+  dialogVisible.value = false;
+}
 
 // 班级
 onMounted(() => {

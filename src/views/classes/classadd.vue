@@ -15,7 +15,7 @@
          clearable />
       </el-form-item>
       <el-form-item>
-          <el-button @click="resetForm" class="text">取消</el-button>
+          <el-button  @click="resetForm(ruleFormRef)" class="text">取消</el-button>
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 确定 </el-button>
   
       </el-form-item>
@@ -68,7 +68,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   });
 };
-const resetForm=()=>{
+
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
   dialogVisible.value = false;
 }
 // 添加
