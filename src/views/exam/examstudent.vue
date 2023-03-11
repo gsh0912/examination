@@ -268,7 +268,7 @@ const exam = async (data: any) => {
       console.log(item.title);
       item.title = item.title.replaceAll(
         '[]',
-        `<input type="text" value="${item.explains}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
+        `<input type="text" value="${item.studentanswer}" style="width:100px;border:none;border-bottom:1px solid #000;margin-left:10px"/>`
       );
     }
     return item;
@@ -286,12 +286,9 @@ const scoresValidator = (rule: any, value: any, callback: any) => {
   // console.log(isNaN(value));
   if (isNaN(value) || value === null) {
     callback(new Error(`请输入分数`));
-  } else if (_value < 0 || _value > max) {
+  }else if (_value < 0 || _value > max) {
     callback(new Error(`不能小于0,或大于${max}`));
-  }else if( parseInt(value)){
-    callback(new Error(`请输入整数`));
-  }
-   else {
+  } else {
     callback();
   }
 };

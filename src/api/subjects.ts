@@ -15,3 +15,7 @@ export const subjectsAdd = (data: any) => {
 export const subjectsGet = (params: any) => {
   return get('/api/subjects/get', params);
 };
+// 根据id下载单个试卷试题列表 
+export const subjectsExcel = (params: any) => {
+  return get('/api/subjects/exportExcel', params);
+};
