@@ -47,7 +47,7 @@
                 <el-button @click="close">取消</el-button>
                 <el-button type="primary" @click="adds(ruleFormRefAdd)">确定</el-button>
               </span>
-            </template>3
+            </template>
           </el-dialog>
           <!-- 添加教资 -->
         </el-form-item>
